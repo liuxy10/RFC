@@ -4,7 +4,7 @@ from bvh import Bvh
 from khrylib.utils.transformation import quaternion_slerp, quaternion_from_euler, euler_from_quaternion
 
 
-def load_amc_file(fname, scale):
+def load_amc_file(fname, scale): # scale is the length of the bone
 
     with open(fname) as f:
         content = f.readlines()

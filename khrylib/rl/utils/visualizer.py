@@ -17,7 +17,7 @@ class Visualizer:
         self.data = next(self.data_gen)
         self.vis_file = vis_file
         self.env_vis = HumanoidVisEnv(vis_file, 1, focus=False)
-        self.env_vis._get_viewer('human')._hide_overlay = True
+        #self.env_vis._get_viewer('human')._hide_overlay = True
         self.env_vis.set_custom_key_callback(self.key_callback)
 
     def data_generator(self):

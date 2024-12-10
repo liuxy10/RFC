@@ -27,7 +27,7 @@ def recreate_dirs(*dirs):
             shutil.rmtree(d)
         os.makedirs(d)
 
-
+    
 def load_img(path):
     # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
     with open(path, 'rb') as f:
@@ -36,11 +36,40 @@ def load_img(path):
         return img
 
 
-def save_screen_shots(window, file_name, transparent=False, autogui=False):
+def save_image_hwc(data, file_path):
+    """
+    Save a NumPy array as an image file.
+    
+    Args:
+        data (np.ndarray): Image array in HWC format (Height x Width x Channels)
+        file_path (str): Path where the image will be saved
+    """
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    
+    # Convert the array to uint8 if not already
+    if data.dtype != np.uint8:
+        data = (data * 255).astype(np.uint8)
+    
+    # Create and save the image
+    image = Image.fromarray(data)
+    image.save(file_path)
+
+## TODO: fix this: WSL is not supported
+def save_screen_shots(window, file_name, transparent=False, autogui=False, wsl = True):
     import glfw
-    xpos, ypos = glfw.get_window_pos(window)
+    xpos, ypos = glfw.get_window_pos(window) 
     width, height = glfw.get_window_size(window)
-    if autogui:
+    if False: #wsl: # for wsl2 compatibility
+        # Headless FFmpeg screen capture for WSL2
+        subprocess.call([
+        'ffmpeg', 
+        # '-video_size', f'{width - 20}x{height-20}', 
+        '-framerate', '25', 
+        # '-f', 'x11grab', 
+        # '-i', '$DISPLAY', #f':0.0+{xpos},{ypos}', 
+        file_name])
+    elif autogui:
         import pyautogui
         image = pyautogui.screenshot(region=(xpos*2, ypos*2, width*2, height*2))
         image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGRA if transparent else cv2.COLOR_RGB2BGR)

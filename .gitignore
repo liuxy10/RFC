@@ -1,0 +1,9 @@
+*.pyc
+*.p
+# *.png
+events.out.*
+**/log.txt
+**/log_eval.txt
+*.png
+*.mp4
+*.amc

@@ -1,0 +1,47 @@
+{
+    "configurations": [
+        
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "Launch motion_im.py",
+            "python":"/home/xliu227/miniconda3/envs/rfc/bin/python", 
+            "program": "${workspaceFolder}/motion_imitation/motion_im.py",
+            "args": [
+                "--cfg",
+                "${input:configFile}"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "Launch vis_im.py",
+            "python":"/home/xliu227/miniconda3/envs/rfc/bin/python", 
+            "program": "${workspaceFolder}/motion_imitation/vis_im.py",
+            "args": [
+                "--cfg",
+                "${input:configFile}"
+            ],
+            "console": "integratedTerminal"
+        }
+    ],
+    "inputs": [
+        {
+            "type": "pickString",
+            "id": "configFile",
+            "description": "Select the configuration file",
+            "options": [
+                "0202",
+                "0506",
+                "0507",
+                "0513",
+                "8801",
+                "9002",
+                "9005",
+                "9008",
+                "9011"
+            ]
+        }
+    ]
+}

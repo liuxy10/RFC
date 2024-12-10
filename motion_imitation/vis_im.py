@@ -14,11 +14,11 @@ from khrylib.rl.core.critic import Value
 from khrylib.models.mlp import MLP
 from motion_imitation.envs.humanoid_im import HumanoidEnv
 from motion_imitation.utils.config import Config
-
+import glfw
 parser = argparse.ArgumentParser()
 parser.add_argument('--cfg', default=None)
 parser.add_argument('--vis_model_file', default='mocap_v2_vis')
-parser.add_argument('--iter', type=int, default=-1)
+parser.add_argument('--iter', type=int, default=800)
 parser.add_argument('--focus', action='store_true', default=True)
 parser.add_argument('--hide_expert', action='store_true', default=False)
 parser.add_argument('--preview', action='store_true', default=False)
@@ -38,6 +38,7 @@ torch.manual_seed(cfg.seed)
 torch.set_grad_enabled(False)
 env = HumanoidEnv(cfg)
 env.seed(cfg.seed)
+
 actuators = env.model.actuator_names
 state_dim = env.observation_space.shape[0]
 action_dim = env.action_space.shape[0]
@@ -120,12 +121,15 @@ class MyVisulizer(Visualizer):
                 self.render()
             if not args.preview:
                 t0 = time.time()
-                save_screen_shots(self.env_vis.viewer.window, f'{frame_dir}/%04d.png' % fr)
+                # save_screen_shots(self.env_vis.viewer.window, f'{frame_dir}/%04d.png' % fr)
+                width, height = glfw.get_window_size(self.env_vis.viewer.window)
+                data = self.env_vis._get_viewer("human").read_pixels(width, height, depth=False)
+                save_image_hwc(data[::-1, :, [0,1,2]],  f'{frame_dir}/%04d.png' % fr)
                 print('%d/%d, %.3f' % (fr, self.num_fr, time.time() - t0))
 
         if not args.preview:
             out_name = f'{args.video_dir}/{args.cfg}_{"expert" if args.record_expert else args.iter}.mp4'
-            cmd = ['/usr/local/bin/ffmpeg', '-y', '-r', '30', '-f', 'image2', '-start_number', '0',
+            cmd = ['ffmpeg', '-y', '-r', '30', '-f', 'image2', '-start_number', '0',
                 '-i', f'{frame_dir}/%04d.png', '-vcodec', 'libx264', '-crf', '5', '-pix_fmt', 'yuv420p', out_name]
             subprocess.call(cmd)
 

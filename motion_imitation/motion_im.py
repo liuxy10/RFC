@@ -14,7 +14,7 @@ from torch.utils.tensorboard import SummaryWriter
 from motion_imitation.envs.humanoid_im import HumanoidEnv
 from motion_imitation.utils.config import Config
 from motion_imitation.reward_function import reward_func
-
+from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--cfg', default=None)
@@ -42,7 +42,7 @@ logger = create_logger(os.path.join(cfg.log_dir, 'log.txt'), file_handle=not arg
 """environment"""
 env = HumanoidEnv(cfg)
 env.seed(cfg.seed)
-actuators = env.model.actuator_names
+actuators = env.model.actuator_names 
 state_dim = env.observation_space.shape[0]
 action_dim = env.action_space.shape[0]
 running_state = ZFilter((state_dim,), clip=5)
@@ -97,7 +97,7 @@ def main_loop():
         pre_iter_update(args.iter)
         agent.sample(1e8)
     else:
-        for i_iter in range(args.iter, cfg.max_iter_num):
+        for i_iter in tqdm(range(args.iter, cfg.max_iter_num)):
             """generate multiple trajectories that reach the minimum batch_size"""
             pre_iter_update(i_iter)
             batch, log = agent.sample(cfg.min_batch_size)

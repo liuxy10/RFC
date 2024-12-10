@@ -1,0 +1,6 @@
+{
+    "remote.SSH.configFile": {
+        "ForwardX11": "yes"
+    },
+    "docwriter.style": "Google"
+}

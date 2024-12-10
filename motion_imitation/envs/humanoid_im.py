@@ -124,16 +124,23 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         return self.data.subtree_com[0, :].copy()
 
     def compute_desired_accel(self, qpos_err, qvel_err, k_p, k_d):
+        """
+        Compute desired acceleration given position and velocity errors
+        :param qpos_err: position error
+        :param qvel_err: velocity error
+        :param k_p: position gain
+        :param k_d: velocity gain
+        """
         dt = self.model.opt.timestep
         nv = self.model.nv
         M = np.zeros(nv * nv)
         mjf.mj_fullM(self.model, M, self.data.qM)
         M.resize(self.model.nv, self.model.nv)
-        C = self.data.qfrc_bias.copy()
+        C = self.data.qfrc_bias.copy() 
         K_p = np.diag(k_p)
         K_d = np.diag(k_d)
         q_accel = cho_solve(cho_factor(M + K_d*dt, overwrite_a=True, check_finite=False),
-                            -C[:, None] - K_p.dot(qpos_err[:, None]) - K_d.dot(qvel_err[:, None]), overwrite_b=True, check_finite=False)
+                            -C[:, None] - K_p.dot(qpos_err[:, None]) - K_d.dot(qvel_err[:, None]), overwrite_b=True, check_finite=False) # solve for acceleration
         return q_accel.squeeze()
 
     def compute_torque(self, ctrl):

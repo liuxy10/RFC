@@ -64,6 +64,14 @@ def world_rfc_implicit_reward(env, state, action, info):
 
 
 def world_rfc_explicit_reward(env, state, action, info):
+    """
+    Explicit reward function for world frame control: 
+    - pose reward: body quaternion
+    - velocity reward: body angular velocity
+    - ee reward: end-effector position
+    - com reward: center of mass position
+    - residual force reward: residual force
+    """
     # reward coefficients
     cfg = env.cfg
     ws = cfg.reward_weights
