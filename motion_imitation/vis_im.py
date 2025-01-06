@@ -16,7 +16,7 @@ from motion_imitation.envs.humanoid_im import HumanoidEnv
 from motion_imitation.utils.config import Config
 import glfw
 parser = argparse.ArgumentParser()
-parser.add_argument('--cfg', default=None)
+parser.add_argument('--cfg', default='0202_freeze')
 parser.add_argument('--vis_model_file', default='mocap_v2_vis')
 parser.add_argument('--iter', type=int, default=800)
 parser.add_argument('--focus', action='store_true', default=True)

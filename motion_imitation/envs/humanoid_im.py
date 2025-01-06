@@ -33,6 +33,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
         # print(expert_meta)
+        print(expert_qpos.shape)
         self.expert = get_expert(expert_qpos, expert_meta, self)
 
     def set_model_params(self):
@@ -91,7 +92,8 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         obs = np.concatenate(obs)
         return obs
 
-    def get_ee_pos(self, transform):
+    def get_ee_pos(self, transform): 
+        # get end effector position
         data = self.data
         ee_name = ['lfoot', 'rfoot', 'lwrist', 'rwrist', 'head']
         ee_pos = []
@@ -107,6 +109,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         return np.concatenate(ee_pos)
 
     def get_body_quat(self):
+        # get body quaternion
         qpos = self.data.qpos.copy()
         body_quat = [qpos[3:7]]
         for body in self.model.body_names[1:]:
@@ -121,6 +124,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         return body_quat
 
     def get_com(self):
+        # get center of mass
         return self.data.subtree_com[0, :].copy()
 
     def compute_desired_accel(self, qpos_err, qvel_err, k_p, k_d):
