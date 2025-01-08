@@ -16,7 +16,7 @@ from motion_imitation.envs.humanoid_im import HumanoidEnv
 from motion_imitation.utils.config import Config
 import glfw
 parser = argparse.ArgumentParser()
-parser.add_argument('--cfg', default='0202_freeze')
+parser.add_argument('--cfg', default='0202')
 parser.add_argument('--vis_model_file', default='mocap_v2_vis')
 parser.add_argument('--iter', type=int, default=800)
 parser.add_argument('--focus', action='store_true', default=True)
@@ -73,34 +73,56 @@ class MyVisulizer(Visualizer):
             if running_state is not None:
                 state = running_state(state, update=False)
 
-            for t in range(1000):
+            for t in range(1000): 
+                
                 epos = env.get_expert_attr('qpos', env.get_expert_index(t)).copy()
+                # print(epos.shape)
                 if env.expert['meta']['cyclic']:
                     init_pos = env.expert['init_pos']
                     cycle_h = env.expert['cycle_relheading']
                     cycle_pos = env.expert['cycle_pos']
                     epos[:3] = quat_mul_vec(cycle_h, epos[:3] - init_pos) + cycle_pos
                     epos[3:7] = quaternion_multiply(cycle_h, epos[3:7])
-                poses['gt'].append(epos)
+                poses['gt'].append(epos) 
                 poses['pred'].append(env.data.qpos.copy())
                 state_var = tensor(state, dtype=dtype).unsqueeze(0)
                 action = policy_net.select_action(state_var, mean_action=True)[0].cpu().numpy()
-                next_state, reward, done, _ = env.step(action)
+                # print(t, state.shape, action.shape)
+                next_state, reward, done,info = env.step(action)
                 if running_state is not None:
                     next_state = running_state(next_state, update=False)
                 if done:
+                    print(f"fail: {info['fail']}")
                     break
                 state = next_state
 
             poses['gt'] = np.vstack(poses['gt'])
             poses['pred'] = np.vstack(poses['pred'])
+            plot_pose = False
+            if plot_pose:
+                import matplotlib.pyplot as plt
+                fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4, ncols=4, figsize=(6, 12))
+                for i in range(poses['gt'].shape[1]//4):
+                    for j in range(4):
+                        gt = poses['gt'][:, i*4 + j]
+                        pred = poses['pred'][:, i*4 + j]
+                        mse = np.mean((gt - pred) ** 2)
+                        axs[i, j].plot(gt, 'r', label='gt')
+                        axs[i, j].plot(pred, 'b', label='pred')
+                        axs[i, j].set_ylim([-np.pi, np.pi])
+                        axs[i, j].set_title(f'MSE: {mse:.4f}')
+                        if i == 0 and j == 0:
+                            axs[i, j].legend()
+                plt.tight_layout()
+                plt.show()
             self.num_fr = poses['pred'].shape[0]
             yield poses
 
     def update_pose(self):
+        # print(self.env_vis.data.qpos[env.model.nq], env.model.nq,env.model.nv) # what is the definition of nq and nv? nq is the number of qpos, nv is the number of qvel, the reason why nq is 39 while nv is 28 is that the qpos is the position of the body, while qvel is the velocity of the body, the body has 11 joints, so the qpos is 11*3=33, and the qvel is 11*3=33, so the nq is 33+6=39, nv is  
         self.env_vis.data.qpos[:env.model.nq] = self.data['pred'][self.fr]
-        self.env_vis.data.qpos[env.model.nq:] = self.data['gt'][self.fr]
-        self.env_vis.data.qpos[env.model.nq] += 1.0
+        self.env_vis.data.qpos[env.model.nq:] = self.data['gt'][self.fr] 
+        self.env_vis.data.qpos[env.model.nq] += 1.0 # time update
         if args.record_expert:
             self.env_vis.data.qpos[:env.model.nq] = self.data['gt'][self.fr]
         if args.hide_expert:
@@ -117,14 +139,19 @@ class MyVisulizer(Visualizer):
         for fr in range(self.num_fr):
             self.fr = fr
             self.update_pose()
-            for _ in range(20):
+            for _ in range(200): 
                 self.render()
             if not args.preview:
                 t0 = time.time()
-                # save_screen_shots(self.env_vis.viewer.window, f'{frame_dir}/%04d.png' % fr)
+                # save_screen_shots(self.env_vis.viewer.window,f'{frame_dir}/%04d.png' % fr,  autogui = True)
+                
                 width, height = glfw.get_window_size(self.env_vis.viewer.window)
                 data = self.env_vis._get_viewer("human").read_pixels(width, height, depth=False)
                 save_image_hwc(data[::-1, :, [0,1,2]],  f'{frame_dir}/%04d.png' % fr)
+                
+                # img = self.env_vis.sim.render(width, height)
+                # img = img.astype(np.uint8)
+                # save_image_hwc(img,  f'{frame_dir}/{fr}.png')
                 print('%d/%d, %.3f' % (fr, self.num_fr, time.time() - t0))
 
         if not args.preview:

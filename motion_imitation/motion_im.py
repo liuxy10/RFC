@@ -83,6 +83,7 @@ agent = AgentPPO(env=env, dtype=dtype, device=device, running_state=running_stat
 
 
 def pre_iter_update(i_iter):
+    """ update adaptive parameters """ 
     cfg.update_adaptive_params(i_iter)
     agent.set_noise_rate(cfg.adp_noise_rate)
     set_optimizer_lr(optimizer_policy, cfg.adp_policy_lr)
@@ -100,13 +101,13 @@ def main_loop():
         for i_iter in tqdm(range(args.iter, cfg.max_iter_num)):
             """generate multiple trajectories that reach the minimum batch_size"""
             pre_iter_update(i_iter)
-            batch, log = agent.sample(cfg.min_batch_size)
+            batch, log = agent.sample(cfg.min_batch_size) # sample trajectories 
             if cfg.end_reward:
                 agent.env.end_reward = log.avg_c_reward * cfg.gamma / (1 - cfg.gamma)   
 
             """update networks"""
             t0 = time.time()
-            agent.update_params(batch)
+            agent.update_params(batch) # update policy and value networks
             t1 = time.time()
 
             """logging"""

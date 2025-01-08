@@ -2,6 +2,7 @@ from khrylib.utils.math import *
 
 
 def get_body_qposaddr(model):
+    """ Get the qpos address of each body in the model """ 
     body_qposaddr = dict()
     for i, body_name in enumerate(model.body_names):
         start_joint = model.body_jntadr[i]

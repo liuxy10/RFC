@@ -66,7 +66,7 @@ class Visualizer:
         return True
 
     def render(self):
-        self.env_vis.render()
+        return self.env_vis.render()
 
     def show_animation(self):
         self.t = 0
@@ -79,6 +79,7 @@ class Visualizer:
                         self.fr = 0
                 elif self.reverse and self.fr > 0:
                     self.fr -= 1
+                # print(self.fr, self.T)
                 self.update_pose()
                 self.t = 0
             self.render()

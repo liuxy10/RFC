@@ -6,12 +6,16 @@ from khrylib.utils.transformation import quaternion_matrix, quaternion_about_axi
 
 
 def normal_entropy(std):
+    """return the entropy of a normal distribution, 
+    math formula is: 0.5 + 0.5 * log(2 * pi * var)"""
     var = std.pow(2)
     entropy = 0.5 + 0.5 * torch.log(2 * var * math.pi)
     return entropy.sum(1, keepdim=True)
 
 
 def normal_log_density(x, mean, log_std, std):
+    """return the log density of a normal distribution, 
+    math formula is:  -0.5 * (x - mean)^2 / var - 0.5 * log(2 * pi) - log_std"""
     var = std.pow(2)
     log_density = -(x - mean).pow(2) / (2 * var) - 0.5 * math.log(2 * math.pi) - log_std
     return log_density.sum(1, keepdim=True)
@@ -36,6 +40,7 @@ def get_qvel_fd(cur_qpos, next_qpos, dt, transform=None):
 
 
 def get_qvel_fd_new(cur_qpos, next_qpos, dt, transform=None):
+    """return the qvel from qpos and dt, the angular velocity is in root coord"""
     v = (next_qpos[:3] - cur_qpos[:3]) / dt
     qrel = quaternion_multiply(next_qpos[3:7], quaternion_inverse(cur_qpos[3:7]))
     axis, angle = rotation_from_quaternion(qrel, True)
@@ -46,7 +51,7 @@ def get_qvel_fd_new(cur_qpos, next_qpos, dt, transform=None):
     rv = (axis * angle) / dt
     rv = transform_vec(rv, cur_qpos[3:7], 'root')   # angular velocity is in root coord
     diff = next_qpos[7:] - cur_qpos[7:]
-    while np.any(diff > np.pi):
+    while np.any(diff > np.pi): # wrap to [-pi, pi]
         diff[diff > np.pi] -= 2 * np.pi
     while np.any(diff < -np.pi):
         diff[diff < -np.pi] += 2 * np.pi
@@ -59,6 +64,8 @@ def get_qvel_fd_new(cur_qpos, next_qpos, dt, transform=None):
 
 
 def get_angvel_fd(prev_bquat, cur_bquat, dt):
+    """return the body angular velocity of a quaternion"""
+    
     q_diff = multi_quat_diff(cur_bquat, prev_bquat)
     n_joint = q_diff.shape[0] // 4
     body_angvel = np.zeros(n_joint * 3)
@@ -68,6 +75,7 @@ def get_angvel_fd(prev_bquat, cur_bquat, dt):
 
 
 def transform_vec(v, q, trans='root'):
+    """transform a vector from root to heading or vice versa"""
     if trans == 'root':
         rot = quaternion_matrix(q)[:3, :3]
     elif trans == 'heading':
@@ -83,6 +91,7 @@ def transform_vec(v, q, trans='root'):
 
 
 def get_heading_q(q):
+    """ return the heading quaternion of a quaternion"""
     hq = q.copy()
     hq[1] = 0
     hq[2] = 0
@@ -91,6 +100,7 @@ def get_heading_q(q):
 
 
 def get_heading(q):
+    """ return the heading angle of a quaternion"""
     hq = q.copy()
     hq[1] = 0
     hq[2] = 0
@@ -101,6 +111,7 @@ def get_heading(q):
 
 
 def de_heading(q):
+    """ return the quaternion without heading of a quaternion"""
     return quaternion_multiply(quaternion_inverse(get_heading_q(q)), q)
 
 

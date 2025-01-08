@@ -13,8 +13,8 @@ def world_rfc_implicit_reward(env, state, action, info):
     ind = env.get_expert_index(t)
     prev_bquat = env.prev_bquat
     # learner
-    cur_ee = env.get_ee_pos(None)
-    cur_bquat = env.get_body_quat()
+    cur_ee = env.get_ee_pos(None) # curret end-effector position in world frame
+    cur_bquat = env.get_body_quat() # current body quaternion
     cur_bangvel = get_angvel_fd(prev_bquat, cur_bquat, env.dt)
     cur_com = env.get_com()
     # expert
@@ -30,7 +30,7 @@ def world_rfc_implicit_reward(env, state, action, info):
         cycle_h = expert['cycle_relheading']
         cycle_pos = expert['cycle_pos']
         orig_rpos = e_rpos.copy()
-        e_rpos = quat_mul_vec(cycle_h, e_rpos - init_pos) + cycle_pos
+        e_rpos = quat_mul_vec(cycle_h, e_rpos - init_pos) + cycle_pos 
         e_com = quat_mul_vec(cycle_h, e_com - orig_rpos) + e_rpos
         for i in range(e_ee.shape[0] // 3):
             e_ee[3*i: 3*i+3] = quat_mul_vec(cycle_h, e_ee[3*i: 3*i+3] - orig_rpos) + e_rpos
@@ -185,7 +185,7 @@ def local_rfc_implicit_reward(env, state, action, info):
     root_quat_dist = multi_quat_norm(multi_quat_diff(cur_rq_rmh, e_rq_rmh))[0]
     root_pose_reward = math.exp(-k_rh * (root_height_dist ** 2) - k_rq * (root_quat_dist ** 2))
     # root velocity reward
-    root_linv_dist = np.linalg.norm(cur_rlinv_local - e_rlinv_local)
+    root_linv_dist = np.linalg.norm(cur_rlinv_local - e_rlinv_local) 
     root_angv_dist = np.linalg.norm(cur_rangv - e_rangv)
     root_vel_reward = math.exp(-k_rl * (root_linv_dist ** 2) - k_ra * (root_angv_dist ** 2))
     # residual force reward

@@ -95,11 +95,11 @@ class MujocoEnv:
 
     def set_state(self, qpos, qvel):
         assert qpos.shape == (self.model.nq,) and qvel.shape == (self.model.nv,)
-        old_state = self.sim.get_state()
+        old_state = self.sim.get_state() 
         new_state = mujoco_py.MjSimState(old_state.time, qpos, qvel,
-                                         old_state.act, old_state.udd_state)
-        self.sim.set_state(new_state)
-        self.sim.forward()
+                                         old_state.act, old_state.udd_state) # udd = user defined
+        self.sim.set_state(new_state) # set_state() sets the internal data of the simulation to the given state
+        self.sim.forward() # forward() updates the internal data of the simulation 
 
     @property
     def dt(self):

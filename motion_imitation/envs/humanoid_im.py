@@ -93,7 +93,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         return obs
 
     def get_ee_pos(self, transform): 
-        # get end effector position
+        # get end effector position in world frame
         data = self.data
         ee_name = ['lfoot', 'rfoot', 'lwrist', 'rwrist', 'head']
         ee_pos = []
@@ -230,7 +230,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         if cfg.env_term_body == 'head':
             fail = self.expert is not None and head_pos[2] < self.expert['head_height_lb'] - 0.1
         else:
-            fail = self.expert is not None and self.data.qpos[2] < self.expert['height_lb'] - 0.1
+            fail = self.expert is not None and self.data.qpos[2] < self.expert['height_lb'] - 0.5
         cyclic = self.expert['meta']['cyclic']
         end =  (cyclic and self.cur_t >= cfg.env_episode_len) or (not cyclic and self.cur_t + self.start_ind >= self.expert['len'] + cfg.env_expert_trail_steps)
         done = fail or end

@@ -28,6 +28,7 @@ model_file = f'khrylib/assets/mujoco_models/{args.model_file}.xml'
 model = load_model_from_path(model_file)
 sim = MjSim(model)
 body_qposaddr = get_body_qposaddr(model)
+
 amc_file = f'data/cmu_mocap/amc/{args.amc_id}.amc'
 cyclic = False
 cycle_offset = 0.0
@@ -37,6 +38,7 @@ offset_z = 0.0
 def convert_amc_file():
 
     def get_qpos(pose):
+        # qpos is in the order of root_xyz, root_quat, body_xyz, body_quat
         qpos = np.zeros_like(sim.data.qpos)
         for bone_name, ind2 in body_qposaddr.items():
             ind1 = bone_addr[bone_name]

@@ -346,6 +346,7 @@ import numpy as np
 
 
 def rotation_from_quaternion(quaternion, separate=False):
+    """Return Euler angles from quaternion for specified axis sequence."""
     if 1 - abs(quaternion[0]) < 1e-8:
         axis = np.array([1.0, 0.0, 0.0])
         angle = 0.0

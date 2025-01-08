@@ -56,20 +56,12 @@ def save_image_hwc(data, file_path):
     image.save(file_path)
 
 ## TODO: fix this: WSL is not supported
-def save_screen_shots(window, file_name, transparent=False, autogui=False, wsl = True):
+def save_screen_shots(window, file_name, transparent=False, autogui=False):
     import glfw
     xpos, ypos = glfw.get_window_pos(window) 
     width, height = glfw.get_window_size(window)
-    if False: #wsl: # for wsl2 compatibility
-        # Headless FFmpeg screen capture for WSL2
-        subprocess.call([
-        'ffmpeg', 
-        # '-video_size', f'{width - 20}x{height-20}', 
-        '-framerate', '25', 
-        # '-f', 'x11grab', 
-        # '-i', '$DISPLAY', #f':0.0+{xpos},{ypos}', 
-        file_name])
-    elif autogui:
+    
+    if autogui:
         import pyautogui
         image = pyautogui.screenshot(region=(xpos*2, ypos*2, width*2, height*2))
         image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGRA if transparent else cv2.COLOR_RGB2BGR)
