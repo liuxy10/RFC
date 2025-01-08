@@ -21,8 +21,8 @@ class MujocoEnv:
                 raise IOError("File %s does not exist" % fullpath)
         self.frame_skip = frame_skip
         self.model = mujoco_py.load_model_from_path(fullpath)
-        self.sim = mujoco_py.MjSim(self.model)
-        self.data = self.sim.data
+        self.sim = mujoco_py.MjSim(self.model) 
+        self.data = self.sim.data # changing self.data will change self.sim.data
         self.viewer = None
         self._viewers = {}
         self.obs_dim = None

@@ -33,7 +33,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
         # print(expert_meta)
-        print(expert_qpos.shape)
+        # print(expert_qpos.shape)
         self.expert = get_expert(expert_qpos, expert_meta, self)
 
     def set_model_params(self):
@@ -47,7 +47,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.vf_dim = 0
         if cfg.residual_force:
             if cfg.residual_force_mode == 'implicit':
-                self.vf_dim = 6
+                self.vf_dim = 6 
             else:
                 if cfg.residual_force_bodies == 'all':
                     self.vf_bodies = self.model.body_names[1:]
@@ -66,11 +66,12 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         if self.cfg.obs_type == 'full':
             obs = self.get_full_obs()
         return obs
-
+    
     def get_full_obs(self):
         data = self.data
         qpos = data.qpos.copy()
         qvel = data.qvel.copy()
+        print(f"dim of qpos, qvel = {   qpos.shape, qvel.shape}")
         # transform velocity
         qvel[:3] = transform_vec(qvel[:3], qpos[3:7], self.cfg.obs_coord).ravel()
         obs = []
@@ -143,8 +144,11 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         C = self.data.qfrc_bias.copy() 
         K_p = np.diag(k_p)
         K_d = np.diag(k_d)
+        # solve for acceleration based on LQR control
         q_accel = cho_solve(cho_factor(M + K_d*dt, overwrite_a=True, check_finite=False),
-                            -C[:, None] - K_p.dot(qpos_err[:, None]) - K_d.dot(qvel_err[:, None]), overwrite_b=True, check_finite=False) # solve for acceleration
+                            -C[:, None] - K_p.dot(qpos_err[:, None]) - K_d.dot(qvel_err[:, None]), 
+                            overwrite_b=True, 
+                            check_finite=False) 
         return q_accel.squeeze()
 
     def compute_torque(self, ctrl):
@@ -186,14 +190,14 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         vf *= self.cfg.residual_force_scale
         hq = get_heading_q(self.data.qpos[3:7])
         vf[:3] = quat_mul_vec(hq, vf[:3])
-        self.data.qfrc_applied[:vf.shape[0]] = vf
+        self.data.qfrc_applied[:vf.shape[0]] = vf # qfrc_applied is the residual force applied to the body
 
     def do_simulation(self, action, n_frames):
         t0 = time.time()
         cfg = self.cfg
         for i in range(n_frames):
             ctrl = action
-            if cfg.action_type == 'position':
+            if cfg.action_type == 'position': # used action type is position
                 torque = self.compute_torque(ctrl)
             elif cfg.action_type == 'torque':
                 torque = ctrl * cfg.a_scale
@@ -202,7 +206,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
 
             """ Residual Force Control (RFC) """
             if cfg.residual_force:
-                vf = ctrl[-self.vf_dim:].copy()
+                vf = ctrl[-self.vf_dim:].copy() # vfs are at the last of action
                 if cfg.residual_force_mode == 'implicit':
                     self.rfc_implicit(vf)
                 else:

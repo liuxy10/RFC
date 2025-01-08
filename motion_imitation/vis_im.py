@@ -119,7 +119,6 @@ class MyVisulizer(Visualizer):
             yield poses
 
     def update_pose(self):
-        # print(self.env_vis.data.qpos[env.model.nq], env.model.nq,env.model.nv) # what is the definition of nq and nv? nq is the number of qpos, nv is the number of qvel, the reason why nq is 39 while nv is 28 is that the qpos is the position of the body, while qvel is the velocity of the body, the body has 11 joints, so the qpos is 11*3=33, and the qvel is 11*3=33, so the nq is 33+6=39, nv is  
         self.env_vis.data.qpos[:env.model.nq] = self.data['pred'][self.fr]
         self.env_vis.data.qpos[env.model.nq:] = self.data['gt'][self.fr] 
         self.env_vis.data.qpos[env.model.nq] += 1.0 # time update
