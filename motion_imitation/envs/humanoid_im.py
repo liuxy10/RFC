@@ -408,30 +408,6 @@ class HumanoidEnvFreezeKnee(HumanoidEnv):
         if self.viewer is not None:
             self.viewer.sim_time = time.time() - t0
             
-    def step(self, a):
-        cfg = self.cfg_f
-        # record prev state
-        self.prev_qpos = self.data.qpos.copy()
-        self.prev_qvel = self.data.qvel.copy()
-        self.prev_bquat = self.bquat.copy()
-        # do simulation
-        self.do_simulation(a, self.frame_skip)
-        self.cur_t += 1
-        self.bquat = self.get_body_quat()
-        # self.update_expert()
-        # get obs
-        head_pos = self.get_body_com('head')
-        reward = 1.0
-        # if cfg.env_term_body == 'head':
-        #     fail = self.expert is not None and head_pos[2] < self.expert['head_height_lb'] - 0.1
-        # else:
-        #     fail = self.expert is not None and self.data.qpos[2] < self.expert['height_lb'] - 0.5
-        # cyclic = self.expert['meta']['cyclic']
-        # end =  (cyclic and self.cur_t >= cfg.env_episode_len) or (not cyclic and self.cur_t + self.start_ind >= self.expert['len'] + cfg.env_expert_trail_steps)
-        # done = fail or end
-        done = self.cur_t >= 200
-        obs = self.get_obs()
-        return obs, reward, done, #{'fail': fail, 'end': end}
     
     def get_ee_pos(self, transform): 
         # get end effector position in world frame
@@ -469,6 +445,32 @@ class HumanoidEnvFreezeKnee(HumanoidEnv):
         return self.get_obs()
 
 
+class HumanoidEnvProthesis (HumanoidEnv):
+    def get_osl_sens(self):
+
+        osl_sens_data = {}
+        osl_sens_data['knee_angle'] = self.sim.data.joint('osl_knee_angle_r').qpos[0].copy()
+        osl_sens_data['knee_vel'] = self.sim.data.joint('osl_knee_angle_r').qvel[0].copy()
+        osl_sens_data['ankle_angle'] = self.sim.data.joint('osl_ankle_angle_r').qpos[0].copy()
+        osl_sens_data['ankle_vel'] = self.sim.data.joint('osl_ankle_angle_r').qvel[0].copy()
+        osl_sens_data['load'] = -1*self.sim.data.sensor('r_osl_load').data[1].copy() # Only vertical
+
+        return osl_sens_data
+
+    def upload_osl_param(self, dict_of_dict):
+        """
+        Accessor function to upload full set of paramters to OSL leg
+        """
+        assert len(dict_of_dict.keys()) <= 4
+        for idx in dict_of_dict.keys():
+            self.OSL_CTRL.set_osl_param_batch(dict_of_dict[idx], mode=idx)
+
+    def change_osl_mode(self, mode=0):
+        """
+        Accessor function to activte a set of state machine variables
+        """
+        assert mode < 4
+        self.OSL_CTRL.change_osl_mode(mode)
 if __name__ == "__main__":
     from motion_imitation.utils.config import Config
     cfg = Config('0202', False, create_dirs=False)
