@@ -135,6 +135,7 @@ def multi_quat_norm(nq):
 
 
 def quat_mul_vec(q, v):
+    """return the vector after quaternion multiplication"""
     old_shape = v.shape
     v = v.reshape(-1, 3)
     v = v.dot(quaternion_matrix(q)[:3, :3].T)

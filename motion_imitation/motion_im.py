@@ -45,7 +45,7 @@ env.seed(cfg.seed)
 actuators = env.model.actuator_names 
 state_dim = env.observation_space.shape[0]
 action_dim = env.action_space.shape[0]
-running_state = ZFilter((state_dim,), clip=5)
+running_state = ZFilter((state_dim,), clip=5) # online normalization
 
 """define actor and critic"""
 policy_net = PolicyGaussian(MLP(state_dim, cfg.policy_hsize, cfg.policy_htype), action_dim, log_std=cfg.log_std, fix_std=cfg.fix_std)

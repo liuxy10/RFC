@@ -18,8 +18,8 @@ class RunningStat(object):
             self._M[...] = x
         else:
             oldM = self._M.copy()
-            self._M[...] = oldM + (x - oldM) / self._n
-            self._S[...] = self._S + (x - oldM) * (x - self._M)
+            self._M[...] = oldM + (x - oldM) / self._n # online mean
+            self._S[...] = self._S + (x - oldM) * (x - self._M) # online variance
 
     @property
     def n(self):

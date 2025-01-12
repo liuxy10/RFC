@@ -27,7 +27,7 @@ def world_rfc_implicit_reward(env, state, action, info):
     expert = env.expert
     if expert['meta']['cyclic']:
         init_pos = expert['init_pos']
-        cycle_h = expert['cycle_relheading']
+        cycle_h = expert['cycle_relheading'] # relative heading quaternion
         cycle_pos = expert['cycle_pos']
         orig_rpos = e_rpos.copy()
         e_rpos = quat_mul_vec(cycle_h, e_rpos - init_pos) + cycle_pos 

@@ -98,19 +98,21 @@ class MyVisulizer(Visualizer):
 
             poses['gt'] = np.vstack(poses['gt'])
             poses['pred'] = np.vstack(poses['pred'])
-            plot_pose = False
+            plot_pose = True
             if plot_pose:
                 import matplotlib.pyplot as plt
-                fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4, ncols=4, figsize=(6, 12))
-                for i in range(poses['gt'].shape[1]//4):
+                fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(6, 12))
+                for i in range(poses['gt'].shape[1]//4+1):
                     for j in range(4):
-                        gt = poses['gt'][:, i*4 + j]
-                        pred = poses['pred'][:, i*4 + j]
-                        mse = np.mean((gt - pred) ** 2)
-                        axs[i, j].plot(gt, 'r', label='gt')
-                        axs[i, j].plot(pred, 'b', label='pred')
-                        axs[i, j].set_ylim([-np.pi, np.pi])
-                        axs[i, j].set_title(f'MSE: {mse:.4f}')
+                        idx = i*4 + j
+                        if idx < poses['gt'].shape[1]: 
+                            gt = poses['gt'][:, idx ]
+                            pred = poses['pred'][:, idx ]
+                            mse = np.mean((gt - pred) ** 2)
+                            axs[i, j].plot(gt, 'r', label='gt')
+                            axs[i, j].plot(pred, 'b', label='pred')
+                            axs[i, j].set_ylim([-np.pi, np.pi])
+                            axs[i, j].set_title(f'MSE: {mse:.4f}')
                         if i == 0 and j == 0:
                             axs[i, j].legend()
                 plt.tight_layout()
