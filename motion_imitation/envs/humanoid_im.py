@@ -337,7 +337,7 @@ class HumanoidEnvFreezeKnee(HumanoidEnv):
         data = self.data
         qpos = data.qpos.copy()
         qvel = data.qvel.copy()
-        print(f"[freez]dim of qpos, qvel = {   qpos.shape, qvel.shape}")
+        # print(f"[freez]dim of qpos, qvel = {   qpos.shape, qvel.shape}")
         # transform velocity
         qvel[:3] = transform_vec(qvel[:3], qpos[3:7], self.cfg.obs_coord).ravel()
         obs = []
