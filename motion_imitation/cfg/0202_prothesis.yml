@@ -43,7 +43,7 @@ reward_weights:
   k_ra: 0.1
 
 # expert and environment
-mujoco_model: mocap_v2
+mujoco_model: mocap_v2_prothesis
 vis_model: mocap_v2_vis
 env_episode_len: 200
 env_term_body: 'root'
@@ -66,8 +66,8 @@ joint_params:
   - ["lfemur_y"       ,  500.0,  50.0,   0.0, 1.0, 200.0]
   - ["lfemur_x"       ,  500.0,  50.0,   0.0, 5.0, 200.0]
   - ["ltibia_x"       ,  500.0,  50.0,  45.0, 5.0, 150.0]
-  - ["lfoot_z"        ,  400.0,  40.0,   0.0, 1.0, 150.0]
-  - ["lfoot_y"        ,  400.0,  40.0,   0.0, 1.0, 150.0]
+  # - ["lfoot_z"        ,  400.0,  40.0,   0.0, 1.0, 150.0]
+  # - ["lfoot_y"        ,  400.0,  40.0,   0.0, 1.0, 150.0]
   - ["lfoot_x"        ,  400.0,  40.0,   0.0, 5.0, 150.0]
   - ["rfemur_z"       ,  500.0,  50.0,  20.0, 1.0, 200.0]
   - ["rfemur_y"       ,  500.0,  50.0,   0.0, 1.0, 200.0]

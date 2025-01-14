@@ -119,14 +119,14 @@ class MyoOSLController:
 
         self.OSL_PARAM_LIST[mode][phase_name][param_type][gain] = value
 
-    def set_motor_param(self, joint, act_param):
+    def set_motor_param(self, joint, act_param, value):
         """
         Function to set hardware parameters of the actuators
         """
         assert joint in ['knee', 'ankle'], f"Joint should be : {['knee', 'ankle']}"
         assert act_param in ['gear_ratio', 'peak_torque', 'control_range'], f"Actuator parameter should be : {['gear_ratio', 'peak_torque', 'control_range']}"
 
-        self.HARDWARE[joint][act_param] = act_param
+        self.HARDWARE[joint][act_param] = value 
 
     def _update_param_to_state_machine(self):
         "Internal function to update gain paramters into the State Machine"
@@ -353,3 +353,81 @@ class StateMachine:
             return copy.deepcopy(self.current_state)
         else:
             return "Not running"
+
+def test_myoosl_controller():
+        # Initialize the controller
+        body_mass = 75  # kg
+        controller = MyoOSLController(body_mass, init_state='e_stance', n_sets=4)
+        controller.start()
+
+        # Simulate a few steps
+        for i in range(100):
+            # Generate mock sensor data
+            mock_sensor_data = {
+                'knee_angle': np.random.uniform(-0.5, 0.5),
+                'knee_vel': np.random.uniform(-1, 1),
+                'ankle_angle': np.random.uniform(-0.3, 0.3),
+                'ankle_vel': np.random.uniform(-0.5, 0.5),
+                'load': np.random.uniform(0, body_mass * 9.81)  # Between 0 and body weight
+            }
+
+            # Update the controller
+            controller.update(mock_sensor_data)
+
+            # Get the torques
+            torques = controller.get_osl_torque()
+
+            # Print the current state and torques
+            print(f"Step {i + 1}:")
+            print(f"Current State: {controller.STATE_MACHINE.get_current_state.get_name()}")
+            print(f"Knee Torque: {torques['knee']:.2f} Nm")
+            print(f"Ankle Torque: {torques['ankle']:.2f} Nm")
+            print("---")
+
+            # Optionally, test state transitions
+            if i == 25:
+                controller.change_osl_mode(1)
+                print("Changed OSL mode to 1")
+            elif i == 50:
+                controller.reset('e_swing')
+                print("Reset to early swing state")
+            elif i == 75:
+                new_params = {
+                    'e_stance': {
+                        'gain': {
+                            'knee_stiffness': 120,
+                            'knee_damping': 4,
+                            'knee_target_angle': np.deg2rad(10),
+                            'ankle_stiffness': 25,
+                            'ankle_damping': 1,
+                            'ankle_target_angle': np.deg2rad(-5)
+                        },
+                        'threshold': {
+                            'load': (0.3 * body_mass * 9.81, 'above'),
+                            'ankle_angle': (np.deg2rad(8), 'above')
+                        }
+                    }
+                }
+                controller.set_osl_param_batch(new_params, mode=0)
+                print("Updated parameters for early stance")
+
+        print("Test completed.")       
+if __name__ == '__main__':
+    # Example usage
+    osl = MyoOSLController(body_mass=75)
+    osl.start()
+    print(osl.update({'knee_angle': 0.1, 'knee_vel': 0.1, 'load': 0.1, 'ankle_angle': 0.1, 'ankle_vel': 0.1})) 
+    # print(osl.get_osl_torque()) 
+    # # osl.stop()
+    # osl.reset()
+    # osl.set_osl_param('e_stance', 'gain', 'knee_stiffness', 100)
+    # # osl.set_osl_param_batch(np.random.rand(32)) 
+    # osl.change_osl_mode(1)
+    # osl.set_motor_param('knee', 'gear_ratio', 50)
+    # osl.set_motor_param('ankle', 'peak_torque', 150)
+    # osl.set_motor_param('knee', 'control_range', 3)
+    # print(osl.STATE_MACHINE.get_current_state.get_variables()) 
+    print(osl.getOSLparam)
+    
+    # test_myoosl_controller()
+    

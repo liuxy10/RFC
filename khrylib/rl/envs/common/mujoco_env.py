@@ -30,7 +30,7 @@ class MujocoEnv:
         self.observation_space = None
         self.np_random = None
         self.cur_t = 0  # number of steps taken
-
+        
         self.metadata = {
             'render.modes': ['human', 'rgb_array'],
             'video.frames_per_second': int(np.round(1.0 / self.dt))

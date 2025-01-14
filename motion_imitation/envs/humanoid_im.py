@@ -11,7 +11,7 @@ from mujoco_py import functions as mjf
 import pickle
 import time
 from scipy.linalg import cho_solve, cho_factor
-
+from osl.control.myoosl_control import MyoOSLController
 
 class HumanoidEnv(mujoco_env.MujocoEnv):
 
@@ -311,12 +311,14 @@ class HumanoidEnvFreezeKnee(HumanoidEnv):
         
         super().__init__(cfg_f)
         
+
+        
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
         body_qposaddr = get_body_qposaddr(self.model)
         body_qposaddr_list_start_index = [idxs[0] for idxs in list(body_qposaddr.values())]
-        self.knee_idx = body_qposaddr_list_start_index[2] 
-        expert_qpos_f = np.hstack([expert_qpos[:,:self.knee_idx], expert_qpos[:,self.knee_idx+4:] ]) 
+        self.knee_id = body_qposaddr_list_start_index[2] 
+        expert_qpos_f = np.hstack([expert_qpos[:,:self.knee_id], expert_qpos[:,self.knee_id+4:] ]) 
 
         expert_meta_f = expert_meta.copy()
         self.expert = get_expert(expert_qpos_f , expert_meta_f, self)
@@ -346,8 +348,8 @@ class HumanoidEnvFreezeKnee(HumanoidEnv):
             obs.append(np.array([get_heading(qpos[3:7])])) 
         if self.cfg.root_deheading: # set to True
             qpos[3:7] = de_heading(qpos[3:7]) 
-        qpos = np.hstack([qpos[:self.knee_idx], np.zeros(4),qpos[self.knee_idx:]]) # add the knee and ankle back as zeros
-        qvel = np.hstack([qvel[:self.knee_idx], np.zeros(4),qvel[self.knee_idx:]]) # add the knee and ankle back as zeros
+        qpos = np.hstack([qpos[:self.knee_id], np.zeros(4),qpos[self.knee_id:]]) # add the knee and ankle back as zeros
+        qvel = np.hstack([qvel[:self.knee_id], np.zeros(4),qvel[self.knee_id:]]) # add the knee and ankle back as zeros
         obs.append(qpos[2:])
         # vel
         if self.cfg.obs_vel == 'root':
@@ -387,7 +389,7 @@ class HumanoidEnvFreezeKnee(HumanoidEnv):
         cfg = self.cfg_f
         for i in range(n_frames):
             ctrl = action.copy()
-            ctrl = np.hstack([ctrl[:self.knee_idx], ctrl[self.knee_idx + 4:]]) # remove the knee and ankle back as zeros
+            ctrl = np.hstack([ctrl[:self.knee_id], ctrl[self.knee_id + 4:]]) # remove the knee and ankle back as zeros
             if cfg.action_type == 'position': # used action type is position
                 torque = self.compute_torque(ctrl)
             elif cfg.action_type == 'torque':
@@ -446,24 +448,195 @@ class HumanoidEnvFreezeKnee(HumanoidEnv):
 
 
 class HumanoidEnvProthesis (HumanoidEnv):
-    def get_osl_sens(self):
+    def __init__(self, cfg_p, cfg):
+        self.cfg = cfg
+        self.cfg_p = cfg_p  
+        self.normalize_action = False
+        
+        super().__init__(cfg_p)
+        # OSL specific init
+        self.osl_param_set = 4
+        self.setup_osl_controller()
+        
+        self.grf_sensor_names = ['l_foot', 'l_toes']
+        body_qposaddr = get_body_qposaddr(self.model)
+        body_qposaddr_list_start_index = [idxs[0] for idxs in list(body_qposaddr.values())]
+        self.knee_id = body_qposaddr_list_start_index[2] 
+        
+    def load_expert(self):
+        expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
+        body_qposaddr = get_body_qposaddr(self.model)
+        body_qposaddr_list_start_index = [idxs[0] for idxs in list(body_qposaddr.values())]
+        self.knee_id = body_qposaddr_list_start_index[2] 
+        expert_qpos_p = np.hstack([expert_qpos[:,:self.knee_id+1], expert_qpos[:,self.knee_id+3:] ]) 
 
-        osl_sens_data = {}
-        osl_sens_data['knee_angle'] = self.sim.data.joint('osl_knee_angle_r').qpos[0].copy()
-        osl_sens_data['knee_vel'] = self.sim.data.joint('osl_knee_angle_r').qvel[0].copy()
-        osl_sens_data['ankle_angle'] = self.sim.data.joint('osl_ankle_angle_r').qpos[0].copy()
-        osl_sens_data['ankle_vel'] = self.sim.data.joint('osl_ankle_angle_r').qvel[0].copy()
-        osl_sens_data['load'] = -1*self.sim.data.sensor('r_osl_load').data[1].copy() # Only vertical
+        expert_meta_p = expert_meta.copy()
+        self.expert = get_expert(expert_qpos_p , expert_meta_p, self)
 
-        return osl_sens_data
+    def reset_model(self): 
+        cfg = self.cfg_p
+        if self.expert is not None:
+            ind = 0 if self.cfg.env_start_first else self.np_random.randint(self.expert['len'])
+            self.start_ind = ind
+            init_pose = self.expert['qpos'][ind, :].copy()
+            init_vel = self.expert['qvel'][ind, :].copy()
+            self.init_qpos_p = init_pose.copy()
+            self.init_qvel_p = init_vel.copy()
+            init_pose[7:] += self.np_random.normal(loc=0.0, scale=cfg.env_init_noise, size=self.model.nq - 7)# 
+            self.set_state(init_pose, init_vel)
+            self.bquat = self.get_body_quat()
+            self.update_expert()
+        else:
+            init_pose = self.data.qpos
+            init_pose[2] += 1.0
+            self.set_state(init_pose, self.data.qvel)
+        return self.get_obs()   
 
+    
+    def setup_osl_controller(self):
+        # Initialize the OSL controller
+        self.OSL_CTRL = MyoOSLController(np.sum(self.model.body_mass), init_state='e_stance', n_sets=self.osl_param_set)
+        self.OSL_CTRL.start()
+
+        # Define OSL-controlled joints
+        self.osl_joints = ['knee', 'ankle']
+        
+        # Adjust action space
+
+        self.action_space = spaces.Box(low=-np.ones(self.action_dim), high=np.ones(self.action_dim), dtype=np.float32)
+    
+    def get_full_obs(self):  # definition of observation for knee
+
+        data = self.data
+        qpos = data.qpos.copy()
+        qvel = data.qvel.copy()
+        # print(f"[freez]dim of qpos, qvel = {   qpos.shape, qvel.shape}")
+        # transform velocity
+        qvel[:3] = transform_vec(qvel[:3], qpos[3:7], self.cfg.obs_coord).ravel()
+        obs = []
+        # pos
+        if self.cfg.obs_heading: # set to False
+            obs.append(np.array([get_heading(qpos[3:7])])) 
+        if self.cfg.root_deheading: # set to True
+            qpos[3:7] = de_heading(qpos[3:7]) 
+        qpos = np.hstack([qpos[:self.knee_id+1], np.zeros(2),qpos[self.knee_id+1:]]) # add the knee and ankle back as zeros
+        qvel = np.hstack([qvel[:self.knee_id+1], np.zeros(2),qvel[self.knee_id+1:]]) # add the knee and ankle back as zeros
+        obs.append(qpos[2:])
+        # vel
+        if self.cfg.obs_vel == 'root':
+            obs.append(qvel[:6])
+        elif self.cfg.obs_vel == 'full': # set to True
+            obs.append(qvel)
+
+        if self.cfg.obs_phase:
+            phase = self.get_phase()
+            obs.append(np.array([phase]))
+        obs = np.concatenate(obs)
+        return obs
+    
+    def do_simulation(self, action, n_frames):
+        t0 = time.time()
+        cfg = self.cfg_p
+        for i in range(n_frames):
+            ctrl = action.copy()
+            ctrl = np.hstack([ctrl[:self.knee_id+1], ctrl[self.knee_id + 3:]]) # remove the knee and ankle back as zeros
+            if cfg.action_type == 'position': # used action type is position
+                torque = self.compute_torque(ctrl)
+            elif cfg.action_type == 'torque':
+                torque = ctrl * cfg.a_scale
+            torque = np.clip(torque, -cfg.torque_lim, cfg.torque_lim)
+            self.data.ctrl[:] = torque
+
+            """ Residual Force Control (RFC) """
+            if cfg.residual_force:
+                vf = ctrl[-self.vf_dim:].copy() # vfs are at the last of action
+                if cfg.residual_force_mode == 'implicit':
+                    self.rfc_implicit(vf)
+                else:
+                    self.rfc_explicit(vf)
+
+            self.sim.step()
+
+        if self.viewer is not None:
+            self.viewer.sim_time = time.time() - t0
+    
+    def step(self, action):
+        # Combine OSL actions with other actions
+        # full_action = self._append_osl_actions(action)
+        full_action, osl_info = self._overwrite_osl_actions(action)
+        
+        return super().step(full_action), osl_info
+    
+    
+    """ OSL specific functions
+    """
+    def _overwrite_osl_actions(self, action):
+        
+        action_ow= action.copy()
+
+        osl_sens_data = self.get_osl_sens()
+        # print("osl_sens_data",osl_sens_data)
+        self.OSL_CTRL.update(osl_sens_data)
+        osl_torques = self.OSL_CTRL.get_osl_torque()
+        # print("osl_torques",osl_torques.keys())
+        # print("self.osl_joints", self.osl_joints)
+        for i, joint in enumerate(self.osl_joints):
+            joint_id = self.model._joint_name2id[joint]
+            osl_ctrl = osl_torques[joint] / self.model.actuator_gear[joint_id][0]
+            osl_ctrl = np.clip(osl_ctrl, self.model.actuator_ctrlrange[joint_id][0], self.model.actuator_ctrlrange[joint_id][1])
+            # print("osl_ctrl", osl_ctrl)
+            if self.normalize_action:
+                ctrl_mean = np.mean(self.model.actuator_ctrlrange[joint_id])
+                ctrl_range = np.diff(self.model.actuator_ctrlrange[joint_id])[0] / 2
+                osl_ctrl = (osl_ctrl - ctrl_mean) / ctrl_range
+
+            action_ow[self.knee_id + i*4] = osl_ctrl # TODO
+        osl_info = {"osl_ctrl": osl_torques, "phase": self.OSL_CTRL.STATE_MACHINE.get_current_state.get_name(), "osl_sense_data": osl_sens_data}
+        return action_ow, osl_info
+            
+    def _append_osl_actions(self, action):
+        full_action = np.zeros(self.ndof + self.vf_dim)
+        full_action[:self.action_dim] = action
+
+        osl_sens_data = self.get_osl_sens()
+        self.OSL_CTRL.update(osl_sens_data)
+        osl_torques = self.OSL_CTRL.get_osl_torque()
+
+        for i, joint in enumerate(self.osl_joints):
+            joint_id = self.model._joint_name2id[joint]
+            osl_ctrl = osl_torques[joint.split('_')[1]] / self.model.actuator_gear[joint_id][0]
+            osl_ctrl = np.clip(osl_ctrl, self.model.actuator_ctrlrange[joint_id][0], self.model.actuator_ctrlrange[joint_id][1])
+            
+            if self.cfg.normalize_action:
+                ctrl_mean = np.mean(self.model.actuator_ctrlrange[joint_id])
+                ctrl_range = np.diff(self.model.actuator_ctrlrange[joint_id])[0] / 2
+                osl_ctrl = (osl_ctrl - ctrl_mean) / ctrl_range
+
+            full_action[self.action_dim + i] = osl_ctrl
+
+        return full_action
+    
     def upload_osl_param(self, dict_of_dict):
         """
         Accessor function to upload full set of paramters to OSL leg
-        """
-        assert len(dict_of_dict.keys()) <= 4
+        """   
+        assert len(dict_of_dict.keys()) <= 4   
         for idx in dict_of_dict.keys():
             self.OSL_CTRL.set_osl_param_batch(dict_of_dict[idx], mode=idx)
+
+    
+    def get_osl_sens(self):
+
+        osl_sens_data = {}
+        
+        osl_sens_data['knee_angle'] = self.sim.data.qpos[self.knee_id].copy()
+        osl_sens_data['knee_vel'] = self.sim.data.qvel[self.knee_id].copy()
+        osl_sens_data['ankle_angle'] = self.sim.data.qpos[self.knee_id +1].copy()
+        osl_sens_data['ankle_vel'] = self.sim.data.qpos[self.knee_id +1].copy()
+        # print(self.sim.data.get_sensor('lload'))
+        osl_sens_data['load'] = np.abs(self.sim.data.get_sensor('lload')).copy() # magnitude
+   
+        return osl_sens_data
 
     def change_osl_mode(self, mode=0):
         """
@@ -471,14 +644,28 @@ class HumanoidEnvProthesis (HumanoidEnv):
         """
         assert mode < 4
         self.OSL_CTRL.change_osl_mode(mode)
+        
+        
+        
+        
+        
 if __name__ == "__main__":
     from motion_imitation.utils.config import Config
     cfg = Config('0202', False, create_dirs=False)
     cfg_f = Config('0202_freeze', False, create_dirs=False)
+    cfg_p = Config('0202_prothesis', False, create_dirs=False)
     cfg.env_start_first = True
     cfg_f.env_start_first = True
+    cfg_p.env_start_first = True
     env = HumanoidEnv(cfg)
-    env_f = HumanoidEnvFreezeKnee(cfg_f, cfg)
-    print(env.observation_space, env.action_space)
-    print(env_f.observation_space, env_f.action_space)
-    print(env.reset().shape)
+    # env_f = HumanoidEnvFreezeKnee(cfg_f, cfg)
+    env_p = HumanoidEnvProthesis(cfg_p)
+    print("HumanoidEnv",env.observation_space, env.action_space)
+    # print("HumanoidEnvFreezeKnee",env_f.observation_space, env_f.action_space)
+    print("HumanoidEnvProthesis", env_p.observation_space, env_p.action_space)
+    
+    # print(env.reset().shape)
+    
+    print(env_p.reset().shape)
+    print(env_p.get_osl_sens())
+    print(env_p.model.sensor_names)
