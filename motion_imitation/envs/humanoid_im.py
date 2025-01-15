@@ -71,7 +71,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         data = self.data
         qpos = data.qpos.copy()
         qvel = data.qvel.copy()
-        print(f"dim of qpos, qvel = {qpos.shape, qvel.shape}")
+        # print(f"dim of qpos, qvel = {qpos.shape, qvel.shape}")
         # transform velocity
         qvel[:3] = transform_vec(qvel[:3], qpos[3:7], self.cfg.obs_coord).ravel()
         obs = []
@@ -632,7 +632,7 @@ class HumanoidEnvProthesis (HumanoidEnv):
         osl_sens_data['knee_angle'] = self.sim.data.qpos[self.knee_id].copy()
         osl_sens_data['knee_vel'] = self.sim.data.qvel[self.knee_id].copy()
         osl_sens_data['ankle_angle'] = self.sim.data.qpos[self.knee_id +1].copy()
-        osl_sens_data['ankle_vel'] = self.sim.data.qpos[self.knee_id +1].copy()
+        osl_sens_data['ankle_vel'] = self.sim.data.qvel[self.knee_id +1].copy()
         # print(self.sim.data.get_sensor('lload'))
         osl_sens_data['load'] = np.abs(self.sim.data.get_sensor('lload')).copy() # magnitude
    

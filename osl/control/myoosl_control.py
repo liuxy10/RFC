@@ -152,7 +152,7 @@ class MyoOSLController:
                      -1*peak_torque, peak_torque)
 
         return T
-
+    
     def initDefaults(self, body_mass):
         """
         Initialization functions for body weight and default State Machine variables
@@ -224,7 +224,7 @@ class MyoOSLController:
         temp_dict['l_swing']['gain']['ankle_damping'] = 0
         temp_dict['l_swing']['gain']['ankle_target_angle'] = np.deg2rad(15)
         temp_dict['l_swing']['threshold']['load'] = (0.4 * self.BODY_WEIGHT, 'above')
-        temp_dict['l_swing']['threshold']['knee_angle'] = (np.deg2rad(30), 'below')
+        temp_dict['l_swing']['threshold']['knee_angle'] = (np.deg2rad(30), 'below') # 
 
         self.OSL_PARAM_SELECT = 0
         self.OSL_PARAM_LIST = {}
