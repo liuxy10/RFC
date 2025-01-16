@@ -203,7 +203,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 torque = ctrl * cfg.a_scale
             torque = np.clip(torque, -cfg.torque_lim, cfg.torque_lim)
             self.data.ctrl[:] = torque
-
+            
             """ Residual Force Control (RFC) """
             if cfg.residual_force:
                 vf = ctrl[-self.vf_dim:].copy() # vfs are at the last of action
@@ -211,11 +211,13 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                     self.rfc_implicit(vf)
                 else:
                     self.rfc_explicit(vf)
+            # print("ctrl torques vs vf", torque.tolist(), vf.tolist())
 
             self.sim.step()
 
         if self.viewer is not None:
             self.viewer.sim_time = time.time() - t0
+        
 
     def step(self, a):
         cfg = self.cfg

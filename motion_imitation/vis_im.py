@@ -69,6 +69,7 @@ class MyVisulizer(Visualizer):
     def data_generator(self):
         while True:
             poses = {'pred': [], 'gt': []}
+            vfs = []
             state = env.reset()
             if running_state is not None:
                 state = running_state(state, update=False)
@@ -85,10 +86,12 @@ class MyVisulizer(Visualizer):
                     epos[3:7] = quaternion_multiply(cycle_h, epos[3:7])
                 poses['gt'].append(epos) 
                 poses['pred'].append(env.data.qpos.copy())
+                  
                 state_var = tensor(state, dtype=dtype).unsqueeze(0)
                 action = policy_net.select_action(state_var, mean_action=True)[0].cpu().numpy()
-                # print(t, state.shape, action.shape)
+                
                 next_state, reward, done,info = env.step(action)
+                vfs.append(np.hstack([env.data.qfrc_applied[:6].copy(), env.data.qfrc_actuator[6:].copy()])) 
                 if running_state is not None:
                     next_state = running_state(next_state, update=False)
                 if done:
@@ -98,7 +101,7 @@ class MyVisulizer(Visualizer):
 
             poses['gt'] = np.vstack(poses['gt'])
             poses['pred'] = np.vstack(poses['pred'])
-            plot_pose = True
+            plot_pose = False
             if plot_pose:
                 import matplotlib.pyplot as plt
                 fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(6, 12))
@@ -115,6 +118,21 @@ class MyVisulizer(Visualizer):
                             axs[i, j].set_title(f'MSE: {mse:.4f}')
                         if i == 0 and j == 0:
                             axs[i, j].legend()
+                plt.tight_layout()
+                plt.show()
+            plot_torque = True
+            if plot_torque:
+                import matplotlib.pyplot as plt
+                vfs = np.vstack(vfs)
+                print("virtual force dim = ", vfs.shape)
+                fig, axs = plt.subplots(nrows=2, ncols=1, figsize=(6, 10))
+                for i in range(vfs[0].shape[0]):
+                    if i < 6: 
+                        axs[0].plot(vfs[:,i], label= f'rf {i}')
+                        
+                    else: 
+                        axs[1].plot(vfs[:,i])
+                axs[0].legend()
                 plt.tight_layout()
                 plt.show()
             self.num_fr = poses['pred'].shape[0]
