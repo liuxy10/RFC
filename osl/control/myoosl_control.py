@@ -186,7 +186,7 @@ class MyoOSLController:
         temp_dict['e_stance']['gain']['knee_stiffness'] = 99.372
         temp_dict['e_stance']['gain']['knee_damping'] = 3.180
         temp_dict['e_stance']['gain']['knee_target_angle'] = np.deg2rad(5)
-        temp_dict['e_stance']['gain']['ankle_stiffness'] = 19.874
+        temp_dict['e_stance']['gain']['ankle_stiffness'] = 0 # 19.874
         temp_dict['e_stance']['gain']['ankle_damping'] = 0
         temp_dict['e_stance']['gain']['ankle_target_angle'] = np.deg2rad(-2)
         temp_dict['e_stance']['threshold']['load'] = (0.25 * self.BODY_WEIGHT, 'above')
@@ -198,10 +198,10 @@ class MyoOSLController:
         temp_dict['l_stance']['gain']['knee_stiffness'] = 99.372
         temp_dict['l_stance']['gain']['knee_damping'] = 1.272
         temp_dict['l_stance']['gain']['knee_target_angle'] = np.deg2rad(8)
-        temp_dict['l_stance']['gain']['ankle_stiffness'] = 79.498
+        temp_dict['l_stance']['gain']['ankle_stiffness'] = 0 # 0 #79.498
         temp_dict['l_stance']['gain']['ankle_damping'] = 0.063
         temp_dict['l_stance']['gain']['ankle_target_angle'] = np.deg2rad(-20)
-        temp_dict['l_stance']['threshold']['load'] = (0.15 * self.BODY_WEIGHT, 'below')
+        temp_dict['l_stance']['threshold']['load'] = (0.1 * self.BODY_WEIGHT, 'below')
 
         temp_dict['e_swing'] = {}
         temp_dict['e_swing']['gain'] = {}
@@ -209,7 +209,7 @@ class MyoOSLController:
         temp_dict['e_swing']['gain']['knee_stiffness'] = 39.749
         temp_dict['e_swing']['gain']['knee_damping'] = 0.063
         temp_dict['e_swing']['gain']['knee_target_angle'] = np.deg2rad(60)
-        temp_dict['e_swing']['gain']['ankle_stiffness'] = 7.949
+        temp_dict['e_swing']['gain']['ankle_stiffness'] = 0 # 7.949
         temp_dict['e_swing']['gain']['ankle_damping'] = 0
         temp_dict['e_swing']['gain']['ankle_target_angle'] = np.deg2rad(25)
         temp_dict['e_swing']['threshold']['knee_angle'] = (np.deg2rad(50), 'above')
@@ -221,7 +221,7 @@ class MyoOSLController:
         temp_dict['l_swing']['gain']['knee_stiffness'] = 15.899
         temp_dict['l_swing']['gain']['knee_damping'] = 3.816
         temp_dict['l_swing']['gain']['knee_target_angle'] = np.deg2rad(5)
-        temp_dict['l_swing']['gain']['ankle_stiffness'] = 7.949
+        temp_dict['l_swing']['gain']['ankle_stiffness'] = 0 # 7.949
         temp_dict['l_swing']['gain']['ankle_damping'] = 0
         temp_dict['l_swing']['gain']['ankle_target_angle'] = np.deg2rad(15)
         temp_dict['l_swing']['threshold']['load'] = (0.4 * self.BODY_WEIGHT, 'above')

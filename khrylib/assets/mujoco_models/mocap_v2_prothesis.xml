@@ -34,6 +34,7 @@
             <body name="lfoot" user="0.3731 -0.1606 -0.8523" pos="0.3657 -0.0494 -0.8321">
               <geom contype="1" conaffinity="1" pos="0.3714 -0.0990 -0.8442" size="0.0600 0.1070 0.0240" quat="0.9848 -0.0000 -0.1736 0.0000" type="box"/>
               <site name="load_force" type="box" pos="0.3714 -0.0990 -0.8442" size="0.0700 0.1170 0.0340" quat="0.9848 -0.0000 -0.1736 0.0000" rgba="0.8 0.2 .2 .4" />
+              <site name="load_touch" type="box" pos="0.3714 -0.0990 -0.8442" size="0.0700 0.1170 0.0340" quat="0.9848 -0.0000 -0.1736 0.0000" rgba="0.8 0.2 .2 .4" />
               <!-- <joint axis="-0.3420 -0.0000 0.9397" name="lfoot_z" pos="0.3657 -0.0494 -0.8321" range="-70.0000 20.0000" type="hinge"/>
               <joint axis="0.0000 -1.0000 0.0000" name="lfoot_y" pos="0.3657 -0.0494 -0.8321" range="-45.0000 45.0000" type="hinge"/> -->
               <joint axis="0.9397 0.0000 0.3420" name="ankle" pos="0.3657 -0.0494 -0.8321" range="-45.0000 90.0000" type="hinge"/>
@@ -120,7 +121,10 @@
     </body>
   </worldbody>
   <sensor>
-    <force name="lload" site="load_force"/>
+    <force name="lforce" site="load_force"/>
+  </sensor>
+  <sensor>
+    <touch name="ltouch" site="load_touch"/> 
   </sensor>
   <actuator>
     <motor gear="1" joint="lfemur_z" name="lfemur_z"/>
