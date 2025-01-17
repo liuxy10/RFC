@@ -495,9 +495,9 @@ class HumanoidEnvProthesis (HumanoidEnv):
         return self.get_obs()   
 
     
-    def setup_osl_controller(self):
+    def setup_osl_controller(self, init_state = 'l_swing'):
         # Initialize the OSL controller
-        self.OSL_CTRL = MyoOSLController(np.sum(self.model.body_mass), init_state='e_stance', n_sets=self.osl_param_set)
+        self.OSL_CTRL = MyoOSLController(np.sum(self.model.body_mass), init_state=init_state, n_sets=self.osl_param_set)
         self.OSL_CTRL.start()
 
         # Define OSL-controlled joints

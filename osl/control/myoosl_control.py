@@ -6,6 +6,7 @@ Authors  :: Chun Kwang Tan (cktan.neumove@gmail.com), Vikash Kumar (vikashplus@g
 import numpy as np
 import copy
 
+
 class MyoOSLController:
     def __init__(self, 
                  body_mass,
@@ -258,9 +259,12 @@ class State:
         """
         for key, (threshold, condition) in self.thresholds.items():
             if condition == "above" and sens_data[key] > threshold:
+                print(f"key {key}, thres {threshold}, cond {condition}", "Transitioning to ", self.next_state.get_name())
                 return self.next_state
             elif condition == "below" and sens_data[key] < threshold:
+                print(f"key {key}, thres {threshold}, cond {condition}", "Transitioning to ", self.next_state.get_name())
                 return self.next_state
+            
         return self
 
     def get_name(self):
