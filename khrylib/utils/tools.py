@@ -7,6 +7,91 @@ from os import path
 from PIL import Image
 from khrylib.utils.math import *
 import cv2
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+def visualize_poses(fig, axs, poses): 
+    for i in range(poses['gt'].shape[1]//4+1):
+        for j in range(4):
+            idx = i*4 + j
+            if idx < poses['gt'].shape[1]: 
+                gt = poses['gt'][:, idx ]
+                pred = poses['pred'][:, idx ]
+                mse = np.mean((gt - pred) ** 2)
+                axs[i, j].plot(gt, 'r', label='gt')
+                axs[i, j].plot(pred, 'b', label='pred')
+                axs[i, j].set_ylim([-np.pi, np.pi])
+                axs[i, j].set_title(f'MSE: {mse:.4f}')
+            if i == 0 and j == 0:
+                axs[i, j].legend()
+    plt.tight_layout()
+    return fig, axs
+
+def visualize_torques(fig, axs, vfs):
+    for i in range(vfs[0].shape[0]):
+        if i < 6: 
+            axs[0].plot(vfs[:,i], label= f'rf {i}')
+            
+        else: 
+            axs[1].plot(vfs[:,i])
+    axs[0].legend()
+    plt.tight_layout()
+    return fig, axs
+
+def visualize_contact_forces(fig, ax, forces, positions):
+    # Plot the positions
+    positions = np.array(positions)
+    ax.scatter(positions[:, 0], positions[:, 1], positions[:, 2], c='r', marker='o')
+    
+    # Plot the forces
+    for pos, force in zip(positions, forces):
+        ax.quiver(pos[0], pos[1], pos[2], force[0], force[1], force[2], length=np.linalg.norm(force)/500.0, normalize=True)
+        ax.text(pos[0] + force[0] * 1.1, pos[1] + force[1] * 1.1, pos[2] + force[2] * 1.1, f'{np.linalg.norm(force):.2f}', color='blue', fontsize=8)
+    
+    return fig, ax
+
+def visualize_lower_limb_com(fig, ax, coms, tree):
+    # Plot the COMs
+    for name, com in coms.items():
+        ax.scatter(com[0], com[1], com[2], c='r', marker='o')
+
+    # Convert dictionary values to a numpy array
+    coms_array = np.array(list(coms.values()))
+
+    # Set equal scaling
+    max_range = np.array([coms_array[:, 0].max() - coms_array[:, 0].min(), 
+                          coms_array[:, 1].max() - coms_array[:, 1].min(), 
+                          coms_array[:, 2].max() - coms_array[:, 2].min()]).max() / 2.0 + 0.3
+    
+    # link the component from parent to child
+   
+    for parent, children in tree.items():
+        for child in children:
+            parent_com = coms[parent]
+            child_com = coms[child]
+            ax.plot([parent_com[0], child_com[0]], 
+                    [parent_com[1], child_com[1]], 
+                    [parent_com[2], child_com[2]], 'k-')
+
+    mid_x = (coms_array[:, 0].max() + coms_array[:, 0].min()) * 0.5
+    mid_y = (coms_array[:, 1].max() + coms_array[:, 1].min()) * 0.5
+    mid_z = (coms_array[:, 2].max() + coms_array[:, 2].min()) * 0.5
+
+    ax.set_xlim(mid_x - max_range, mid_x + max_range)
+    ax.set_ylim(mid_y - max_range, mid_y + max_range)
+    ax.set_zlim(mid_z - max_range, mid_z + max_range)
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+    ax.set_title('Lower Limb COMs')
+    
+    # Add a plane at z=0
+    xx, yy = np.meshgrid(np.linspace(mid_x - max_range, mid_x + max_range, 10),
+                         np.linspace(mid_y - max_range, mid_y + max_range, 10))
+    zz = np.zeros_like(xx)
+    ax.plot_surface(xx, yy, zz, alpha=0.2, color='gray')
+    return fig, ax
 
 
 def assets_dir():

@@ -7,6 +7,7 @@ from gym import spaces
 from khrylib.utils import *
 from khrylib.utils.transformation import quaternion_from_euler
 from motion_imitation.utils.tools import get_expert
+import mujoco_py as mujoco
 from mujoco_py import functions as mjf
 import pickle
 import time
@@ -16,7 +17,7 @@ from osl.control.myoosl_control import MyoOSLController
 class HumanoidEnv(mujoco_env.MujocoEnv):
 
     def __init__(self, cfg):
-        mujoco_env.MujocoEnv.__init__(self, cfg.mujoco_model_file, 15)
+        mujoco_env.MujocoEnv.__init__(self, cfg.mujoco_model_file, 15) # 15 is the frame skip 
         self.cfg = cfg
         self.set_cam_first = set()
         # env specific
@@ -179,10 +180,10 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             contact_point = vf[i*self.body_vf_dim: i*self.body_vf_dim + 3]
             force = vf[i*self.body_vf_dim + 3: i*self.body_vf_dim + 6] * self.cfg.residual_force_scale
             torque = vf[i*self.body_vf_dim + 6: i*self.body_vf_dim + 9] * self.cfg.residual_force_scale if self.cfg.residual_force_torque else np.zeros(3)
-            contact_point = self.pos_body2world(body, contact_point)
+            contact_point = self.pos_body2world(body, contact_point) # 
             force = self.vec_body2world(body, force)
             torque = self.vec_body2world(body, torque)
-            mjf.mj_applyFT(self.model, self.data, force, torque, contact_point, body_id, qfrc)
+            mjf.mj_applyFT(self.model, self.data, force, torque, contact_point, body_id, qfrc) # apply a Cartesian force and torque to a point on a body, and add the result to the vector mjData.qfrc_applied of all applied forces. Note that the function requires a pointer to this vector, because sometimes we want to add the result to a different vector.
         self.data.qfrc_applied[:] = qfrc
 
     """ RFC-Implicit """
@@ -213,12 +214,65 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 else:
                     self.rfc_explicit(vf)
             # print("ctrl torques vs vf", torque.tolist(), vf.tolist())
-
+            # contact = self.get_contact()
+            # print("contact = ", contact)
             self.sim.step()
 
         if self.viewer is not None:
             self.viewer.sim_time = time.time() - t0
+
+    def get_body_position(self, body_name):
+        sim = self.sim
+        body_id = sim.model.body_name2id(body_name)
+        return sim.data.body_xpos[body_id]
+    
+    def get_contact_force(self):
+        forces = []
+        poss = []
+        for contact_id in range(self.data.ncon): 
+            contact = self.data.contact[contact_id]
+            if contact.efc_address >= 0 and contact.dim > 1 and contact.pos[2] <= 0.1: # Check if the contact has a valid constraint, if the dimension is greater than 1, and if the contact is on the ground
+                assert contact.dim == 3, "contact force dimension should be 3"
+                # print("contact frame =", contact.frame) 
+                force_local = self.data.efc_force[contact.efc_address:contact.efc_address + contact.dim]
+                force_global = (contact.frame.reshape(3, 3).T @ force_local[:, None]).ravel() # (body_xmat @ pos[:, None]).ravel()
+                forces.append(force_global) # Extract the force from efc_force
+                poss.append(contact.pos) # Extract the contact position
+        return forces, poss
         
+    def get_lower_limb_pos(self):
+        lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
+
+        lower_limb_connect = {
+            'root': ['lfemur', 'rfemur'],
+            'lfemur': ['ltibia'],
+            'ltibia': ['lfoot'],
+            'rfemur': ['rtibia'],
+            'rtibia': ['rfoot']
+        }
+        lower_limb_pos = {}
+        for name in lower_limb_names:
+            bone_vec = self.get_body_com(name)
+            lower_limb_pos[name] = bone_vec
+        return lower_limb_pos, lower_limb_connect
+    
+    def visualize_by_frame(self):
+        lower_limb_pos, tree = self.get_lower_limb_pos()
+        fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
+        forces, poss = self.get_contact_force()
+        ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
+        visualize_contact_forces(fig, ax, forces, poss)
+        visualize_lower_limb_com(fig, ax, lower_limb_pos, tree)
+        plt.show()
+          
+    def get_ground_reaction_force(self):
+        forces, poss = self.get_contact_force()
+        force_sum, pos_sum = get_sum_force(forces, poss)
+
+        return force_sum, pos_sum
+
+    def get_applied_torque(self):
+        return self.data.qfrc_applied[6:]
 
     def step(self, a):
         cfg = self.cfg
@@ -538,7 +592,6 @@ class HumanoidEnvProthesis (HumanoidEnv):
         return obs
     
 
-    
     def do_simulation(self, action, n_frames):
         t0 = time.time()
         cfg = self.cfg_p
@@ -564,41 +617,54 @@ class HumanoidEnvProthesis (HumanoidEnv):
 
         if self.viewer is not None:
             self.viewer.sim_time = time.time() - t0
+
     
-    def step(self, action):
-        # Combine OSL actions with other actions
-        # full_action = self._append_osl_actions(action)
-        full_action, osl_info = self._overwrite_osl_actions(action)
-        self.osl_info = osl_info 
-        return super().step(full_action)
+    def compute_torque(self, ctrl):
+        cfg = self.cfg_p
+        dt = self.model.opt.timestep
+        ctrl_joint = ctrl[:self.ndof] * cfg.a_scale
+        qpos = self.data.qpos.copy()
+        qvel = self.data.qvel.copy()
+        base_pos = cfg.a_ref
+        target_pos = base_pos + ctrl_joint
+
+        k_p = np.zeros(qvel.shape[0])
+        k_d = np.zeros(qvel.shape[0])
+        k_p[6:] = cfg.jkp
+        k_d[6:] = cfg.jkd
+        qpos_err = np.concatenate((np.zeros(6), qpos[7:] + qvel[6:]*dt - target_pos))
+        qvel_err = qvel
+        q_accel = self.compute_desired_accel(qpos_err, qvel_err, k_p, k_d)
+        qvel_err += q_accel * dt
+        torque = -cfg.jkp * qpos_err[6:] - cfg.jkd * qvel_err[6:]
+        
+        osl_sens_data = self.get_osl_sens()
+        self.OSL_CTRL.update(osl_sens_data)
+        osl_torques = self.OSL_CTRL.get_osl_torque()
+        self.osl_info = {"osl_ctrl": osl_torques, 
+                    "phase": self.OSL_CTRL.STATE_MACHINE.get_current_state.get_name(), 
+                    "osl_sense_data": osl_sens_data}
+        
+        overwrite = False
+        if overwrite:
+            torque_overwrite= self._overwrite_osl_actions(torque)
+            return torque_overwrite
+        else:
+            return torque
 
     
     """ OSL specific functions
     """
-    def _overwrite_osl_actions(self, action):
+    def _overwrite_osl_actions(self, humanoid_torques, osl_torques):
         
-        action_ow= action.copy()
+        torque_ow= humanoid_torques.copy()
 
-        osl_sens_data = self.get_osl_sens()
-        # print("osl_sens_data",osl_sens_data)
-        self.OSL_CTRL.update(osl_sens_data)
-        osl_torques = self.OSL_CTRL.get_osl_torque()
-        # print("osl_torques",osl_torques.keys())
-        # print("self.osl_joints", self.osl_joints)
-        for i, joint in enumerate(self.osl_joints):
-            joint_id = self.model._joint_name2id[joint]
-            osl_ctrl = osl_torques[joint] / self.model.actuator_gear[joint_id][0]
-            osl_ctrl = np.clip(osl_ctrl, self.model.actuator_ctrlrange[joint_id][0], self.model.actuator_ctrlrange[joint_id][1])
-            
-            if self.normalize_action:
-                ctrl_mean = np.mean(self.model.actuator_ctrlrange[joint_id])
-                ctrl_range = np.diff(self.model.actuator_ctrlrange[joint_id])[0] / 2
-                osl_ctrl = (osl_ctrl - ctrl_mean) / ctrl_range
-            # print("osl_ctrl", osl_ctrl)
-            action_ow[self.knee_id + i] = osl_ctrl 
-        osl_info = {"osl_ctrl": osl_torques, "phase": self.OSL_CTRL.STATE_MACHINE.get_current_state.get_name(), "osl_sense_data": osl_sens_data}
-        print(action_ow.shape,self.sim.data.qpos.shape, "action_ow", action_ow[self.knee_id: self.knee_id+2], "osl_ctrl", osl_torques)
-        return action_ow, osl_info
+        
+        torque_ow[self.knee_id] = osl_torques["knee"]
+        torque_ow[self.knee_id+1] = osl_torques["ankle"]
+        
+       
+        return torque_ow
             
 
     
@@ -674,3 +740,9 @@ if __name__ == "__main__":
     
     print(env_p.sim.data.get_sensor('ltouch'), env_p.sim.data.get_sensor('lforce'))
     print(env_p.get_osl_sens())
+    print(env_p.action_space.high, env_p.action_space.low)
+    
+    # Access the contact forces
+
+    
+

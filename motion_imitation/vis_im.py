@@ -6,6 +6,7 @@ import time
 import subprocess
 import shutil
 sys.path.append(os.getcwd())
+import matplotlib.pyplot as plt
 
 from khrylib.utils import *
 from khrylib.rl.utils.visualizer import Visualizer
@@ -70,6 +71,7 @@ class MyVisulizer(Visualizer):
         while True:
             poses = {'pred': [], 'gt': []}
             vfs = []
+            contact_force = {}
             state = env.reset()
             if running_state is not None:
                 state = running_state(state, update=False)
@@ -86,7 +88,16 @@ class MyVisulizer(Visualizer):
                     epos[3:7] = quaternion_multiply(cycle_h, epos[3:7])
                 poses['gt'].append(epos) 
                 poses['pred'].append(env.data.qpos.copy())
-                  
+                print(t, 
+                    #   env.get_contact_force(),
+                    #   env.get_end_effector_position("rfoot"),
+                      env.get_ground_reaction_force()
+                    )
+                fs, ps = env.get_contact_force()
+                if len(fs) > 0:
+                    # visualize_contact_forces(fs, ps)
+                    env.visualize_by_frame()  
+                print("*"*20)
                 state_var = tensor(state, dtype=dtype).unsqueeze(0)
                 action = policy_net.select_action(state_var, mean_action=True)[0].cpu().numpy()
                 
@@ -103,37 +114,15 @@ class MyVisulizer(Visualizer):
             poses['pred'] = np.vstack(poses['pred'])
             plot_pose = False
             if plot_pose:
-                import matplotlib.pyplot as plt
                 fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(6, 12))
-                for i in range(poses['gt'].shape[1]//4+1):
-                    for j in range(4):
-                        idx = i*4 + j
-                        if idx < poses['gt'].shape[1]: 
-                            gt = poses['gt'][:, idx ]
-                            pred = poses['pred'][:, idx ]
-                            mse = np.mean((gt - pred) ** 2)
-                            axs[i, j].plot(gt, 'r', label='gt')
-                            axs[i, j].plot(pred, 'b', label='pred')
-                            axs[i, j].set_ylim([-np.pi, np.pi])
-                            axs[i, j].set_title(f'MSE: {mse:.4f}')
-                        if i == 0 and j == 0:
-                            axs[i, j].legend()
-                plt.tight_layout()
+                fig, axs = visualize_poses(fig, axs, poses)
                 plt.show()
             plot_torque = True
             if plot_torque:
-                import matplotlib.pyplot as plt
                 vfs = np.vstack(vfs)
                 print("virtual force dim = ", vfs.shape)
                 fig, axs = plt.subplots(nrows=2, ncols=1, figsize=(6, 10))
-                for i in range(vfs[0].shape[0]):
-                    if i < 6: 
-                        axs[0].plot(vfs[:,i], label= f'rf {i}')
-                        
-                    else: 
-                        axs[1].plot(vfs[:,i])
-                axs[0].legend()
-                plt.tight_layout()
+                fig, axs = visualize_torques(fig, axs, vfs)
                 plt.show()
             self.num_fr = poses['pred'].shape[0]
             yield poses
