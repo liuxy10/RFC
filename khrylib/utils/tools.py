@@ -9,8 +9,25 @@ from khrylib.utils.math import *
 import cv2
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-
-def visualize_poses(fig, axs, poses): 
+def plot_qpos(qpos, body_qposaddr_list_start_index, body_qposaddr):
+    fig, axs = plt.subplots(nrows=qpos.shape[1]//4+1, ncols=4, figsize=(10, 12))
+    for i in range(qpos.shape[1]//4+1):
+        for j in range(4):
+            idx = i*4 + j
+            if idx >= qpos.shape[1]:
+                break
+            gt = qpos[:, idx]
+            axs[i, j].plot(gt, 'r', label='gt')
+            axs[i, j].set_ylim([-np.pi, np.pi])
+            if idx in body_qposaddr_list_start_index:
+                body_name = [name for name, addr in body_qposaddr.items() if addr[0] == idx][0]
+                axs[i, j].set_title(f"idx = {idx}, {body_name}", fontsize=12)
+            if i == 0 and j == 0:
+                axs[i, j].legend()
+    plt.tight_layout()
+    plt.show()
+    
+def visualize_poses(fig, axs, poses, body_qposaddr): 
     for i in range(poses['gt'].shape[1]//4+1):
         for j in range(4):
             idx = i*4 + j
@@ -21,6 +38,8 @@ def visualize_poses(fig, axs, poses):
                 axs[i, j].plot(gt, 'r', label='gt')
                 axs[i, j].plot(pred, 'b', label='pred')
                 axs[i, j].set_ylim([-np.pi, np.pi])
+                # body_name = [name for name, addr in body_qposaddr.items() if addr[0] == idx][0]
+                # axs[i, j].set_title(f"idx = {idx}, {body_name} MSE: {mse:.4f}", fontsize=4)
                 axs[i, j].set_title(f'MSE: {mse:.4f}')
             if i == 0 and j == 0:
                 axs[i, j].legend()

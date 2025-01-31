@@ -71,11 +71,11 @@ class MyVisulizer(Visualizer):
         while True:
             poses = {'pred': [], 'gt': []}
             vfs = []
-            contact_force = {}
             state = env.reset()
             if running_state is not None:
                 state = running_state(state, update=False)
-
+            
+            
             for t in range(1000): 
                 
                 epos = env.get_expert_attr('qpos', env.get_expert_index(t)).copy()
@@ -89,14 +89,14 @@ class MyVisulizer(Visualizer):
                 poses['gt'].append(epos) 
                 poses['pred'].append(env.data.qpos.copy())
                 print(t, 
-                    #   env.get_contact_force(),
+                      env.get_contact_force()
                     #   env.get_end_effector_position("rfoot"),
-                      env.get_ground_reaction_force()
+                    #   env.get_ground_reaction_force()
                     )
                 fs, ps = env.get_contact_force()
                 if len(fs) > 0:
-                    # visualize_contact_forces(fs, ps)
-                    env.visualize_by_frame()  
+                    fig, ax = env.visualize_by_frame(show = True)  
+                    
                 print("*"*20)
                 state_var = tensor(state, dtype=dtype).unsqueeze(0)
                 action = policy_net.select_action(state_var, mean_action=True)[0].cpu().numpy()
@@ -114,8 +114,8 @@ class MyVisulizer(Visualizer):
             poses['pred'] = np.vstack(poses['pred'])
             plot_pose = False
             if plot_pose:
-                fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(6, 12))
-                fig, axs = visualize_poses(fig, axs, poses)
+                fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(10, 12))
+                fig, axs = visualize_poses(fig, axs, poses, env.body_qposaddr)
                 plt.show()
             plot_torque = True
             if plot_torque:

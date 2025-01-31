@@ -30,6 +30,17 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.expert = None
         self.load_expert()
         self.set_spaces()
+        self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
+
+        self.lower_limb_connect = {
+            'root': ['lfemur', 'rfemur'],
+            'lfemur': ['ltibia'],
+            'ltibia': ['lfoot'],
+            'rfemur': ['rtibia'],
+            'rtibia': ['rfoot']
+        }
+        self.body_qposaddr_list_start_index = [idxs[0] for idxs in list(self.body_qposaddr.values())]
+        self.knee_idx = self.body_qposaddr_list_start_index[2]
 
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
@@ -220,60 +231,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
 
         if self.viewer is not None:
             self.viewer.sim_time = time.time() - t0
-
-    def get_body_position(self, body_name):
-        sim = self.sim
-        body_id = sim.model.body_name2id(body_name)
-        return sim.data.body_xpos[body_id]
     
-    def get_contact_force(self):
-        forces = []
-        poss = []
-        for contact_id in range(self.data.ncon): 
-            contact = self.data.contact[contact_id]
-            if contact.efc_address >= 0 and contact.dim > 1 and contact.pos[2] <= 0.1: # Check if the contact has a valid constraint, if the dimension is greater than 1, and if the contact is on the ground
-                assert contact.dim == 3, "contact force dimension should be 3"
-                # print("contact frame =", contact.frame) 
-                force_local = self.data.efc_force[contact.efc_address:contact.efc_address + contact.dim]
-                force_global = (contact.frame.reshape(3, 3).T @ force_local[:, None]).ravel() # (body_xmat @ pos[:, None]).ravel()
-                forces.append(force_global) # Extract the force from efc_force
-                poss.append(contact.pos) # Extract the contact position
-        return forces, poss
-        
-    def get_lower_limb_pos(self):
-        lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
-
-        lower_limb_connect = {
-            'root': ['lfemur', 'rfemur'],
-            'lfemur': ['ltibia'],
-            'ltibia': ['lfoot'],
-            'rfemur': ['rtibia'],
-            'rtibia': ['rfoot']
-        }
-        lower_limb_pos = {}
-        for name in lower_limb_names:
-            bone_vec = self.get_body_com(name)
-            lower_limb_pos[name] = bone_vec
-        return lower_limb_pos, lower_limb_connect
-    
-    def visualize_by_frame(self):
-        lower_limb_pos, tree = self.get_lower_limb_pos()
-        fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
-        forces, poss = self.get_contact_force()
-        ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
-        visualize_contact_forces(fig, ax, forces, poss)
-        visualize_lower_limb_com(fig, ax, lower_limb_pos, tree)
-        plt.show()
-          
-    def get_ground_reaction_force(self):
-        forces, poss = self.get_contact_force()
-        force_sum, pos_sum = get_sum_force(forces, poss)
-
-        return force_sum, pos_sum
-
-    def get_applied_torque(self):
-        return self.data.qfrc_applied[6:]
-
     def step(self, a):
         cfg = self.cfg
         # record prev state
@@ -356,6 +314,66 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
 
     def get_expert_attr(self, attr, ind):
         return self.expert[attr][ind, :]
+    
+##############################################################################################################
+### xinyi's code
+##############################################################################################################
+
+    def get_body_position(self, body_name):
+        sim = self.sim
+        body_id = sim.model.body_name2id(body_name)
+        return sim.data.body_xpos[body_id]
+    
+
+
+    def get_contact_force(self):
+        forces = []
+        poss = []
+        for contact_id in range(self.data.ncon): 
+            contact = self.data.contact[contact_id]
+            if contact.efc_address >= 0 and contact.dim > 1 and contact.pos[2] <= 0.1:
+                assert contact.dim == 3, "contact force dimension should be 3"
+                
+                # Create contact rotation matrix (normal along z)
+                tmp = np.concatenate([contact.frame[3:9], contact.frame[0:3]])
+                mat = np.transpose(tmp.reshape(3, 3))
+                
+                force_local = self.data.efc_force[contact.efc_address:contact.efc_address + contact.dim]
+                force_global = (mat @ force_local[:, None]).ravel()
+                
+                forces.append(force_global)
+                poss.append(contact.pos)
+        return forces, poss
+
+        
+    def get_lower_limb_pos(self):
+        
+        lower_limb_pos = {}
+        for name in self.lower_limb_names:
+            bone_vec = self.get_body_com(name)
+            lower_limb_pos[name] = bone_vec
+        return lower_limb_pos
+    
+    def visualize_by_frame(self, show = False):
+        lower_limb_pos = self.get_lower_limb_pos()
+        fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
+        forces, poss = self.get_contact_force()
+        ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
+        visualize_contact_forces(fig, ax, forces, poss)
+        visualize_lower_limb_com(fig, ax, lower_limb_pos, self.lower_limb_connect)
+        if show:
+            plt.show()
+        return fig, ax
+        
+          
+    # def get_ground_reaction_force(self):
+    #     forces, poss = self.get_contact_force()
+    #     # force_sum, pos_sum = get_sum_force(forces, poss)
+
+    #     return force_sum, pos_sum
+
+    def get_applied_torque(self):
+        return self.data.qfrc_applied[6:]
 
 
 class HumanoidEnvFreezeKnee(HumanoidEnv):
