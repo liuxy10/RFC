@@ -1,5 +1,5 @@
 *.pyc
-*.p
+# *.p
 # *.png
 events.out.*
 **/log.txt
