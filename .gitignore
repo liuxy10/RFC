@@ -5,5 +5,5 @@ events.out.*
 **/log.txt
 **/log_eval.txt
 *.png
-*.mp4
+# *.mp4
 *.amc

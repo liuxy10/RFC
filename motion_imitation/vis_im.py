@@ -93,9 +93,15 @@ class MyVisulizer(Visualizer):
                     #   env.get_end_effector_position("rfoot"),
                     #   env.get_ground_reaction_force()
                     )
-                fs, ps = env.get_contact_force()
-                if len(fs) > 0:
-                    fig, ax = env.visualize_by_frame(show = True)  
+                
+                fig, ax = env.visualize_by_frame(show = False) 
+                save_by_frame = False
+                if save_by_frame:
+                    frame_dir = f'{args.video_dir}/frame_skeleton'
+                    fig.canvas.draw()
+                    data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
+                    save_image_hwc(data,  f'{frame_dir}/%04d.png' % t) 
+                plt.close(fig)
                     
                 print("*"*20)
                 state_var = tensor(state, dtype=dtype).unsqueeze(0)
@@ -117,7 +123,7 @@ class MyVisulizer(Visualizer):
                 fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(10, 12))
                 fig, axs = visualize_poses(fig, axs, poses, env.body_qposaddr)
                 plt.show()
-            plot_torque = True
+            plot_torque = False
             if plot_torque:
                 vfs = np.vstack(vfs)
                 print("virtual force dim = ", vfs.shape)
@@ -125,6 +131,12 @@ class MyVisulizer(Visualizer):
                 fig, axs = visualize_torques(fig, axs, vfs)
                 plt.show()
             self.num_fr = poses['pred'].shape[0]
+            
+            contact_video = True
+            if contact_video:
+                out_name = f'{args.cfg}_{"expert" if args.record_expert else args.iter}_skeleton.mp4'
+                frames_to_video(f'{args.video_dir}/frame_skeleton', args.video_dir, 5, out_name)
+                
             yield poses
 
     def update_pose(self):
@@ -167,12 +179,12 @@ class MyVisulizer(Visualizer):
             cmd = ['ffmpeg', '-y', '-r', '30', '-f', 'image2', '-start_number', '0',
                 '-i', f'{frame_dir}/%04d.png', '-vcodec', 'libx264', '-crf', '5', '-pix_fmt', 'yuv420p', out_name]
             subprocess.call(cmd)
-
-
+        
+        
 
 vis = MyVisulizer(f'{args.vis_model_file}.xml')
 
-if args.record:
-    vis.record_video()
-else:
-    vis.show_animation()
+# if args.record:
+#     vis.record_video()
+# else:
+#     vis.show_animation()

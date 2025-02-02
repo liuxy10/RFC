@@ -359,7 +359,8 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
         forces, poss = self.get_contact_force()
         ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
-        visualize_contact_forces(fig, ax, forces, poss)
+        if len(forces) > 0: 
+            visualize_contact_forces(fig, ax, forces, poss)
         visualize_lower_limb_com(fig, ax, lower_limb_pos, self.lower_limb_connect)
         if show:
             plt.show()

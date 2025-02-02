@@ -9,6 +9,8 @@ from khrylib.utils.math import *
 import cv2
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import glob
+import re
 def plot_qpos(qpos, body_qposaddr_list_start_index, body_qposaddr):
     fig, axs = plt.subplots(nrows=qpos.shape[1]//4+1, ncols=4, figsize=(10, 12))
     for i in range(qpos.shape[1]//4+1):
@@ -65,7 +67,7 @@ def visualize_contact_forces(fig, ax, forces, positions):
     # Plot the forces
     for pos, force in zip(positions, forces):
         ax.quiver(pos[0], pos[1], pos[2], force[0], force[1], force[2], length=np.linalg.norm(force)/500.0, normalize=True)
-        ax.text(pos[0] + force[0] * 1.1, pos[1] + force[1] * 1.1, pos[2] + force[2] * 1.1, f'{np.linalg.norm(force):.2f}', color='blue', fontsize=8)
+        ax.text(pos[0] + force[0]/500.0 * 1.1, pos[1] + force[1]/500.0 * 1.1, pos[2] + force[2] /500.0* 1.1, f'{np.linalg.norm(force):.2f}', color='blue', fontsize=8)
     
     return fig, ax
 
@@ -111,6 +113,42 @@ def visualize_lower_limb_com(fig, ax, coms, tree):
     zz = np.zeros_like(xx)
     ax.plot_surface(xx, yy, zz, alpha=0.2, color='gray')
     return fig, ax
+
+def frames_to_video(frame_dir, out_dir, fps=30, filename='output.mp4'):
+
+    # Create output directory if it doesn't exist
+    os.makedirs(out_dir, exist_ok=True)
+    
+    # Define numerical sort for frames
+    numbers = re.compile(r'(\d+)')
+    def numerical_sort(value):
+        parts = numbers.split(value)
+        parts[1::2] = map(int, parts[1::2])
+        return parts
+    
+    # Get all frames from the directory
+    frames = sorted(glob.glob(os.path.join(frame_dir, '*.png')), key=numerical_sort)
+    
+    if not frames:
+        raise ValueError(f"No frames found in directory: {frame_dir}")
+    
+    # Read first frame to get dimensions
+    first_frame = cv2.imread(frames[0])
+    height, width, layers = first_frame.shape
+    
+    # Create video writer
+    output_path = os.path.join(out_dir, filename)
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+    
+    # Write frames to video
+    for frame_path in frames:
+        frame = cv2.imread(frame_path)
+        out.write(frame)
+    
+    # Release the video writer
+    out.release()
+    
 
 
 def assets_dir():
