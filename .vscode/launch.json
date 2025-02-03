@@ -1,5 +1,13 @@
 {
     "configurations": [
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "test nrel data reader",
+            "python":"/home/xliu227/miniconda3/envs/rfc/bin/python", 
+            "program": "${workspaceFolder}/data/nrel/data_check.py",
+            "console": "integratedTerminal"
+        },
 
         
         {
