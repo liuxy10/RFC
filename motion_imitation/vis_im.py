@@ -95,7 +95,7 @@ class MyVisulizer(Visualizer):
                     )
                 
                 
-                save_by_frame = False
+                save_by_frame = True
                 if save_by_frame:
                     fig, ax = env.visualize_by_frame(show = False) 
                     frame_dir = f'{args.video_dir}/frame_skeleton'
@@ -134,6 +134,8 @@ class MyVisulizer(Visualizer):
             self.num_fr = poses['pred'].shape[0]
             plot_grfs = False
             if plot_grfs:
+                # fig, axs = plt.subplots(3, 1, figsize=(10, 10))
+                # fig, axs = visualize_contact_forces(fig, axs, env.contact_forces, env.contact_positions)
                 pass
             contact_video = True
             if contact_video:

@@ -13,7 +13,7 @@ import numpy as np
 import os
 
 xml_path = 'biped.xml'
-simend = 30
+simend = 15
 
 step_no = 0
 
@@ -169,22 +169,20 @@ def scroll(window, xoffset, yoffset):
     mj.mjv_moveCamera(model, action, 0.0, -0.05 *
                       yoffset, scene, cam)
 
-def get_contact_force(data):
+def get_contact_force(model, data, id):
     forces = []
     poss = []
     for contact_id in range(data.ncon): 
         contact = data.contact[contact_id]
         if contact.efc_address >= 0 and contact.dim > 1 and contact.pos[2] <= 0.1:
             assert contact.dim == 3, "contact force dimension should be 3"
-            
-            # Create contact rotation matrix (normal along z)
-            tmp = np.concatenate([contact.frame[3:9], contact.frame[0:3]])
-            mat = np.transpose(tmp.reshape(3, 3))
-            
-            force_local = data.efc_force[contact.efc_address:contact.efc_address + contact.dim]
-            force_global = (mat @ force_local[:, None]).ravel()
+            mat = np.transpose(contact.frame.reshape(3, 3))
+            force_local = np.zeros([6,1])
+            mj.mj_contactForce(model, data,id, force_local)
+            force_global = (mat @ force_local[:3]).ravel()
             
             forces.append(force_global)
+            # forces.append(force_local)
             poss.append(contact.pos)
     return forces, poss
 
@@ -234,6 +232,8 @@ init_controller(model,data)
 t = 0
 grf_z = []
 grf_x = []
+grf_y = []
+coms = []
 while not glfw.window_should_close(window):
     simstart = data.time
     while (data.time - simstart < 1.0/60.0):
@@ -244,10 +244,13 @@ while not glfw.window_should_close(window):
 
     if (data.time>=simend):
         break
-    print(t)
     
-    grf_z.append(get_contact_force(data)[0][0][2])
-    grf_x.append(get_contact_force(data)[0][0][0])
+    grf_z.append(get_contact_force(model,data,0)[0][0][2])
+    grf_x.append(get_contact_force(model,data,0)[0][0][0])
+    grf_y.append(get_contact_force(model,data,0)[0][0][1])
+    coms.append(data.subtree_com[0].copy())
+    print(t, coms[-1])
+    # coms.append() # not working
     # print()
     # get framebuffer viewport
     viewport_width, viewport_height = glfw.get_framebuffer_size(
@@ -270,14 +273,40 @@ while not glfw.window_should_close(window):
     glfw.poll_events()
     t += 1
 
+
 glfw.terminate()
+
 
 #plot the ground reaction forces
 import matplotlib.pyplot as plt
-plt.plot(grf_z)
-plt.plot(grf_x)
-plt.legend(["GRF_z", "GRF_x"])
-plt.xlabel("Time")
-plt.ylabel("Force")
-plt.title("Ground Reaction Forces")
+
+fig, axs = plt.subplots(2, 1, figsize=(10, 10))
+
+# First plot: vertical ground reaction force
+axs[0].plot(grf_z)
+axs[0].set_title("Vertical Ground Reaction Force")
+axs[0].set_xlabel("Time")
+axs[0].set_ylabel("Force (N)")
+
+# Second plot: COM trajectory with horizontal GRF arrows
+coms = np.array(coms)
+# exit()
+grf_x = np.array(grf_x)
+grf_y = np.array(grf_y)
+
+axs[1].plot(coms[:, 0], coms[:, 1], label="COM Trajectory")
+
+axs[1].set_title("COM Trajectory with Horizontal GRF Arrows")
+axs[1].set_xlabel("X Position")
+axs[1].set_ylabel("Y Position")
+axs[1].axis('equal')
+axs[1].legend()
+# Add arrows representing ground reaction force in horizontal plane
+for i in range(0, len(coms), 30):  # Adjust the step size for arrow density
+    axs[1].arrow(coms[i, 0], coms[i, 1], grf_x[i], grf_y[i], head_width=0.05, head_length=0.1, fc='r', ec='r')
+
+plt.tight_layout()
+plt.show()
+
+plt.tight_layout()
 plt.show()

@@ -334,13 +334,11 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             if contact.efc_address >= 0 and contact.dim > 1 and contact.pos[2] <= 0.1:
                 assert contact.dim == 3, "contact force dimension should be 3"
                 
-                # Create contact rotation matrix (normal along z)
-                tmp = np.concatenate([contact.frame[3:9], contact.frame[0:3]])
-                mat = np.transpose(tmp.reshape(3, 3))
-                
-                force_local = self.data.efc_force[contact.efc_address:contact.efc_address + contact.dim]
-                force_global = (mat @ force_local[:, None]).ravel()
-                
+                mat = np.transpose(contact.frame.reshape(3, 3))
+                force_local = np.zeros(6)
+                mjf.mj_contactForce(self.sim.model, self.data, contact_id, force_local)
+                force_global = (mat @ force_local[:3, None]).ravel()
+                    
                 forces.append(force_global)
                 poss.append(contact.pos)
         return forces, poss
