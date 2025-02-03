@@ -308,5 +308,3 @@ for i in range(0, len(coms), 30):  # Adjust the step size for arrow density
 plt.tight_layout()
 plt.show()
 
-plt.tight_layout()
-plt.show()
