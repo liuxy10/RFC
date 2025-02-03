@@ -132,7 +132,9 @@ class MyVisulizer(Visualizer):
                 fig, axs = visualize_torques(fig, axs, vfs)
                 plt.show()
             self.num_fr = poses['pred'].shape[0]
-            
+            plot_grfs = False
+            if plot_grfs:
+                pass
             contact_video = True
             if contact_video:
                 out_name = f'{args.cfg}_{"expert" if args.record_expert else args.iter}_skeleton.mp4'

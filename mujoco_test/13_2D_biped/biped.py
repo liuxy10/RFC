@@ -1,3 +1,10 @@
+# https://pab47.github.io/mujoco/notes/Lec13_2D_biped.pdf
+
+import os
+import sys
+sys.path.append(os.getcwd())
+
+from khrylib.utils import *
 import mujoco as mj
 from mujoco.glfw import glfw
 from numpy.linalg import inv
@@ -162,6 +169,25 @@ def scroll(window, xoffset, yoffset):
     mj.mjv_moveCamera(model, action, 0.0, -0.05 *
                       yoffset, scene, cam)
 
+def get_contact_force(data):
+    forces = []
+    poss = []
+    for contact_id in range(data.ncon): 
+        contact = data.contact[contact_id]
+        if contact.efc_address >= 0 and contact.dim > 1 and contact.pos[2] <= 0.1:
+            assert contact.dim == 3, "contact force dimension should be 3"
+            
+            # Create contact rotation matrix (normal along z)
+            tmp = np.concatenate([contact.frame[3:9], contact.frame[0:3]])
+            mat = np.transpose(tmp.reshape(3, 3))
+            
+            force_local = data.efc_force[contact.efc_address:contact.efc_address + contact.dim]
+            force_global = (mat @ force_local[:, None]).ravel()
+            
+            forces.append(force_global)
+            poss.append(contact.pos)
+    return forces, poss
+
 #get the full path
 dirname = os.path.dirname(__file__)
 abspath = os.path.join(dirname + "/" + xml_path)
@@ -198,17 +224,18 @@ cam.distance = 8.0  # 5.0
 cam.lookat = np.array([0.0, 0.0, 2.0])
 
 #turn the direction of gravity to simulate a ramp
-model.opt.gravity[0] = 9.81 * np.sin(0.1)
+model.opt.gravity[0] = 9.81 * np.sin(0.1) ## hack!!! 0.1 rad = 5.7 deg
 model.opt.gravity[2] = -9.81 * np.cos(0.1)
 
 init_controller(model,data)
 
 #set the controller
-#mj.set_mjcb_control(controller)
-
+#mj.set_mjcb_control(controller) # disabled callback function for control input in order to use the controller function
+t = 0
+grf_z = []
+grf_x = []
 while not glfw.window_should_close(window):
     simstart = data.time
-
     while (data.time - simstart < 1.0/60.0):
         #simulation step
         mj.mj_step(model, data)
@@ -217,7 +244,11 @@ while not glfw.window_should_close(window):
 
     if (data.time>=simend):
         break
-
+    print(t)
+    
+    grf_z.append(get_contact_force(data)[0][0][2])
+    grf_x.append(get_contact_force(data)[0][0][0])
+    # print()
     # get framebuffer viewport
     viewport_width, viewport_height = glfw.get_framebuffer_size(
         window)
@@ -237,5 +268,16 @@ while not glfw.window_should_close(window):
 
     # process pending GUI events, call GLFW callbacks
     glfw.poll_events()
+    t += 1
 
 glfw.terminate()
+
+#plot the ground reaction forces
+import matplotlib.pyplot as plt
+plt.plot(grf_z)
+plt.plot(grf_x)
+plt.legend(["GRF_z", "GRF_x"])
+plt.xlabel("Time")
+plt.ylabel("Force")
+plt.title("Ground Reaction Forces")
+plt.show()
