@@ -94,14 +94,15 @@ class MyVisulizer(Visualizer):
                     #   env.get_ground_reaction_force()
                     )
                 
-                fig, ax = env.visualize_by_frame(show = False) 
+                
                 save_by_frame = False
                 if save_by_frame:
+                    fig, ax = env.visualize_by_frame(show = False) 
                     frame_dir = f'{args.video_dir}/frame_skeleton'
                     fig.canvas.draw()
                     data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
                     save_image_hwc(data,  f'{frame_dir}/%04d.png' % t) 
-                plt.close(fig)
+                    plt.close(fig)
                     
                 print("*"*20)
                 state_var = tensor(state, dtype=dtype).unsqueeze(0)
