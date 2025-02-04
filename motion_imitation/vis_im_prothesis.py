@@ -46,9 +46,6 @@ env.seed(cfg.seed)
 
 
 
-body_qposaddr_list_start_index = [idxs[0] for idxs in list(env.body_qposaddr.values())]
-knee_idx = body_qposaddr_list_start_index[2]
-
 
 # Example usage:
 # plot_qpos(qpos, body_qposaddr_list_start_index, body_qposaddr)
@@ -86,7 +83,7 @@ for phase_name in phase_list:
     env_p.OSL_CTRL.set_osl_param( phase_name, 'gain',  'ankle_stiffness', 0 , mode=0)
 
 
-class MyVisulizerFK(Visualizer):
+class MyVisulizerPK(Visualizer):
 
     def __init__(self, vis_file):
         super().__init__(vis_file)
@@ -102,6 +99,7 @@ class MyVisulizerFK(Visualizer):
         poses = {'pred': [], 'gt': []}
         osl_infos = { 'phase': [], 'osl_sense_data': {'knee_angle': [], 'knee_vel': [], 'ankle_angle': [], 'ankle_vel': [], 'load': []}}
         vfs = []
+        grfs = []
         state = env_p.reset()
         assert env_p.init_qpos_p[1] == env.expert['qpos'][0,1], "init_qpos[1] != expert_qpos[0,1]"
         assert np.allclose(env_p.init_qpos_p, env_p.data.qpos), "init_qpos[1] != qpos[0,1]"
@@ -118,12 +116,12 @@ class MyVisulizerFK(Visualizer):
                 epos[3:7] = quaternion_multiply(cycle_h, epos[3:7])
             poses['gt'].append(epos) 
             qpos = env_p.data.qpos.copy()
-            qpos = np.concatenate([qpos[:knee_idx+1], np.zeros(2), qpos[knee_idx+1:]])
+            qpos = np.concatenate([qpos[:env.knee_id+1], np.zeros(2), qpos[env.knee_id+1:]])
             poses['pred'].append(qpos)
             
             save_by_frame = True
             if save_by_frame:
-                fig, ax = env_p.visualize_by_frame(show = False) 
+                fig, ax = env_p.visualize_by_frame(show = False, label = "Prothesis (red is prothesis)") 
                 frame_dir = f'{args.video_dir}/frame_skeleton/'
                 fig.canvas.draw()
                 data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
@@ -136,6 +134,9 @@ class MyVisulizerFK(Visualizer):
 
             osl_infos['phase'].append(osl_info['phase'])
             vfs.append(env_p.vf)
+            f, cop, f_m = env_p.get_ground_reaction_force()
+            grfs.append(f)
+            
             for key in osl_infos['osl_sense_data']:
                 osl_infos['osl_sense_data'][key].append(osl_info['osl_sense_data'][key])
 
@@ -158,25 +159,7 @@ class MyVisulizerFK(Visualizer):
         # import matplotlib.pyplot as plt
         if plot_sensor:
             fig, axs = plt.subplots(nrows=6, ncols=1, figsize=(7, 14))
-            phases = ['e_stance', 'l_stance', 'e_swing', 'l_swing']
-            phase_colors = {'e_stance': 'r', 'l_stance': 'g', 'e_swing': 'b', 'l_swing': 'y'}
-            phase_data = osl_infos['phase']
-            
-            phase_values = {'e_stance': 1, 'l_stance': 2, 'e_swing': 3, 'l_swing': 4}
-            phase_line = [phase_values[phase] for phase in phase_data]
-            axs[0].plot(phase_line, label='phase change', color='black',  marker='o')
-            axs[0].legend()
-            
-            sensor_names = ['knee_angle', 'knee_vel', 'ankle_angle', 'ankle_vel', 'load']
-            for i, name in enumerate(sensor_names):
-                if 'ankle' in name or 'knee' in name:
-                    axs[i+1].plot(np.rad2deg(osl_infos['osl_sense_data'][name]), marker='o', label=name)
-                else:
-                    axs[i+1].plot(osl_infos['osl_sense_data'][name], marker='o', label=name)
-                axs[i+1].set_title(name)
-                axs[i+1].set_ylabel('deg' if 'angle' in name else 'deg/s' if 'vel' in name else 'N')
-                axs[i+1].legend() 
-            plt.tight_layout()
+            fig, axs = visualize_phases(fig, axs, osl_infos)
             plt.show()
         plot_pose = False
         if plot_pose:
@@ -191,12 +174,12 @@ class MyVisulizerFK(Visualizer):
             fig, axs = visualize_torques(fig, axs, vfs)
             plt.show()
         self.num_fr = poses['pred'].shape[0]
-        plot_grfs = False
+        plot_grfs = True
         if plot_grfs:
-            # fig, axs = plt.subplots(3, 1, figsize=(10, 10))
-            # fig, axs = visualize_contact_forces(fig, axs, env.contact_forces, env.contact_positions)
-            pass
-        contact_video = False
+            fig, axs = plt.subplots(3, 1, figsize=(10, 10))
+            fig, axs = visualize_grfs(fig, axs, grfs)
+            plt.show()
+        contact_video = True
         if contact_video:
             out_name = f'{args.cfg}_{"expert" if args.record_expert else args.iter}_skeleton.mp4'
             frames_to_video(f'{args.video_dir}/frame_skeleton', args.video_dir, 5, out_name)   
@@ -243,7 +226,7 @@ class MyVisulizerFK(Visualizer):
             subprocess.call(cmd)
             
             
-vis = MyVisulizerFK(f'mocap_v2_vis.xml')
+vis = MyVisulizerPK(f'mocap_v2_vis.xml')
 # vis.num_fr
 
 # vis.record_video(preview = False)

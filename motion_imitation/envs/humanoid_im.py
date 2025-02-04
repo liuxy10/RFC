@@ -40,7 +40,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             'rtibia': ['rfoot']
         }
         self.body_qposaddr_list_start_index = [idxs[0] for idxs in list(self.body_qposaddr.values())]
-        self.knee_idx = self.body_qposaddr_list_start_index[2]
+        self.knee_id = self.body_qposaddr_list_start_index[2]
 
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
@@ -352,24 +352,24 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             lower_limb_pos[name] = bone_vec
         return lower_limb_pos
     
-    def visualize_by_frame(self, show = False):
+    def visualize_by_frame(self, show = False, label =  "normal"):
         lower_limb_pos = self.get_lower_limb_pos()
         fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
         forces, poss = self.get_contact_force()
         ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
+        ax.set_title(label)
         if len(forces) > 0: 
             visualize_contact_forces(fig, ax, forces, poss)
-        visualize_skeleton(fig, ax, lower_limb_pos, self.lower_limb_connect)
+        fig, ax = visualize_skeleton(fig, ax, lower_limb_pos, self.lower_limb_connect)
         if show:
             plt.show()
         return fig, ax
         
           
-    # def get_ground_reaction_force(self):
-    #     forces, poss = self.get_contact_force()
-    #     # force_sum, pos_sum = get_sum_force(forces, poss)
-
-    #     return force_sum, pos_sum
+    def get_ground_reaction_force(self):
+        forces, poss = self.get_contact_force()
+        force_sum, pos_sum, force_sum_magnitude = get_sum_force(forces, poss)
+        return force_sum, pos_sum, force_sum_magnitude
 
     def get_applied_torque(self):
         return self.data.qfrc_applied[6:]

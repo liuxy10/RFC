@@ -71,6 +71,7 @@ class MyVisulizer(Visualizer):
         while True:
             poses = {'pred': [], 'gt': []}
             vfs = []
+            grfs = []
             state = env.reset()
             if running_state is not None:
                 state = running_state(state, update=False)
@@ -95,10 +96,10 @@ class MyVisulizer(Visualizer):
                     )
                 
                 
-                save_by_frame = True
+                save_by_frame = False
                 if save_by_frame:
                     fig, ax = env.visualize_by_frame(show = False) 
-                    frame_dir = f'{args.video_dir}/frame_skeleton/'
+                    frame_dir = f'{args.video_dir}/frame_skeleton'
                     fig.canvas.draw()
                     data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
                     save_image_hwc(data,  f'{frame_dir}/%04d.png' % t) 
@@ -110,6 +111,8 @@ class MyVisulizer(Visualizer):
                 
                 next_state, reward, done,info = env.step(action)
                 vfs.append(np.hstack([env.data.qfrc_applied[:6].copy(), env.data.qfrc_actuator[6:].copy()])) 
+                f, cop, f_m = env.get_ground_reaction_force()
+                grfs.append(f)
                 if running_state is not None:
                     next_state = running_state(next_state, update=False)
                 if done:
@@ -132,12 +135,12 @@ class MyVisulizer(Visualizer):
                 fig, axs = visualize_torques(fig, axs, vfs)
                 plt.show()
             self.num_fr = poses['pred'].shape[0]
-            plot_grfs = False
+            plot_grfs = True
             if plot_grfs:
-                # fig, axs = plt.subplots(3, 1, figsize=(10, 10))
-                # fig, axs = visualize_contact_forces(fig, axs, env.contact_forces, env.contact_positions)
-                pass
-            contact_video = True
+                fig, axs = plt.subplots(3, 1, figsize=(10, 10))
+                fig, axs = visualize_grfs(fig, axs, grfs)
+                plt.show()
+            contact_video = False
             if contact_video:
                 out_name = f'{args.cfg}_{"expert" if args.record_expert else args.iter}_skeleton.mp4'
                 frames_to_video(f'{args.video_dir}/frame_skeleton', args.video_dir, 5, out_name)

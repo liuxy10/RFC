@@ -11,6 +11,31 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import glob
 import re
+
+def get_sum_force(forces, poss):
+    forces = np.array(forces)
+    poss = np.array(poss)
+    total_force = np.sum(forces, axis=0)
+    total_force_magnitude = np.linalg.norm(total_force)
+    
+    if total_force_magnitude == 0:
+        cop = np.zeros(3)
+        total_force = np.zeros(3)
+    else:
+        cop = np.sum(poss * np.linalg.norm(forces, axis=1)[:, np.newaxis], axis=0) / total_force_magnitude
+    
+    return total_force, cop, total_force_magnitude
+
+def visualize_grfs(fig, axs, grfs):
+    grfs = np.array(grfs)
+    label = 'xyz'
+    for i in range(3):
+        axs[i].plot(grfs[:,i], label = f'GRF {label[i]}')
+        axs[i].set_ylabel('N')
+        axs[i].legend()
+    plt.tight_layout()
+    return fig, axs
+
 def plot_qpos(qpos, body_qposaddr_list_start_index, body_qposaddr):
     fig, axs = plt.subplots(nrows=qpos.shape[1]//4+1, ncols=4, figsize=(10, 12))
     for i in range(qpos.shape[1]//4+1):
@@ -29,6 +54,28 @@ def plot_qpos(qpos, body_qposaddr_list_start_index, body_qposaddr):
     plt.tight_layout()
     plt.show()
     
+def visualize_phases(fig, axs, osl_infos):
+    phases = ['e_stance', 'l_stance', 'e_swing', 'l_swing']
+    phase_colors = {'e_stance': 'r', 'l_stance': 'g', 'e_swing': 'b', 'l_swing': 'y'}
+    phase_data = osl_infos['phase']
+    
+    phase_values = {'e_stance': 1, 'l_stance': 2, 'e_swing': 3, 'l_swing': 4}
+    phase_line = [phase_values[phase] for phase in phase_data]
+    axs[0].plot(phase_line, label='phase change', color='black',  marker='o')
+    axs[0].legend()
+    
+    sensor_names = ['knee_angle', 'knee_vel', 'ankle_angle', 'ankle_vel', 'load']
+    for i, name in enumerate(sensor_names):
+        if 'ankle' in name or 'knee' in name:
+            axs[i+1].plot(np.rad2deg(osl_infos['osl_sense_data'][name]), marker='o', label=name)
+        else:
+            axs[i+1].plot(osl_infos['osl_sense_data'][name], marker='o', label=name)
+        axs[i+1].set_title(name)
+        axs[i+1].set_ylabel('deg' if 'angle' in name else 'deg/s' if 'vel' in name else 'N')
+        axs[i+1].legend() 
+    plt.tight_layout()
+    return fig, axs
+
 def visualize_poses(fig, axs, poses, body_qposaddr): 
     for i in range(poses['gt'].shape[1]//4+1):
         for j in range(4):
@@ -71,7 +118,7 @@ def visualize_contact_forces(fig, ax, forces, positions):
     
     return fig, ax
 
-def visualize_skeleton(fig, ax, coms, tree, title ='Lower Limb COMs'):
+def visualize_skeleton(fig, ax, coms, tree):
     # Plot the COMs
     for name, com in coms.items():
         ax.scatter(com[0], com[1], com[2], c='r', marker='o')
@@ -93,6 +140,10 @@ def visualize_skeleton(fig, ax, coms, tree, title ='Lower Limb COMs'):
             ax.plot([parent_com[0], child_com[0]], 
                     [parent_com[1], child_com[1]], 
                     [parent_com[2], child_com[2]], 'k-')
+            if child == 'lfoot' or child == 'ltibia':
+                ax.plot([parent_com[0], child_com[0]], 
+                    [parent_com[1], child_com[1]], 
+                    [parent_com[2], child_com[2]], 'r-')
 
     mid_x = (coms_array[:, 0].max() + coms_array[:, 0].min()) * 0.5
     mid_y = (coms_array[:, 1].max() + coms_array[:, 1].min()) * 0.5
@@ -105,7 +156,6 @@ def visualize_skeleton(fig, ax, coms, tree, title ='Lower Limb COMs'):
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
-    ax.set_title(title)
     
     # Add a plane at z=0
     xx, yy = np.meshgrid(np.linspace(mid_x - max_range, mid_x + max_range, 10),
