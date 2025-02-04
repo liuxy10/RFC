@@ -1,7 +1,12 @@
+import os
+import sys
+sys.path.append(os.getcwd())
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from khrylib.utils.tools import *
     
 def process_force_data(csv_file):
     df = pd.read_csv(csv_file)
@@ -54,6 +59,7 @@ def process_motion_data(csv_file):
     
     # Other body parts
     body_parts = {
+        
         'LShould': ([24, 25, 29], [0, 0, None]),
         'LElb': ([33, 34, 35], [0, 0, None]),
         'Lwrist': ([39,42, 40,43, 41,44], [0, 0, None]),
@@ -68,6 +74,21 @@ def process_motion_data(csv_file):
         'Rknee': ([102, 103, 104], [0, 0, None]),
         'Rank': ([108, 109, 110], [0, 0, None])
     }
+    
+    body_tree = {
+        'LShould': ['LElb'],
+        'LElb': ['Lwrist'],
+        'RShould': ['RElb'],
+        'RElb': ['Rwrist'],
+        'Pelv': ['Lhip', 'Rhip', 'LShould', 'RShould'],
+        'Lhip': ['Lknee'],
+        'Lknee': ['Lank'],
+        'Rhip': ['Rknee'],
+        'Rknee': ['Rank'],
+    }
+
+
+
     
     coordinates = {}
     for part, (cols, offsets) in body_parts.items():
@@ -89,13 +110,13 @@ def process_motion_data(csv_file):
     steps = foot_strikes[-22:-1]
     step_times = np.round(df.iloc[steps, 3].astype(float) * 100)
     
-    return coordinates, step_times
+    return coordinates, step_times, body_tree
 
 if __name__ == "__main__":
     # Process motion data
     # fname = 'data/nrel/no-rail-W1_High K2/no-rail-W1_High K2.csv'
     fname = 'data/nrel/Walking_passive01_K4/Walking_passive01_K4.csv'
-    coordinates, step_times = process_motion_data(fname)
+    coordinates, step_times, body_tree = process_motion_data(fname)
     force_data, moment_data, cop_data = process_force_data(fname)
     # Print coordinates and step times
     print("Coordinates:")
@@ -115,15 +136,24 @@ if __name__ == "__main__":
     print(cop_data.head())
 
     # visualize the motion using matplotlib
-    
-    fig = plt.figure(figsize=(10, 10))
-    ax = fig.add_subplot(111, projection='3d')
-    
-    for part, coords in coordinates.items():
-        ax.plot(coords[:, 0], coords[:, 1], coords[:, 2], label=part)
-    plt.legend()
-    plt.show()
-    
+    plot_motion = False
+    if plot_motion:
+        fig = plt.figure(figsize=(10, 10))
+        ax = fig.add_subplot(111, projection='3d')
+        
+        for part, coords in coordinates.items():
+            ax.plot(coords[:, 0], coords[:, 1], coords[:, 2], label=part)
+        plt.legend()
+        plt.show()
+        
+    # visualize by frame 
+
+    for i in range(0, coords.shape[0], 200):
+        fig = plt.figure(figsize=(10, 10))
+        ax = fig.add_subplot(111, projection='3d')
+        coordinates_slice = {part: coords[i] for part, coords in coordinates.items()}
+        visualize_skeleton(fig, ax, coordinates_slice, body_tree, title= 'whole body skeleton')
+        plt.show()
     # visualize the force data using matplotlib
     
     fig = plt.figure(figsize=(10, 10))

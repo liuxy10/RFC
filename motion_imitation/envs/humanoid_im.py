@@ -359,7 +359,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
         if len(forces) > 0: 
             visualize_contact_forces(fig, ax, forces, poss)
-        visualize_lower_limb_com(fig, ax, lower_limb_pos, self.lower_limb_connect)
+        visualize_skeleton(fig, ax, lower_limb_pos, self.lower_limb_connect)
         if show:
             plt.show()
         return fig, ax

@@ -71,7 +71,7 @@ def visualize_contact_forces(fig, ax, forces, positions):
     
     return fig, ax
 
-def visualize_lower_limb_com(fig, ax, coms, tree):
+def visualize_skeleton(fig, ax, coms, tree, title ='Lower Limb COMs'):
     # Plot the COMs
     for name, com in coms.items():
         ax.scatter(com[0], com[1], com[2], c='r', marker='o')
@@ -105,7 +105,7 @@ def visualize_lower_limb_com(fig, ax, coms, tree):
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
-    ax.set_title('Lower Limb COMs')
+    ax.set_title(title)
     
     # Add a plane at z=0
     xx, yy = np.meshgrid(np.linspace(mid_x - max_range, mid_x + max_range, 10),
