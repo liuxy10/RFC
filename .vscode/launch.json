@@ -16,7 +16,7 @@
             "request": "launch",
             "name": "Launch motion_im.py",
             "python":"/home/xliu227/miniconda3/envs/rfc/bin/python", 
-            "program": "${workspaceFolder}/motion_imitation/motion_im.py",
+            "program": "${workspaceFolder}/normalitation/normal.py",
             "args": [
                 "--cfg",
                 "${input:configFile}"
@@ -36,7 +36,7 @@
             "request": "launch",
             "name": "Launch vis_im.py",
             "python":"/home/xliu227/miniconda3/envs/rfc/bin/python", 
-            "program": "${workspaceFolder}/motion_imitation/vis_im.py",
+            "program": "${workspaceFolder}/normalitation/vis_im.py",
             "args": [
                 "--cfg",
                 "${input:configFile}"

@@ -55,7 +55,7 @@ def process_motion_data(csv_file):
         (raw.iloc[:, [0,3,6,9]].mean(axis=1) - Norm[0]),
         (raw.iloc[:, [1,4,7,10]].mean(axis=1) - Norm[1]),
         (raw.iloc[:, [2,5,8,11]].mean(axis=1))
-    ])
+    ]) # not used in this project
     
     # Other body parts
     body_parts = {

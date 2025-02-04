@@ -26,7 +26,7 @@ parser.add_argument('--preview', action='store_true', default=False)
 parser.add_argument('--record', action='store_true', default=False)
 parser.add_argument('--record_expert', action='store_true', default=False)
 parser.add_argument('--azimuth', type=float, default=45)
-parser.add_argument('--video_dir', default='out/videos/motion_im')
+parser.add_argument('--video_dir', default='out/videos/normal')
 args = parser.parse_args()
 cfg = Config(args.cfg, False, create_dirs=False)
 cfg.env_start_first = True
@@ -98,7 +98,7 @@ class MyVisulizer(Visualizer):
                 save_by_frame = True
                 if save_by_frame:
                     fig, ax = env.visualize_by_frame(show = False) 
-                    frame_dir = f'{args.video_dir}/frame_skeleton'
+                    frame_dir = f'{args.video_dir}/frame_skeleton/'
                     fig.canvas.draw()
                     data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
                     save_image_hwc(data,  f'{frame_dir}/%04d.png' % t) 
