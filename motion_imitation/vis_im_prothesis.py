@@ -13,6 +13,7 @@ from khrylib.rl.core.policy_gaussian import PolicyGaussian
 from khrylib.rl.core.critic import Value
 from khrylib.models.mlp import MLP
 from motion_imitation.envs.humanoid_im import HumanoidEnv, HumanoidEnvProthesis
+# from motion_imitation.envs.humanoid_pk import HumanoidEnvProthesis
 from motion_imitation.utils.config import Config 
 import matplotlib.pyplot as plt
 import glfw
@@ -44,14 +45,6 @@ torch.set_grad_enabled(False)
 env = HumanoidEnv(cfg)
 env.seed(cfg.seed)
 
-
-
-
-# Example usage:
-# plot_qpos(qpos, body_qposaddr_list_start_index, body_qposaddr)
-
-
-
 env_p = HumanoidEnvProthesis(cfg_p, cfg)
 env_p.seed(cfg_p.seed)
 
@@ -72,11 +65,9 @@ model_cp = pickle.load(open(cp_path, "rb"))
 policy_net.load_state_dict(model_cp['policy_dict'])
 value_net.load_state_dict(model_cp['value_dict'])
 running_state = model_cp['running_state']
-
 # change based on osl default controller
 phase_list = ['e_stance', 'l_stance', 'e_swing', 'l_swing']
 joint_list = ['knee', 'ankle', 'threshold']
-# gain_list =  ['knee_stiffness', 'knee_damping', 'ankle_stiffness', 'ankle_damping', 'load', 'knee_angle', 'knee_vel', 'ankle_angle']
 n_sets = env_p.OSL_CTRL.n_sets
 
 for phase_name in phase_list: 
@@ -106,7 +97,7 @@ class MyVisulizerPK(Visualizer):
         if running_state is not None:
             state = running_state(state, update=False)
         for t in range(1000): 
-            # print(t)
+            print(t)
             epos = env.get_expert_attr('qpos', env.get_expert_index(t)).copy()
             if env.expert['meta']['cyclic']:
                 init_pos = env.expert['init_pos']
@@ -127,19 +118,22 @@ class MyVisulizerPK(Visualizer):
                 data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
                 save_image_hwc(data,  f'{frame_dir}/%04d.png' % t) 
                 plt.close(fig)
+            # attain action from policy
             state_var = tensor(state, dtype=dtype).unsqueeze(0)
             action = policy_net.select_action(state_var, mean_action=True)[0].cpu().numpy()
-            next_state, reward, done, fail = env_p.step(action)
-            osl_info = env_p.osl_info
-
-            osl_infos['phase'].append(osl_info['phase'])
+            next_state, reward, done, fail = env_p.step(action) # env_p also include the osl update
+            # logging osl info
+            # osl_info = env_p.osl_info
+            # osl_infos['phase'].append(osl_info['phase'])
+            # for key in osl_infos['osl_sense_data']:
+            #     osl_infos['osl_sense_data'][key].append(osl_info['osl_sense_data'][key])
+            # logging virtual force and grf info
             vfs.append(env_p.vf)
             f, cop, f_m = env_p.get_ground_reaction_force()
             grfs.append(f)
+            # logging osl sense data
             
-            for key in osl_infos['osl_sense_data']:
-                osl_infos['osl_sense_data'][key].append(osl_info['osl_sense_data'][key])
-
+            # filter state
             if running_state is not None:
                 next_state = running_state(next_state, update=False)
             if done:
@@ -153,18 +147,13 @@ class MyVisulizerPK(Visualizer):
         if plot_pose:
             fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(6, 12))
             fig, axs = visualize_poses(fig, axs, poses, env.body_qposaddr)
-            plt.show()
+            plt.show() 
             
-        plot_sensor = False
+        plot_sensor = False #True
         # import matplotlib.pyplot as plt
         if plot_sensor:
             fig, axs = plt.subplots(nrows=6, ncols=1, figsize=(7, 14))
             fig, axs = visualize_phases(fig, axs, osl_infos)
-            plt.show()
-        plot_pose = False
-        if plot_pose:
-            fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(10, 12))
-            fig, axs = visualize_poses(fig, axs, poses, env.body_qposaddr)
             plt.show()
         plot_torque = False
         if plot_torque:
@@ -174,12 +163,12 @@ class MyVisulizerPK(Visualizer):
             fig, axs = visualize_torques(fig, axs, vfs)
             plt.show()
         self.num_fr = poses['pred'].shape[0]
-        plot_grfs = True
+        plot_grfs = False
         if plot_grfs:
             fig, axs = plt.subplots(3, 1, figsize=(10, 10))
             fig, axs = visualize_grfs(fig, axs, grfs)
             plt.show()
-        contact_video = True
+        contact_video = False
         if contact_video:
             out_name = f'{args.cfg}_{"expert" if args.record_expert else args.iter}_skeleton.mp4'
             frames_to_video(f'{args.video_dir}/frame_skeleton', args.video_dir, 5, out_name)   
@@ -229,4 +218,4 @@ class MyVisulizerPK(Visualizer):
 vis = MyVisulizerPK(f'mocap_v2_vis.xml')
 # vis.num_fr
 
-# vis.record_video(preview = False)
+vis.record_video(preview = False)

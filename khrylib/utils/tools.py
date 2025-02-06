@@ -46,7 +46,7 @@ def plot_qpos(qpos, body_qposaddr_list_start_index, body_qposaddr):
             gt = qpos[:, idx]
             axs[i, j].plot(gt, 'r', label='gt')
             axs[i, j].set_ylim([-np.pi, np.pi])
-            if idx in body_qposaddr_list_start_index:
+            if idx in [idxs[0] for idxs in list(body_qposaddr.values())]:
                 body_name = [name for name, addr in body_qposaddr.items() if addr[0] == idx][0]
                 axs[i, j].set_title(f"idx = {idx}, {body_name}", fontsize=12)
             if i == 0 and j == 0:

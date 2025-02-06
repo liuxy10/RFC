@@ -4,7 +4,20 @@ import numpy as np
 from khrylib.utils.transformation import quaternion_matrix, quaternion_about_axis,\
     quaternion_inverse, quaternion_multiply, rotation_from_quaternion, rotation_from_matrix
 
-
+      
+class runningAvg:
+    def __init__(self, size):
+        self.size = size
+        self.data = []
+        
+    def add(self, x):
+        self.data.append(x)
+        if len(self.data) > self.size:
+            self.data.pop(0)
+            
+    def get(self):
+        return np.mean(self.data)   
+    
 def normal_entropy(std):
     """return the entropy of a normal distribution, 
     math formula is: 0.5 + 0.5 * log(2 * pi * var)"""

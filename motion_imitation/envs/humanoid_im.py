@@ -12,6 +12,7 @@ from mujoco_py import functions as mjf
 import pickle
 import time
 from scipy.linalg import cho_solve, cho_factor
+
 from osl.control.myoosl_control import MyoOSLController
 
 class HumanoidEnv(mujoco_env.MujocoEnv):
@@ -37,7 +38,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             'lfemur': ['ltibia'],
             'ltibia': ['lfoot'],
             'rfemur': ['rtibia'],
-            'rtibia': ['rfoot']
+            'rtibia': ['rfoot'],
         }
         self.body_qposaddr_list_start_index = [idxs[0] for idxs in list(self.body_qposaddr.values())]
         self.knee_id = self.body_qposaddr_list_start_index[2]
@@ -84,19 +85,18 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         qpos = data.qpos.copy()
         qvel = data.qvel.copy()
         # print(f"dim of qpos, qvel = {qpos.shape, qvel.shape}")
-        # transform velocity
-        qvel[:3] = transform_vec(qvel[:3], qpos[3:7], self.cfg.obs_coord).ravel()
+        qvel[:3] = transform_vec(qvel[:3], qpos[3:7], self.cfg.obs_coord).ravel()# transform velocity to root frame by default, or heading frame if specified
         obs = []
         # pos
-        if self.cfg.obs_heading:
+        if self.cfg.obs_heading: # set to False
             obs.append(np.array([get_heading(qpos[3:7])]))
-        if self.cfg.root_deheading:
+        if self.cfg.root_deheading: # set to True
             qpos[3:7] = de_heading(qpos[3:7])
-        obs.append(qpos[2:]) # why?
+        obs.append(qpos[2:]) # why? because x,y position is not useful, so start from z(2)
         #  vel
         if self.cfg.obs_vel == 'root':
             obs.append(qvel[:6])
-        elif self.cfg.obs_vel == 'full':
+        elif self.cfg.obs_vel == 'full': # set to True
             obs.append(qvel)
         # phase
         if self.cfg.obs_phase:
@@ -211,7 +211,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         for i in range(n_frames):
             ctrl = action
             if cfg.action_type == 'position': # used action type is position
-                torque = self.compute_torque(ctrl)
+                torque = self.compute_torque(ctrl) # where we add osl control and overwrite the knee and ankle torque
             elif cfg.action_type == 'torque':
                 torque = ctrl * cfg.a_scale
             torque = np.clip(torque, -cfg.torque_lim, cfg.torque_lim)
@@ -239,7 +239,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.prev_qvel = self.data.qvel.copy()
         self.prev_bquat = self.bquat.copy()
         # do simulation
-        self.do_simulation(a, self.frame_skip)
+        self.do_simulation(a, self.frame_skip) 
         self.cur_t += 1
         self.bquat = self.get_body_quat()
         self.update_expert()
@@ -263,7 +263,9 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             self.start_ind = ind
             init_pose = self.expert['qpos'][ind, :].copy()
             init_vel = self.expert['qvel'][ind, :].copy()
-            init_pose[7:] += self.np_random.normal(loc=0.0, scale=cfg.env_init_noise, size=self.model.nq - 7)
+            self.init_qpos_p = init_pose.copy()
+            self.init_qvel_p = init_vel.copy()
+            init_pose[7:] += self.np_random.normal(loc=0.0, scale=cfg.env_init_noise, size=self.model.nq - 7)# 
             self.set_state(init_pose, init_vel)
             self.bquat = self.get_body_quat()
             self.update_expert()
@@ -719,20 +721,7 @@ class HumanoidEnvProthesis (HumanoidEnv):
     def get_sensor(self, name, dimensions):
         i = self.sim.model.sensor_name2id(name)
         return self.sim.data.sensordata[i:i+dimensions]         
-class runningAvg:
-    def __init__(self, size):
-        self.size = size
-        self.data = []
-        
-    def add(self, x):
-        self.data.append(x)
-        if len(self.data) > self.size:
-            self.data.pop(0)
-            
-    def get(self):
-        return np.mean(self.data)        
-        
-   
+
         
 if __name__ == "__main__":
     from motion_imitation.utils.config import Config
@@ -744,22 +733,24 @@ if __name__ == "__main__":
     cfg_p.env_start_first = True
     env = HumanoidEnv(cfg)
     # env_f = HumanoidEnvFreezeKnee(cfg_f, cfg)
-    env_p = HumanoidEnvProthesis(cfg_p, cfg)
+    # env_p = HumanoidEnvProthesis(cfg_p, cfg)
     print("HumanoidEnv",env.observation_space, env.action_space)
     # print("HumanoidEnvFreezeKnee",env_f.observation_space, env_f.action_space)
-    print("HumanoidEnvProthesis", env_p.observation_space, env_p.action_space)
+    # print("HumanoidEnvProthesis", env_p.observation_space, env_p.action_space)
     
     # print(env.reset().shape)
     
-    print(env_p.reset().shape)
-    print(env_p.get_osl_sens())
-    print(env_p.model.sensor_names)
+    # print(env_p.reset().shape)
+    # print(env_p.get_osl_sens())
+    # print(env_p.model.sensor_names)
     
-    print(env_p.sim.data.get_sensor('ltouch'), env_p.sim.data.get_sensor('lforce'))
-    print(env_p.get_osl_sens())
-    print(env_p.action_space.high, env_p.action_space.low)
+    # print(env_p.sim.data.get_sensor('ltouch'), env_p.sim.data.get_sensor('lforce'))
+    # print(env_p.get_osl_sens())
+    # print(env_p.action_space.high, env_p.action_space.low)
     
     # Access the contact forces
 
     
+
+
 
