@@ -12,8 +12,8 @@ from khrylib.rl.utils.visualizer import Visualizer
 from khrylib.rl.core.policy_gaussian import PolicyGaussian
 from khrylib.rl.core.critic import Value
 from khrylib.models.mlp import MLP
-from motion_imitation.envs.humanoid_im import HumanoidEnv, HumanoidEnvProthesis
-# from motion_imitation.envs.humanoid_pk import HumanoidEnvProthesis
+from motion_imitation.envs.humanoid_im import HumanoidEnv
+from motion_imitation.envs.humanoid_pk import HumanoidEnvProthesis
 from motion_imitation.utils.config import Config 
 import matplotlib.pyplot as plt
 import glfw
