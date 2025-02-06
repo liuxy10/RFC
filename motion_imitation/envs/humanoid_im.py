@@ -25,6 +25,12 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.end_reward = 0.0
         self.start_ind = 0
         self.body_qposaddr = get_body_qposaddr(self.model)
+        self.body_qposaddr_list_start_index = [idxs[0] for idxs in list(self.body_qposaddr.values())]
+        self.knee_qposaddr = self.body_qposaddr_list_start_index[2]
+        try:
+            self.knee_qveladdr = self.sim.model.get_joint_qvel_addr("ltibia_x")
+        except:
+            self.knee_qveladdr = self.sim.model.get_joint_qvel_addr("knee")
         self.bquat = self.get_body_quat()
         self.prev_bquat = None
         self.set_model_params()
@@ -40,9 +46,8 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             'rfemur': ['rtibia'],
             'rtibia': ['rfoot'],
         }
-        self.body_qposaddr_list_start_index = [idxs[0] for idxs in list(self.body_qposaddr.values())]
-        self.knee_id = self.body_qposaddr_list_start_index[2]
-
+        self.max_vf = 30.0 # N
+        
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
         # print(expert_meta)
@@ -216,7 +221,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 torque = ctrl * cfg.a_scale
             torque = np.clip(torque, -cfg.torque_lim, cfg.torque_lim)
             self.data.ctrl[:] = torque
-            
+
             """ Residual Force Control (RFC) """
             if cfg.residual_force:
                 vf = ctrl[-self.vf_dim:].copy() # vfs are at the last of action
@@ -326,7 +331,8 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         body_id = sim.model.body_name2id(body_name)
         return sim.data.body_xpos[body_id]
     
-
+    def get_joint_qvel_addr(self, joint_name):
+        return self.sim.model.get_joint_qvel_addr(joint_name)
 
     def get_contact_force(self):
         forces = []

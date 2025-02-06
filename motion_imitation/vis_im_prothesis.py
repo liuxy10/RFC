@@ -70,8 +70,8 @@ phase_list = ['e_stance', 'l_stance', 'e_swing', 'l_swing']
 joint_list = ['knee', 'ankle', 'threshold']
 n_sets = env_p.OSL_CTRL.n_sets
 
-for phase_name in phase_list: 
-    env_p.OSL_CTRL.set_osl_param( phase_name, 'gain',  'ankle_stiffness', 0 , mode=0)
+# for phase_name in phase_list: 
+#     env_p.OSL_CTRL.set_osl_param( phase_name, 'gain',  'ankle_stiffness', 0 , mode=0)
 
 
 class MyVisulizerPK(Visualizer):
@@ -107,7 +107,7 @@ class MyVisulizerPK(Visualizer):
                 epos[3:7] = quaternion_multiply(cycle_h, epos[3:7])
             poses['gt'].append(epos) 
             qpos = env_p.data.qpos.copy()
-            qpos = np.concatenate([qpos[:env.knee_id+1], np.zeros(2), qpos[env.knee_id+1:]])
+            qpos = np.concatenate([qpos[:env.knee_qposaddr+1], np.zeros(2), qpos[env.knee_qposaddr+1:]])
             poses['pred'].append(qpos)
             
             save_by_frame = True
@@ -123,10 +123,10 @@ class MyVisulizerPK(Visualizer):
             action = policy_net.select_action(state_var, mean_action=True)[0].cpu().numpy()
             next_state, reward, done, fail = env_p.step(action) # env_p also include the osl update
             # logging osl info
-            # osl_info = env_p.osl_info
-            # osl_infos['phase'].append(osl_info['phase'])
-            # for key in osl_infos['osl_sense_data']:
-            #     osl_infos['osl_sense_data'][key].append(osl_info['osl_sense_data'][key])
+            osl_info = env_p.osl_info
+            osl_infos['phase'].append(osl_info['phase'])
+            for key in osl_infos['osl_sense_data']:
+                osl_infos['osl_sense_data'][key].append(osl_info['osl_sense_data'][key])
             # logging virtual force and grf info
             vfs.append(env_p.vf)
             f, cop, f_m = env_p.get_ground_reaction_force()
@@ -216,6 +216,4 @@ class MyVisulizerPK(Visualizer):
             
             
 vis = MyVisulizerPK(f'mocap_v2_vis.xml')
-# vis.num_fr
-
 vis.record_video(preview = False)

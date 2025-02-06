@@ -30,8 +30,8 @@ class HumanoidEnvFreezeKnee(HumanoidEnv):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
         body_qposaddr = get_body_qposaddr(self.model)
         body_qposaddr_list_start_index = [idxs[0] for idxs in list(body_qposaddr.values())]
-        self.knee_id = body_qposaddr_list_start_index[2] 
-        expert_qpos_f = np.hstack([expert_qpos[:,:self.knee_id], expert_qpos[:,self.knee_id+4:] ]) 
+        self.knee_qposaddr = body_qposaddr_list_start_index[2] 
+        expert_qpos_f = np.hstack([expert_qpos[:,:self.knee_qposaddr], expert_qpos[:,self.knee_qposaddr+4:] ]) 
 
         expert_meta_f = expert_meta.copy()
         self.expert = get_expert(expert_qpos_f , expert_meta_f, self)
@@ -61,8 +61,8 @@ class HumanoidEnvFreezeKnee(HumanoidEnv):
             obs.append(np.array([get_heading(qpos[3:7])])) 
         if self.cfg.root_deheading: # set to True
             qpos[3:7] = de_heading(qpos[3:7]) 
-        qpos = np.hstack([qpos[:self.knee_id], np.zeros(4),qpos[self.knee_id:]]) # add the knee and ankle back as zeros
-        qvel = np.hstack([qvel[:self.knee_id], np.zeros(4),qvel[self.knee_id:]]) # add the knee and ankle back as zeros
+        qpos = np.hstack([qpos[:self.knee_qposaddr], np.zeros(4),qpos[self.knee_qposaddr:]]) # add the knee and ankle back as zeros
+        qvel = np.hstack([qvel[:self.knee_qposaddr], np.zeros(4),qvel[self.knee_qposaddr:]]) # add the knee and ankle back as zeros
         obs.append(qpos[2:])
         # vel
         if self.cfg.obs_vel == 'root':
@@ -102,7 +102,7 @@ class HumanoidEnvFreezeKnee(HumanoidEnv):
         cfg = self.cfg_f
         for i in range(n_frames):
             ctrl = action.copy()
-            ctrl = np.hstack([ctrl[:self.knee_id], ctrl[self.knee_id + 4:]]) # remove the knee and ankle back as zeros
+            ctrl = np.hstack([ctrl[:self.knee_qposaddr], ctrl[self.knee_qposaddr + 4:]]) # remove the knee and ankle back as zeros
             if cfg.action_type == 'position': # used action type is position
                 torque = self.compute_torque(ctrl) 
             elif cfg.action_type == 'torque': 
