@@ -1,7 +1,6 @@
 import os
 import sys
 sys.path.append(os.getcwd())
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -58,33 +57,32 @@ def process_motion_data(csv_file):
     ]) # not used in this project
     
     # Other body parts
-    body_parts = {
-        
-        'LShould': ([24, 25, 29], [0, 0, None]),
-        'LElb': ([33, 34, 35], [0, 0, None]),
-        'Lwrist': ([39,42, 40,43, 41,44], [0, 0, None]),
-        'RShould': ([48, 49, 50], [0, 0, None]),
-        'RElb': ([54, 55, 56], [0, 0, None]),
-        'Rwrist': ([60,63, 61,64, 62,65], [0, 0, None]),
-        'Pelv': ([75,78, 79,73, 77,80], [0, 30, None]),
-        'Lhip': ([69, 70, 71], [-30, 0, -70]),
-        'Rhip': ([72, 73, 74], [30, 0, -70]),
-        'Lknee': ([84, 85, 86], [0, 0, None]),
-        'Lank': ([90, 91, 92], [0, 0, None]),
-        'Rknee': ([102, 103, 104], [0, 0, None]),
-        'Rank': ([108, 109, 110], [0, 0, None])
+    body_parts = {  # with joint name commented here
+        'lclavicle': ([24, 25, 29], [0, 0, None]), # 'Left Should'
+        'lhumerus': ([33, 34, 35], [0, 0, None]), # 'Left Elbow'
+        'lradius': ([39, 42, 40, 43, 41, 44], [0, 0, None]), # 'Left wrist'
+        'rclavicle': ([48, 49, 50], [0, 0, None]), # 'Rright Should'
+        'rhumerus': ([54, 55, 56], [0, 0, None]), # 'Right Elbow'
+        'rradius': ([60, 63, 61, 64, 62, 65], [0, 0, None]), # 'Rwrist'
+        'lowerback': ([75, 78, 79, 73, 77, 80], [0, 30, None]), # 'Pelv'
+        'lfemur': ([69, 70, 71], [-30, 0, -70]), # 'Lhip'
+        'rfemur': ([72, 73, 74], [30, 0, -70]), # 'Rhip'
+        'ltibia': ([84, 85, 86], [0, 0, None]), # 'Lknee'
+        'lfoot': ([90, 91, 92], [0, 0, None]), # 'Lank'
+        'rtibia': ([102, 103, 104], [0, 0, None]), # 'Rknee'
+        'rfoot': ([108, 109, 110], [0, 0, None]) # 'Rank'
     }
-    
+
     body_tree = {
-        'LShould': ['LElb'],
-        'LElb': ['Lwrist'],
-        'RShould': ['RElb'],
-        'RElb': ['Rwrist'],
-        'Pelv': ['Lhip', 'Rhip', 'LShould', 'RShould'],
-        'Lhip': ['Lknee'],
-        'Lknee': ['Lank'],
-        'Rhip': ['Rknee'],
-        'Rknee': ['Rank'],
+        'lclavicle': ['lhumerus'],
+        'lhumerus': ['lradius'],
+        'rclavicle': ['rhumerus'],
+        'rhumerus': ['rradius'],
+        'lowerback': ['lfemur', 'rfemur', 'lclavicle', 'rclavicle'],
+        'lfemur': ['ltibia'],
+        'ltibia': ['lfoot'],
+        'rfemur': ['rtibia'],
+        'rtibia': ['rfoot'],
     }
 
 
@@ -152,7 +150,7 @@ if __name__ == "__main__":
         fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(111, projection='3d')
         coordinates_slice = {part: coords[i] for part, coords in coordinates.items()}
-        visualize_skeleton(fig, ax, coordinates_slice, body_tree, title= 'whole body skeleton')
+        visualize_skeleton(fig, ax, coordinates_slice, body_tree)
         plt.show()
     # visualize the force data using matplotlib
     

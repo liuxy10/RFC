@@ -48,6 +48,18 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         }
         self.max_vf = 30.0 # N
         
+    #     body_tree = {
+    #     'LShould': ['LElb'],
+    #     'LElb': ['Lwrist'],
+    #     'RShould': ['RElb'],
+    #     'RElb': ['Rwrist'],
+    #     'Pelv': ['Lhip', 'Rhip', 'LShould', 'RShould'],
+    #     'Lhip': ['Lknee'],
+    #     'Lknee': ['Lank'],
+    #     'Rhip': ['Rknee'],
+    #     'Rknee': ['Rank'],
+    # }
+        
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
         # print(expert_meta)
@@ -367,21 +379,34 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
         ax.set_title(label)
         if len(forces) > 0: 
-            visualize_contact_forces(fig, ax, forces, poss)
+            visualize_3d_forces(fig, ax, forces, poss)
         fig, ax = visualize_skeleton(fig, ax, lower_limb_pos, self.lower_limb_connect)
+        
         if show:
             plt.show()
         return fig, ax
         
-          
     def get_ground_reaction_force(self):
         forces, poss = self.get_contact_force()
         force_sum, pos_sum, force_sum_magnitude = get_sum_force(forces, poss)
         return force_sum, pos_sum, force_sum_magnitude
 
-    def get_applied_torque(self):
+    def get_applied_torque_generalized(self):
         return self.data.qfrc_applied[6:]
+    
+    def compute_global_force(self):
+        # Get full constraint Jacobian (efc_J)
+        J = self.data.efc_J.copy()  # Shape: (n_contacts, nv)
         
+        # Compute pseudoinverse of J^T
+        J_transpose = J.T  # Shape: (nv, n_contacts)
+        J_transpose_pinv = np.linalg.pinv(J_transpose)
+        
+        # Solve for Cartesian forces
+        F_cartesian = J_transpose_pinv @ self.data.qfrc_applied
+        
+        return F_cartesian
+   
 if __name__ == "__main__":
     from motion_imitation.utils.config import Config
     cfg = Config('0202', False, create_dirs=False)

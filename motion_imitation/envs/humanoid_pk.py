@@ -105,15 +105,7 @@ class HumanoidEnvProthesis (HumanoidEnv):
             self.osl_info = {"osl_ctrl": osl_torques, 
                         "phase": self.OSL_CTRL.STATE_MACHINE.get_current_state.get_name(), 
                         "osl_sense_data": osl_sens_data}
-            overwrite = True
-            if overwrite:
-                torque_overwrite= self._overwrite_osl_actions(torque, osl_torques)
-                self.data.ctrl[:] = torque_overwrite
-            else:
-                self.data.ctrl[:] = torque
-        
-            # print("test: disable the knee and ankle")
-            # self.data.ctrl[:] = self._overwrite_osl_actions(torque, {"knee":0,"ankle":0})
+            self.data.ctrl[:] = torque
             
             """ Residual Force Control (RFC) """
             if cfg.residual_force:
@@ -124,7 +116,12 @@ class HumanoidEnvProthesis (HumanoidEnv):
                     # self.data.qfrc_applied[:] = 0.
                 else:
                     self.rfc_explicit(vf)
-
+            overwrite = True
+            if overwrite:
+                self._overwrite_osl_actions(osl_torques)
+            print("test: disable the knee and ankle")
+            self._overwrite_osl_actions( {"knee":0,"ankle":0})
+            # self.data.actuator_force[:] = 0.0
             self.sim.step()
 
         if self.viewer is not None:
@@ -164,16 +161,15 @@ class HumanoidEnvProthesis (HumanoidEnv):
         # Adjust action space
         self.action_space = spaces.Box(low=-np.ones(self.action_dim), high=np.ones(self.action_dim), dtype=np.float32)
   
-    def _overwrite_osl_actions(self, humanoid_torques, osl_torques):
+    def _overwrite_osl_actions(self, osl_torques):
         
-        torque_ow= humanoid_torques.copy()
+        self.data.actuator_force[self.knee_qposaddr - 6] = osl_torques["knee"] 
+        self.data.actuator_force[self.knee_qposaddr+1 - 6] = osl_torques["ankle"]
+        
 
-        
-        torque_ow[self.knee_qposaddr - 6] = osl_torques["knee"]
-        torque_ow[self.knee_qposaddr+1 - 6] = osl_torques["ankle"]
-        
-       
-        return torque_ow
+        # self.data.qfrc_actuator[self.knee_qposaddr] = osl_torques["knee"] 
+        # self.data.qfrc_actuator[self.knee_qposaddr+1] = osl_torques["ankle"]
+
     
     def upload_osl_param(self, dict_of_dict):
         """

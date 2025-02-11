@@ -89,7 +89,7 @@ class MyVisulizerPK(Visualizer):
     def data_generator(self):
         poses = {'pred': [], 'gt': []}
         osl_infos = { 'phase': [], 'osl_sense_data': {'knee_angle': [], 'knee_vel': [], 'ankle_angle': [], 'ankle_vel': [], 'load': []}}
-        vfs = []
+        forces = []
         grfs = []
         state = env_p.reset()
         assert env_p.init_qpos_p[1] == env.expert['qpos'][0,1], "init_qpos[1] != expert_qpos[0,1]"
@@ -110,11 +110,10 @@ class MyVisulizerPK(Visualizer):
             qpos = np.concatenate([qpos[:env.knee_qposaddr+1], np.zeros(2), qpos[env.knee_qposaddr+1:]])
             poses['pred'].append(qpos)
             
-            save_by_frame = True
+            save_by_frame = False #True
             if save_by_frame:
-                fig, ax = env_p.visualize_by_frame(show = False, label = "Prothesis (red is prothesis)") 
+                fig, ax = env_p.visualize_by_frame(show = True, label = "Prothesis (red is prothesis)") 
                 frame_dir = f'{args.video_dir}/frame_skeleton/'
-                fig.canvas.draw()
                 data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
                 save_image_hwc(data,  f'{frame_dir}/%04d.png' % t) 
                 plt.close(fig)
@@ -128,7 +127,7 @@ class MyVisulizerPK(Visualizer):
             for key in osl_infos['osl_sense_data']:
                 osl_infos['osl_sense_data'][key].append(osl_info['osl_sense_data'][key])
             # logging virtual force and grf info
-            vfs.append(env_p.vf)
+            forces.append(env_p.data.actuator_force.copy())# env_p.data.qfrc_actuator.copy()[6:]) #np.hstack([env.data.qfrc_applied[:6].copy(), env.data.qfrc_actuator[6:].copy()]))   
             f, cop, f_m = env_p.get_ground_reaction_force()
             grfs.append(f)
             # logging osl sense data
@@ -149,18 +148,19 @@ class MyVisulizerPK(Visualizer):
             fig, axs = visualize_poses(fig, axs, poses, env.body_qposaddr)
             plt.show() 
             
-        plot_sensor = False #True
+        plot_sensor = True
         # import matplotlib.pyplot as plt
         if plot_sensor:
             fig, axs = plt.subplots(nrows=6, ncols=1, figsize=(7, 14))
             fig, axs = visualize_phases(fig, axs, osl_infos)
             plt.show()
-        plot_torque = False
+        plot_torque = True
         if plot_torque:
-            vfs = np.vstack(vfs)
-            print("virtual force dim = ", vfs.shape)
-            fig, axs = plt.subplots(nrows=2, ncols=1, figsize=(6, 10))
-            fig, axs = visualize_torques(fig, axs, vfs)
+            forces = np.vstack(forces)
+            # print("virtual force dim = ", forces.shape)
+            # fig, axs = plt.subplots(nrows=2, ncols=1, figsize=(6, 10))
+            # fig, axs = visualize_torques(fig, axs, forces)
+            visualize_force(forces, env_p.model.actuator_names)
             plt.show()
         self.num_fr = poses['pred'].shape[0]
         plot_grfs = False
@@ -216,4 +216,6 @@ class MyVisulizerPK(Visualizer):
             
             
 vis = MyVisulizerPK(f'mocap_v2_vis.xml')
+
 vis.record_video(preview = False)
+torch.cuda.empty_cache()

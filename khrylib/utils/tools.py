@@ -12,6 +12,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import glob
 import re
 
+
+
 def get_sum_force(forces, poss):
     forces = np.array(forces)
     poss = np.array(poss)
@@ -26,6 +28,9 @@ def get_sum_force(forces, poss):
     
     return total_force, cop, total_force_magnitude
 
+
+
+   
 def visualize_grfs(fig, axs, grfs):
     grfs = np.array(grfs)
     label = 'xyz'
@@ -36,7 +41,7 @@ def visualize_grfs(fig, axs, grfs):
     plt.tight_layout()
     return fig, axs
 
-def plot_qpos(qpos, body_qposaddr_list_start_index, body_qposaddr):
+def visualize_qpos(qpos, body_qposaddr_list_start_index, body_qposaddr):
     fig, axs = plt.subplots(nrows=qpos.shape[1]//4+1, ncols=4, figsize=(10, 12))
     for i in range(qpos.shape[1]//4+1):
         for j in range(4):
@@ -48,6 +53,24 @@ def plot_qpos(qpos, body_qposaddr_list_start_index, body_qposaddr):
             axs[i, j].set_ylim([-np.pi, np.pi])
             if idx in [idxs[0] for idxs in list(body_qposaddr.values())]:
                 body_name = [name for name, addr in body_qposaddr.items() if addr[0] == idx][0]
+                axs[i, j].set_title(f"idx = {idx}, {body_name}", fontsize=12)
+            if i == 0 and j == 0:
+                axs[i, j].legend()
+    plt.tight_layout()
+    plt.show()
+    
+def visualize_qvel(qvel, body_qveladdr_list_start_index, body_qveladdr):
+    fig, axs = plt.subplots(nrows=qvel.shape[1]//4+1, ncols=4, figsize=(10, 12))
+    for i in range(qvel.shape[1]//4+1):
+        for j in range(4):
+            idx = i*4 + j
+            if idx >= qvel.shape[1]:
+                break
+            gt = qvel[:, idx]
+            axs[i, j].plot(gt, 'r', label='gt')
+            axs[i, j].set_ylim([-np.pi, np.pi])
+            if idx in [idxs[0] for idxs in list(body_qveladdr.values())]:
+                body_name = [name for name, addr in body_qveladdr.items() if addr[0] == idx][0]
                 axs[i, j].set_title(f"idx = {idx}, {body_name}", fontsize=12)
             if i == 0 and j == 0:
                 axs[i, j].legend()
@@ -106,7 +129,7 @@ def visualize_torques(fig, axs, vfs):
     plt.tight_layout()
     return fig, axs
 
-def visualize_contact_forces(fig, ax, forces, positions):
+def visualize_3d_forces(fig, ax, forces, positions):
     # Plot the positions
     positions = np.array(positions)
     ax.scatter(positions[:, 0], positions[:, 1], positions[:, 2], c='r', marker='o')
@@ -117,6 +140,7 @@ def visualize_contact_forces(fig, ax, forces, positions):
         ax.text(pos[0] + force[0]/500.0 * 1.1, pos[1] + force[1]/500.0 * 1.1, pos[2] + force[2] /500.0* 1.1, f'{np.linalg.norm(force):.2f}', color='blue', fontsize=8)
     
     return fig, ax
+
 
 def visualize_skeleton(fig, ax, coms, tree):
     # Plot the COMs
@@ -163,6 +187,27 @@ def visualize_skeleton(fig, ax, coms, tree):
     zz = np.zeros_like(xx)
     ax.plot_surface(xx, yy, zz, alpha=0.2, color='gray')
     return fig, ax
+
+def visualize_force( actuator_forces, actuator_names):
+    num_actuators = len(actuator_names)
+    num_cols = 4
+    num_rows = num_actuators // num_cols + (num_actuators % num_cols > 0)
+    
+    fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(15, num_rows * 3))
+    axs = axs.flatten()
+    
+    for i, (force, name) in enumerate(zip(actuator_forces.T, actuator_names)):
+        axs[i].plot(force, label=name)
+        axs[i].set_title(name)
+        axs[i].set_ylabel('Force (N)')
+        axs[i].legend()
+    
+    for j in range(i + 1, len(axs)):
+        fig.delaxes(axs[j])
+    
+    plt.tight_layout()
+    plt.show()
+    return fig, axs
 
 def frames_to_video(frame_dir, out_dir, fps=30, filename='output.mp4'):
 
