@@ -74,17 +74,30 @@ def process_motion_data(csv_file):
     }
 
     body_tree = {
-        'lclavicle': ['lhumerus'],
-        'lhumerus': ['lradius'],
-        'rclavicle': ['rhumerus'],
-        'rhumerus': ['rradius'],
-        'lowerback': ['lfemur', 'rfemur', 'lclavicle', 'rclavicle'],
+        'root': ['lhipjoint', 'rhipjoint', 'lowerback'],
+        'lhipjoint': ['lfemur'],
         'lfemur': ['ltibia'],
         'ltibia': ['lfoot'],
+        'lfoot': [],
+        'rhipjoint': ['rfemur'],
         'rfemur': ['rtibia'],
         'rtibia': ['rfoot'],
+        'rfoot': [],
+        'lowerback': ['upperback'],
+        'upperback': ['thorax'],
+        'thorax': ['lowerneck'],
+        'lowerneck': ['upperneck', 'lclavicle', 'rclavicle'],
+        'upperneck': ['head'],
+        'head': [],
+        'lclavicle': ['lhumerus'],
+        'lhumerus': ['lradius'],
+        'lradius': ['lwrist'],
+        'lwrist': [],
+        'rclavicle': ['rhumerus'],
+        'rhumerus': ['rradius'],
+        'rradius': ['rwrist'],
+        'rwrist': [],
     }
-
 
 
     
@@ -149,8 +162,8 @@ if __name__ == "__main__":
     for i in range(0, coords.shape[0], 200):
         fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(111, projection='3d')
-        coordinates_slice = {part: coords[i] for part, coords in coordinates.items()}
-        visualize_skeleton(fig, ax, coordinates_slice, body_tree)
+        chosen_parts_coms = {part: coords[i] for part, coords in coordinates.items()}
+        visualize_skeleton(fig, ax, chosen_parts_coms, body_tree)
         plt.show()
     # visualize the force data using matplotlib
     

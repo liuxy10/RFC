@@ -143,6 +143,9 @@ def visualize_3d_forces(fig, ax, forces, positions):
 
 
 def visualize_skeleton(fig, ax, coms, tree):
+    """
+    visualzie the skeletons specifed by the coms and tree
+    """
     # Plot the COMs
     for name, com in coms.items():
         ax.scatter(com[0], com[1], com[2], c='r', marker='o')
@@ -159,15 +162,19 @@ def visualize_skeleton(fig, ax, coms, tree):
    
     for parent, children in tree.items():
         for child in children:
-            parent_com = coms[parent]
-            child_com = coms[child]
-            ax.plot([parent_com[0], child_com[0]], 
-                    [parent_com[1], child_com[1]], 
-                    [parent_com[2], child_com[2]], 'k-')
-            if child == 'lfoot' or child == 'ltibia':
+            try: 
+                parent_com = coms[parent]
+                child_com = coms[child]
                 ax.plot([parent_com[0], child_com[0]], 
-                    [parent_com[1], child_com[1]], 
-                    [parent_com[2], child_com[2]], 'r-')
+                        [parent_com[1], child_com[1]], 
+                        [parent_com[2], child_com[2]], 'k-')
+                if child == 'lfoot' or child == 'ltibia': # seems like prothetic side
+                    ax.plot([parent_com[0], child_com[0]], 
+                        [parent_com[1], child_com[1]], 
+                        [parent_com[2], child_com[2]], 'r-')
+                    
+            except KeyError:
+                pass
 
     mid_x = (coms_array[:, 0].max() + coms_array[:, 0].min()) * 0.5
     mid_y = (coms_array[:, 1].max() + coms_array[:, 1].min()) * 0.5

@@ -102,7 +102,7 @@ class MyVisulizer(Visualizer):
                     #   env.get_end_effector_position("rfoot"),
                     #   env.get_ground_reaction_force()
                     )
-                save_by_frame = False
+                save_by_frame = True
                 if save_by_frame:
                     fig, ax = env.visualize_by_frame(show = False) 
                     frame_dir = f'{args.video_dir}/frame_skeleton'

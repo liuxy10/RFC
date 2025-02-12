@@ -1,4 +1,57 @@
 from khrylib.utils.math import *
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+from os import path
+
+def build_body_tree(fullpath):
+    if not path.exists(fullpath):
+            # try the default assets path
+            fullpath = path.join(Path(__file__).parent.parent, 'assets/mujoco_models', path.basename(fullpath))
+            if not path.exists(fullpath):
+                raise IOError("File %s does not exist" % fullpath)
+    tree = ET.parse(fullpath)
+    xml_string = ET.tostring(tree.getroot(), encoding='unicode')
+    body_tree = {}
+    try:
+        root = ET.fromstring(xml_string)
+        worldbody = root.find('worldbody')
+
+        def process_body(body_element, parent_name=None):
+            body_name = body_element.get('name')
+            if body_name is None:
+                return
+            body_tree[body_name] = []
+            if parent_name:
+                if parent_name in body_tree:
+                    body_tree[parent_name].append(body_name)
+                else:
+                     body_tree[parent_name] = [body_name] # Initialize if parent doesn't exist
+            
+            for child in body_element:
+                if child.tag == 'body':
+                    process_body(child, body_name)
+
+        # Find the root body and start processing
+        root_body = worldbody.find('body')
+        process_body(root_body)
+        
+        # Ensure all parents exist in the dictionary, even if they have no children
+        all_bodies = worldbody.findall('.//body')
+        for body in all_bodies:
+            body_name = body.get('name')
+            if body_name not in body_tree:
+                body_tree[body_name] = []
+
+    except ET.ParseError as e:
+        print(f"XML Parse Error: {e}")
+        return {}  # Return an empty dictionary in case of an error
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return {}
+
+    return body_tree
+
 
 
 def get_body_qposaddr(model):
@@ -40,3 +93,17 @@ def get_traj_vel(orig_traj, dt):
     traj_vel.append(traj_vel[-1].copy())
     traj_vel = np.vstack(traj_vel)
     return traj_vel
+
+if __name__ == "__main__":
+    # Example usage:
+    tree = ET.parse("/home/xliu227/Github/RFC/khrylib/assets/mujoco_models/mocap_v2.xml")
+    xml_string = ET.tostring(tree.getroot(), encoding='unicode')
+
+
+    body_tree = build_body_tree(xml_string)
+
+    # Print the body tree in the desired format
+    print("self.body_tree = {")
+    for parent, children in body_tree.items():
+        print(f"    '{parent}': {children if children else []},")
+    print("}")

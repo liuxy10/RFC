@@ -37,28 +37,10 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.expert = None
         self.load_expert()
         self.set_spaces()
-        self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
+        self.body_tree = build_body_tree(cfg.mujoco_model_file)
 
-        self.lower_limb_connect = {
-            'root': ['lfemur', 'rfemur'],
-            'lfemur': ['ltibia'],
-            'ltibia': ['lfoot'],
-            'rfemur': ['rtibia'],
-            'rtibia': ['rfoot'],
-        }
+        self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
         self.max_vf = 30.0 # N
-        
-    #     body_tree = {
-    #     'LShould': ['LElb'],
-    #     'LElb': ['Lwrist'],
-    #     'RShould': ['RElb'],
-    #     'RElb': ['Rwrist'],
-    #     'Pelv': ['Lhip', 'Rhip', 'LShould', 'RShould'],
-    #     'Lhip': ['Lknee'],
-    #     'Lknee': ['Lank'],
-    #     'Rhip': ['Rknee'],
-    #     'Rknee': ['Rank'],
-    # }
         
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
@@ -363,24 +345,16 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 poss.append(contact.pos)
         return forces, poss
 
-        
-    def get_lower_limb_pos(self):
-        
-        lower_limb_pos = {}
-        for name in self.lower_limb_names:
-            bone_vec = self.get_body_com(name)
-            lower_limb_pos[name] = bone_vec
-        return lower_limb_pos
     
     def visualize_by_frame(self, show = False, label =  "normal"):
-        lower_limb_pos = self.get_lower_limb_pos()
+        body_pos = {n: self.get_body_position(n) for n in self.model.body_names if n != "world"}
         fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
         forces, poss = self.get_contact_force()
         ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
         ax.set_title(label)
         if len(forces) > 0: 
             visualize_3d_forces(fig, ax, forces, poss)
-        fig, ax = visualize_skeleton(fig, ax, lower_limb_pos, self.lower_limb_connect)
+        fig, ax = visualize_skeleton(fig, ax, body_pos, self.body_tree)
         
         if show:
             plt.show()
