@@ -76,6 +76,7 @@ def lin_interp(pose1, pose2, t):
 
 
 def interpolated_traj(poses, sample_t=0.030, mocap_fr=120, interp_func=lin_interp):
+
     N = poses.shape[0]
     T = float(N-1)/mocap_fr
     num = int(math.floor(T/sample_t))

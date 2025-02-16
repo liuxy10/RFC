@@ -1,5 +1,17 @@
 {
     "configurations": [
+
+
+
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "test nrel data reader",
+            "python":"/home/xliu227/miniconda3/envs/rfc/bin/python", 
+            "program": "${workspaceFolder}/mujoco_test/data_read.py",
+            "console": "integratedTerminal"
+        },
+
         
         {
             "type": "debugpy",
@@ -7,10 +19,14 @@
             "name": "Launch motion_im.py",
             "python":"/home/xliu227/miniconda3/envs/rfc/bin/python", 
             "program": "${workspaceFolder}/motion_imitation/motion_im.py",
-            "args": [
-                "--cfg",
-                "${input:configFile}"
-            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "test biped.py",
+            "python":"/home/xliu227/miniconda3/envs/rfc/bin/python", 
+            "program": "${workspaceFolder}/mujoco_test/13_2D_biped/biped.py",
             "console": "integratedTerminal"
         },
         {

@@ -6,6 +6,7 @@ import time
 import subprocess
 import shutil
 sys.path.append(os.getcwd())
+import matplotlib.pyplot as plt
 
 from khrylib.utils import *
 from khrylib.rl.utils.visualizer import Visualizer
@@ -25,7 +26,7 @@ parser.add_argument('--preview', action='store_true', default=False)
 parser.add_argument('--record', action='store_true', default=False)
 parser.add_argument('--record_expert', action='store_true', default=False)
 parser.add_argument('--azimuth', type=float, default=45)
-parser.add_argument('--video_dir', default='out/videos/motion_im')
+parser.add_argument('--video_dir', default='out/videos/normal')
 args = parser.parse_args()
 cfg = Config(args.cfg, False, create_dirs=False)
 cfg.env_start_first = True
@@ -69,11 +70,13 @@ class MyVisulizer(Visualizer):
     def data_generator(self):
         while True:
             poses = {'pred': [], 'gt': []}
-            vfs = []
+            forces = []
+            grfs = []
             state = env.reset()
             if running_state is not None:
                 state = running_state(state, update=False)
-
+            
+            
             for t in range(1000): 
                 
                 epos = env.get_expert_attr('qpos', env.get_expert_index(t)).copy()
@@ -86,12 +89,37 @@ class MyVisulizer(Visualizer):
                     epos[3:7] = quaternion_multiply(cycle_h, epos[3:7])
                 poses['gt'].append(epos) 
                 poses['pred'].append(env.data.qpos.copy())
-                  
+                
+    
+                print(t, 
+                    #   env.compute_global_force(),
+                    # env.data.efc_J.shape # this is 500* 38 but only non-zeros till index 22
+                    # env.data.efc_J[np.nonzero(env.data.efc_J)],
+                      "env.data.qfrc_applied", env.data.qfrc_applied.shape,
+                      "env.data.qfrc_actuator",env.data.qfrc_actuator.shape,
+                      "env.data.actuator_force", env.data.actuator_force.shape,
+                    #   env.get_contact_force()
+                    #   env.get_end_effector_position("rfoot"),
+                    #   env.get_ground_reaction_force()
+                    )
+                save_by_frame = True
+                if save_by_frame:
+                    fig, ax = env.visualize_by_frame(show = False) 
+                    frame_dir = f'{args.video_dir}/frame_skeleton'
+                    fig.canvas.draw()
+                    data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
+                    save_image_hwc(data,  f'{frame_dir}/%04d.png' % t) 
+                    plt.close(fig)
+                    
+                print("*"*20)
                 state_var = tensor(state, dtype=dtype).unsqueeze(0)
                 action = policy_net.select_action(state_var, mean_action=True)[0].cpu().numpy()
                 
                 next_state, reward, done,info = env.step(action)
-                vfs.append(np.hstack([env.data.qfrc_applied[:6].copy(), env.data.qfrc_actuator[6:].copy()])) 
+                forces.append(env.data.actuator_force.copy()) # env.data.qfrc_actuator.copy()[6:]) #np.hstack([env.data.qfrc_applied[:6].copy(), env.data.qfrc_actuator[6:].copy()])) 
+                # print(env.data.actuator_force.copy())
+                f, cop, f_m = env.get_ground_reaction_force()
+                grfs.append(f)
                 if running_state is not None:
                     next_state = running_state(next_state, update=False)
                 if done:
@@ -103,39 +131,28 @@ class MyVisulizer(Visualizer):
             poses['pred'] = np.vstack(poses['pred'])
             plot_pose = False
             if plot_pose:
-                import matplotlib.pyplot as plt
-                fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(6, 12))
-                for i in range(poses['gt'].shape[1]//4+1):
-                    for j in range(4):
-                        idx = i*4 + j
-                        if idx < poses['gt'].shape[1]: 
-                            gt = poses['gt'][:, idx ]
-                            pred = poses['pred'][:, idx ]
-                            mse = np.mean((gt - pred) ** 2)
-                            axs[i, j].plot(gt, 'r', label='gt')
-                            axs[i, j].plot(pred, 'b', label='pred')
-                            axs[i, j].set_ylim([-np.pi, np.pi])
-                            axs[i, j].set_title(f'MSE: {mse:.4f}')
-                        if i == 0 and j == 0:
-                            axs[i, j].legend()
-                plt.tight_layout()
+                fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(10, 12))
+                fig, axs = visualize_poses(fig, axs, poses, env.body_qposaddr)
                 plt.show()
             plot_torque = True
             if plot_torque:
-                import matplotlib.pyplot as plt
-                vfs = np.vstack(vfs)
-                print("virtual force dim = ", vfs.shape)
-                fig, axs = plt.subplots(nrows=2, ncols=1, figsize=(6, 10))
-                for i in range(vfs[0].shape[0]):
-                    if i < 6: 
-                        axs[0].plot(vfs[:,i], label= f'rf {i}')
-                        
-                    else: 
-                        axs[1].plot(vfs[:,i])
-                axs[0].legend()
-                plt.tight_layout()
-                plt.show()
+                forces = np.vstack(forces)
+                print("virtual force dim = ", forces.shape)
+                # fig, axs = plt.subplots(nrows=2, ncols=1, figsize=(6, 10))
+                # fig, axs = visualize_torques(fig, axs, forces)
+                # plt.show()
+                visualize_force(forces, env.model.actuator_names)
             self.num_fr = poses['pred'].shape[0]
+            plot_grfs = True
+            if plot_grfs:
+                fig, axs = plt.subplots(3, 1, figsize=(10, 10))
+                fig, axs = visualize_grfs(fig, axs, grfs)
+                plt.show()
+            contact_video = False
+            if contact_video:
+                out_name = f'{args.cfg}_{"expert" if args.record_expert else args.iter}_skeleton.mp4'
+                frames_to_video(f'{args.video_dir}/frame_skeleton', args.video_dir, 5, out_name)
+                
             yield poses
 
     def update_pose(self):
@@ -167,10 +184,6 @@ class MyVisulizer(Visualizer):
                 width, height = glfw.get_window_size(self.env_vis.viewer.window)
                 data = self.env_vis._get_viewer("human").read_pixels(width, height, depth=False)
                 save_image_hwc(data[::-1, :, [0,1,2]],  f'{frame_dir}/%04d.png' % fr)
-                
-                # img = self.env_vis.sim.render(width, height)
-                # img = img.astype(np.uint8)
-                # save_image_hwc(img,  f'{frame_dir}/{fr}.png')
                 print('%d/%d, %.3f' % (fr, self.num_fr, time.time() - t0))
 
         if not args.preview:
@@ -178,12 +191,12 @@ class MyVisulizer(Visualizer):
             cmd = ['ffmpeg', '-y', '-r', '30', '-f', 'image2', '-start_number', '0',
                 '-i', f'{frame_dir}/%04d.png', '-vcodec', 'libx264', '-crf', '5', '-pix_fmt', 'yuv420p', out_name]
             subprocess.call(cmd)
-
-
+        
+        
 
 vis = MyVisulizer(f'{args.vis_model_file}.xml')
-
-if args.record:
-    vis.record_video()
-else:
-    vis.show_animation()
+torch.cuda.empty_cache()
+# if args.record:
+#     vis.record_video()
+# else:
+#     vis.show_animation()

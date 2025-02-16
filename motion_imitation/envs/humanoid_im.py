@@ -7,29 +7,41 @@ from gym import spaces
 from khrylib.utils import *
 from khrylib.utils.transformation import quaternion_from_euler
 from motion_imitation.utils.tools import get_expert
+import mujoco_py as mujoco
 from mujoco_py import functions as mjf
 import pickle
 import time
 from scipy.linalg import cho_solve, cho_factor
+
 from osl.control.myoosl_control import MyoOSLController
 
 class HumanoidEnv(mujoco_env.MujocoEnv):
 
     def __init__(self, cfg):
-        mujoco_env.MujocoEnv.__init__(self, cfg.mujoco_model_file, 15)
+        mujoco_env.MujocoEnv.__init__(self, cfg.mujoco_model_file, 15) # 15 is the frame skip 
         self.cfg = cfg
         self.set_cam_first = set()
         # env specific
         self.end_reward = 0.0
         self.start_ind = 0
         self.body_qposaddr = get_body_qposaddr(self.model)
+        self.body_qposaddr_list_start_index = [idxs[0] for idxs in list(self.body_qposaddr.values())]
+        self.knee_qposaddr = self.body_qposaddr_list_start_index[2]
+        try:
+            self.knee_qveladdr = self.sim.model.get_joint_qvel_addr("ltibia_x")
+        except:
+            self.knee_qveladdr = self.sim.model.get_joint_qvel_addr("knee")
         self.bquat = self.get_body_quat()
         self.prev_bquat = None
         self.set_model_params()
         self.expert = None
         self.load_expert()
         self.set_spaces()
+        self.body_tree = build_body_tree(cfg.mujoco_model_file)
 
+        self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
+        self.max_vf = 30.0 # N
+        
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
         # print(expert_meta)
@@ -72,19 +84,18 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         qpos = data.qpos.copy()
         qvel = data.qvel.copy()
         # print(f"dim of qpos, qvel = {qpos.shape, qvel.shape}")
-        # transform velocity
-        qvel[:3] = transform_vec(qvel[:3], qpos[3:7], self.cfg.obs_coord).ravel()
+        qvel[:3] = transform_vec(qvel[:3], qpos[3:7], self.cfg.obs_coord).ravel()# transform velocity to root frame by default, or heading frame if specified
         obs = []
         # pos
-        if self.cfg.obs_heading:
+        if self.cfg.obs_heading: # set to False
             obs.append(np.array([get_heading(qpos[3:7])]))
-        if self.cfg.root_deheading:
+        if self.cfg.root_deheading: # set to True
             qpos[3:7] = de_heading(qpos[3:7])
-        obs.append(qpos[2:]) # why?
+        obs.append(qpos[2:]) # why? because x,y position is not useful, so start from z(2)
         #  vel
         if self.cfg.obs_vel == 'root':
             obs.append(qvel[:6])
-        elif self.cfg.obs_vel == 'full':
+        elif self.cfg.obs_vel == 'full': # set to True
             obs.append(qvel)
         # phase
         if self.cfg.obs_phase:
@@ -179,10 +190,10 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             contact_point = vf[i*self.body_vf_dim: i*self.body_vf_dim + 3]
             force = vf[i*self.body_vf_dim + 3: i*self.body_vf_dim + 6] * self.cfg.residual_force_scale
             torque = vf[i*self.body_vf_dim + 6: i*self.body_vf_dim + 9] * self.cfg.residual_force_scale if self.cfg.residual_force_torque else np.zeros(3)
-            contact_point = self.pos_body2world(body, contact_point)
+            contact_point = self.pos_body2world(body, contact_point) # 
             force = self.vec_body2world(body, force)
             torque = self.vec_body2world(body, torque)
-            mjf.mj_applyFT(self.model, self.data, force, torque, contact_point, body_id, qfrc)
+            mjf.mj_applyFT(self.model, self.data, force, torque, contact_point, body_id, qfrc) # apply a Cartesian force and torque to a point on a body, and add the result to the vector mjData.qfrc_applied of all applied forces. Note that the function requires a pointer to this vector, because sometimes we want to add the result to a different vector.
         self.data.qfrc_applied[:] = qfrc
 
     """ RFC-Implicit """
@@ -199,12 +210,12 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         for i in range(n_frames):
             ctrl = action
             if cfg.action_type == 'position': # used action type is position
-                torque = self.compute_torque(ctrl)
+                torque = self.compute_torque(ctrl) # where we add osl control and overwrite the knee and ankle torque
             elif cfg.action_type == 'torque':
                 torque = ctrl * cfg.a_scale
             torque = np.clip(torque, -cfg.torque_lim, cfg.torque_lim)
             self.data.ctrl[:] = torque
-            
+
             """ Residual Force Control (RFC) """
             if cfg.residual_force:
                 vf = ctrl[-self.vf_dim:].copy() # vfs are at the last of action
@@ -213,13 +224,13 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 else:
                     self.rfc_explicit(vf)
             # print("ctrl torques vs vf", torque.tolist(), vf.tolist())
-
+            # contact = self.get_contact()
+            # print("contact = ", contact)
             self.sim.step()
 
         if self.viewer is not None:
             self.viewer.sim_time = time.time() - t0
-        
-
+    
     def step(self, a):
         cfg = self.cfg
         # record prev state
@@ -227,7 +238,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.prev_qvel = self.data.qvel.copy()
         self.prev_bquat = self.bquat.copy()
         # do simulation
-        self.do_simulation(a, self.frame_skip)
+        self.do_simulation(a, self.frame_skip) 
         self.cur_t += 1
         self.bquat = self.get_body_quat()
         self.update_expert()
@@ -251,7 +262,9 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             self.start_ind = ind
             init_pose = self.expert['qpos'][ind, :].copy()
             init_vel = self.expert['qvel'][ind, :].copy()
-            init_pose[7:] += self.np_random.normal(loc=0.0, scale=cfg.env_init_noise, size=self.model.nq - 7)
+            self.init_qpos_p = init_pose.copy()
+            self.init_qvel_p = init_vel.copy()
+            init_pose[7:] += self.np_random.normal(loc=0.0, scale=cfg.env_init_noise, size=self.model.nq - 7)# 
             self.set_state(init_pose, init_vel)
             self.bquat = self.get_body_quat()
             self.update_expert()
@@ -302,355 +315,72 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
 
     def get_expert_attr(self, attr, ind):
         return self.expert[attr][ind, :]
+    
+##############################################################################################################
+### xinyi's code
+##############################################################################################################
 
+    def get_body_position(self, body_name):
+        sim = self.sim
+        body_id = sim.model.body_name2id(body_name)
+        return sim.data.body_xpos[body_id]
+    
+    def get_joint_qvel_addr(self, joint_name):
+        return self.sim.model.get_joint_qvel_addr(joint_name)
 
-class HumanoidEnvFreezeKnee(HumanoidEnv):
-    """ take out left knee and ankle degree of freedom, 
-    but compatible with the normally trained policy """
+    def get_contact_force(self):
+        forces = []
+        poss = []
+        for contact_id in range(self.data.ncon): 
+            contact = self.data.contact[contact_id]
+            if contact.efc_address >= 0 and contact.dim > 1 and contact.pos[2] <= 0.1:
+                assert contact.dim == 3, "contact force dimension should be 3"
+                
+                mat = np.transpose(contact.frame.reshape(3, 3))
+                force_local = np.zeros(6)
+                mjf.mj_contactForce(self.sim.model, self.data, contact_id, force_local)
+                force_global = (mat @ force_local[:3, None]).ravel()
+                    
+                forces.append(force_global)
+                poss.append(contact.pos)
+        return forces, poss
 
-    def __init__(self, cfg_f, cfg):
-        self.cfg = cfg
-        self.cfg_f = cfg_f  
+    
+    def visualize_by_frame(self, show = False, label =  "normal"):
+        body_pos = {n: self.get_body_position(n) for n in self.model.body_names if n != "world"}
+        fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
+        forces, poss = self.get_contact_force()
+        ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
+        ax.set_title(label)
+        if len(forces) > 0: 
+            visualize_3d_forces(fig, ax, forces, poss)
+        fig, ax = visualize_skeleton(fig, ax, body_pos, self.body_tree)
         
-        super().__init__(cfg_f)
+        if show:
+            plt.show()
+        return fig, ax
         
+    def get_ground_reaction_force(self):
+        forces, poss = self.get_contact_force()
+        force_sum, pos_sum, force_sum_magnitude = get_sum_force(forces, poss)
+        return force_sum, pos_sum, force_sum_magnitude
 
+    def get_applied_torque_generalized(self):
+        return self.data.qfrc_applied[6:]
+    
+    def compute_global_force(self):
+        # Get full constraint Jacobian (efc_J)
+        J = self.data.efc_J.copy()  # Shape: (n_contacts, nv)
         
-    def load_expert(self):
-        expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
-        body_qposaddr = get_body_qposaddr(self.model)
-        body_qposaddr_list_start_index = [idxs[0] for idxs in list(body_qposaddr.values())]
-        self.knee_id = body_qposaddr_list_start_index[2] 
-        expert_qpos_f = np.hstack([expert_qpos[:,:self.knee_id], expert_qpos[:,self.knee_id+4:] ]) 
-
-        expert_meta_f = expert_meta.copy()
-        self.expert = get_expert(expert_qpos_f , expert_meta_f, self)
-
-    
-    def get_full_obs(self):  # definition of observation for knee
-        """
-        Get the full observation for the humanoid.
-
-        This function constructs the observation vector for the humanoid, which includes
-        position, velocity, and optionally heading and phase information based on the configuration.
-
-        Returns:
-            np.ndarray: The observation vector containing:
-                - qpos[2:] (np.ndarray): Position information excluding the first two elements.
-                - qvel[:6] or qvel (np.ndarray): Velocity information, either root or full based on configuration.
-        """
-        data = self.data
-        qpos = data.qpos.copy()
-        qvel = data.qvel.copy()
-        # print(f"[freez]dim of qpos, qvel = {   qpos.shape, qvel.shape}")
-        # transform velocity
-        qvel[:3] = transform_vec(qvel[:3], qpos[3:7], self.cfg.obs_coord).ravel()
-        obs = []
-        # pos
-        if self.cfg.obs_heading: # set to False
-            obs.append(np.array([get_heading(qpos[3:7])])) 
-        if self.cfg.root_deheading: # set to True
-            qpos[3:7] = de_heading(qpos[3:7]) 
-        qpos = np.hstack([qpos[:self.knee_id], np.zeros(4),qpos[self.knee_id:]]) # add the knee and ankle back as zeros
-        qvel = np.hstack([qvel[:self.knee_id], np.zeros(4),qvel[self.knee_id:]]) # add the knee and ankle back as zeros
-        obs.append(qpos[2:])
-        # vel
-        if self.cfg.obs_vel == 'root':
-            obs.append(qvel[:6])
-        elif self.cfg.obs_vel == 'full': # set to True
-            obs.append(qvel)
-
-        if self.cfg.obs_phase:
-            phase = self.get_phase()
-            obs.append(np.array([phase]))
-        obs = np.concatenate(obs)
-        return obs
-    
-    def compute_torque(self, ctrl):
-        cfg = self.cfg_f
-        dt = self.model.opt.timestep
-        ctrl_joint = ctrl[:self.ndof] * cfg.a_scale
-        qpos = self.data.qpos.copy()
-        qvel = self.data.qvel.copy()
-        base_pos = cfg.a_ref
-        target_pos = base_pos + ctrl_joint
-
-        k_p = np.zeros(qvel.shape[0])
-        k_d = np.zeros(qvel.shape[0])
-        k_p[6:] = cfg.jkp
-        k_d[6:] = cfg.jkd
-        qpos_err = np.concatenate((np.zeros(6), qpos[7:] + qvel[6:]*dt - target_pos))
-        qvel_err = qvel
-        q_accel = self.compute_desired_accel(qpos_err, qvel_err, k_p, k_d)
-        qvel_err += q_accel * dt
-        torque = -cfg.jkp * qpos_err[6:] - cfg.jkd * qvel_err[6:]
-        return torque
-        # return super().compute_torque(ctrl)
-    
-    def do_simulation(self, action, n_frames):
-        t0 = time.time()
-        cfg = self.cfg_f
-        for i in range(n_frames):
-            ctrl = action.copy()
-            ctrl = np.hstack([ctrl[:self.knee_id], ctrl[self.knee_id + 4:]]) # remove the knee and ankle back as zeros
-            if cfg.action_type == 'position': # used action type is position
-                torque = self.compute_torque(ctrl) 
-            elif cfg.action_type == 'torque': 
-                torque = ctrl * cfg.a_scale
-            torque = np.clip(torque, -cfg.torque_lim, cfg.torque_lim)
-            self.data.ctrl[:] = torque
-
-            """ Residual Force Control (RFC) """
-            if cfg.residual_force:
-                vf = ctrl[-self.vf_dim:].copy() # vfs are at the last of action
-                if cfg.residual_force_mode == 'implicit':
-                    self.rfc_implicit(vf)
-                else:
-                    self.rfc_explicit(vf)
-
-            self.sim.step()
-
-        if self.viewer is not None:
-            self.viewer.sim_time = time.time() - t0
-            
-    
-    def get_ee_pos(self, transform): 
-        # get end effector position in world frame
-        data = self.data
-        ee_name = ['lfemur', 'rfoot', 'lwrist', 'rwrist', 'head']
-        ee_pos = []
-        root_pos = data.qpos[:3]
-        root_q = data.qpos[3:7].copy()
-        for name in ee_name:
-            bone_id = self.model._body_name2id[name]
-            bone_vec = self.data.body_xpos[bone_id]
-            if transform is not None:
-                bone_vec = bone_vec - root_pos
-                bone_vec = transform_vec(bone_vec, root_q, transform)
-            ee_pos.append(bone_vec)
-        return np.concatenate(ee_pos)
-    
-    def reset_model(self): 
-        cfg = self.cfg_f
-        if self.expert is not None:
-            ind = 0 if self.cfg.env_start_first else self.np_random.randint(self.expert['len'])
-            self.start_ind = ind
-            init_pose = self.expert['qpos'][ind, :].copy()
-            init_vel = self.expert['qvel'][ind, :].copy()
-            self.init_qpos_f = init_pose.copy()
-            self.init_qvel_f = init_vel.copy()
-            init_pose[7:] += self.np_random.normal(loc=0.0, scale=cfg.env_init_noise, size=self.model.nq - 7)# 
-            self.set_state(init_pose, init_vel)
-            self.bquat = self.get_body_quat()
-            self.update_expert()
-        else:
-            init_pose = self.data.qpos
-            init_pose[2] += 1.0
-            self.set_state(init_pose, self.data.qvel)
-        return self.get_obs()
-
-
-class HumanoidEnvProthesis (HumanoidEnv):
-    def __init__(self, cfg_p, cfg):
-        self.cfg = cfg
-        self.cfg_p = cfg_p  
-        self.normalize_action = False
+        # Compute pseudoinverse of J^T
+        J_transpose = J.T  # Shape: (nv, n_contacts)
+        J_transpose_pinv = np.linalg.pinv(J_transpose)
         
-        super().__init__(cfg_p)
-        # OSL specific init
-        self.osl_param_set = 4
-        self.setup_osl_controller()
+        # Solve for Cartesian forces
+        F_cartesian = J_transpose_pinv @ self.data.qfrc_applied
         
-        self.grf_sensor_names = ['l_foot', 'l_toes']
-        body_qposaddr = get_body_qposaddr(self.model)
-        body_qposaddr_list_start_index = [idxs[0] for idxs in list(body_qposaddr.values())]
-        self.knee_id = body_qposaddr_list_start_index[2] 
-        
-    def load_expert(self):
-        expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
-        body_qposaddr = get_body_qposaddr(self.model)
-        body_qposaddr_list_start_index = [idxs[0] for idxs in list(body_qposaddr.values())]
-        self.knee_id = body_qposaddr_list_start_index[2] 
-        expert_qpos_p = np.hstack([expert_qpos[:,:self.knee_id+1], expert_qpos[:,self.knee_id+3:] ]) 
-
-        expert_meta_p = expert_meta.copy()
-        self.expert = get_expert(expert_qpos_p , expert_meta_p, self)
-
-    def reset_model(self): 
-        cfg = self.cfg_p
-        if self.expert is not None:
-            ind = 0 if self.cfg.env_start_first else self.np_random.randint(self.expert['len'])
-            self.start_ind = ind
-            init_pose = self.expert['qpos'][ind, :].copy()
-            init_vel = self.expert['qvel'][ind, :].copy()
-            self.init_qpos_p = init_pose.copy()
-            self.init_qvel_p = init_vel.copy()
-            init_pose[7:] += self.np_random.normal(loc=0.0, scale=cfg.env_init_noise, size=self.model.nq - 7)# 
-            self.set_state(init_pose, init_vel)
-            self.bquat = self.get_body_quat()
-            self.update_expert()
-        else:
-            init_pose = self.data.qpos
-            init_pose[2] += 1.0
-            self.set_state(init_pose, self.data.qvel)
-        return self.get_obs()   
-
-    
-    def setup_osl_controller(self, init_state = 'l_swing'):
-        # Initialize the OSL controller
-        self.OSL_CTRL = MyoOSLController(np.sum(self.model.body_mass), init_state=init_state, n_sets=self.osl_param_set)
-        self.OSL_CTRL.start()
-
-        # Define OSL-controlled joints
-        self.osl_joints = ['knee', 'ankle']
-        
-        # Adjust action space
-
-        self.action_space = spaces.Box(low=-np.ones(self.action_dim), high=np.ones(self.action_dim), dtype=np.float32)
-    
-    def get_full_obs(self):  # definition of observation for knee
-
-        data = self.data
-        qpos = data.qpos.copy()
-        qvel = data.qvel.copy()
-        # print(f"[freez]dim of qpos, qvel = {   qpos.shape, qvel.shape}")
-        # transform velocity
-        qvel[:3] = transform_vec(qvel[:3], qpos[3:7], self.cfg.obs_coord).ravel()
-        obs = []
-        # pos
-        if self.cfg.obs_heading: # set to False
-            obs.append(np.array([get_heading(qpos[3:7])])) 
-        if self.cfg.root_deheading: # set to True
-            qpos[3:7] = de_heading(qpos[3:7]) 
-        qpos = np.hstack([qpos[:self.knee_id+1], np.zeros(2),qpos[self.knee_id+1:]]) # add the knee and ankle back as zeros
-        qvel = np.hstack([qvel[:self.knee_id+1], np.zeros(2),qvel[self.knee_id+1:]]) # add the knee and ankle back as zeros
-        obs.append(qpos[2:])
-        # vel
-        if self.cfg.obs_vel == 'root':
-            obs.append(qvel[:6])
-        elif self.cfg.obs_vel == 'full': # set to True
-            obs.append(qvel)
-
-        if self.cfg.obs_phase:
-            phase = self.get_phase()
-            obs.append(np.array([phase]))
-        obs = np.concatenate(obs)
-        return obs
-    
-
-    
-    def do_simulation(self, action, n_frames):
-        t0 = time.time()
-        cfg = self.cfg_p
-        for i in range(n_frames):
-            ctrl = action.copy()
-            ctrl = np.hstack([ctrl[:self.knee_id+1], ctrl[self.knee_id + 3:]]) # remove the knee and ankle back as zeros
-            if cfg.action_type == 'position': # used action type is position
-                torque = self.compute_torque(ctrl)
-            elif cfg.action_type == 'torque':
-                torque = ctrl * cfg.a_scale
-            torque = np.clip(torque, -cfg.torque_lim, cfg.torque_lim)
-            self.data.ctrl[:] = torque
-
-            """ Residual Force Control (RFC) """
-            if cfg.residual_force:
-                vf = ctrl[-self.vf_dim:].copy() # vfs are at the last of action
-                if cfg.residual_force_mode == 'implicit':
-                    self.rfc_implicit(vf)
-                else:
-                    self.rfc_explicit(vf)
-
-            self.sim.step()
-
-        if self.viewer is not None:
-            self.viewer.sim_time = time.time() - t0
-    
-    def step(self, action):
-        # Combine OSL actions with other actions
-        # full_action = self._append_osl_actions(action)
-        full_action, osl_info = self._overwrite_osl_actions(action)
-        self.osl_info = osl_info 
-        return super().step(full_action)
-
-    
-    """ OSL specific functions
-    """
-    def _overwrite_osl_actions(self, action):
-        
-        action_ow= action.copy()
-
-        osl_sens_data = self.get_osl_sens()
-        # print("osl_sens_data",osl_sens_data)
-        self.OSL_CTRL.update(osl_sens_data)
-        osl_torques = self.OSL_CTRL.get_osl_torque()
-        # print("osl_torques",osl_torques.keys())
-        # print("self.osl_joints", self.osl_joints)
-        for i, joint in enumerate(self.osl_joints):
-            joint_id = self.model._joint_name2id[joint]
-            osl_ctrl = osl_torques[joint] / self.model.actuator_gear[joint_id][0]
-            osl_ctrl = np.clip(osl_ctrl, self.model.actuator_ctrlrange[joint_id][0], self.model.actuator_ctrlrange[joint_id][1])
-            
-            if self.normalize_action:
-                ctrl_mean = np.mean(self.model.actuator_ctrlrange[joint_id])
-                ctrl_range = np.diff(self.model.actuator_ctrlrange[joint_id])[0] / 2
-                osl_ctrl = (osl_ctrl - ctrl_mean) / ctrl_range
-            # print("osl_ctrl", osl_ctrl)
-            action_ow[self.knee_id + i] = osl_ctrl 
-        osl_info = {"osl_ctrl": osl_torques, "phase": self.OSL_CTRL.STATE_MACHINE.get_current_state.get_name(), "osl_sense_data": osl_sens_data}
-        print(action_ow.shape,self.sim.data.qpos.shape, "action_ow", action_ow[self.knee_id: self.knee_id+2], "osl_ctrl", osl_torques)
-        return action_ow, osl_info
-            
-
-    
-    def upload_osl_param(self, dict_of_dict):
-        """
-        Accessor function to upload full set of paramters to OSL leg
-        """   
-        assert len(dict_of_dict.keys()) <= 4   
-        for idx in dict_of_dict.keys():
-            self.OSL_CTRL.set_osl_param_batch(dict_of_dict[idx], mode=idx)
-
-    
-    def get_osl_sens(self):
-
-        osl_sens_data = {}
-        
-        osl_sens_data['knee_angle'] = self.sim.data.qpos[self.knee_id].copy()
-        osl_sens_data['knee_vel'] = self.sim.data.qvel[self.knee_id].copy()
-        osl_sens_data['ankle_angle'] = self.sim.data.qpos[self.knee_id +1].copy()
-        osl_sens_data['ankle_vel'] = self.sim.data.qvel[self.knee_id +1].copy()
-        # print(self.sim.data.get_sensor('lload'))
-        
-        osl_sens_data['load'] =  np.maximum(- self.get_sensor('lforce', 3).copy() [2], 0.0)  # magnitude
-        osl_sens_data['touch'] = np.sign(self.get_sensor('ltouch', 1).copy() [0] )# magnitude
+        return F_cartesian
    
-        return osl_sens_data
-
-    def change_osl_mode(self, mode=0):
-        """
-        Accessor function to activte a set of state machine variables
-        """
-        assert mode < 4
-        self.OSL_CTRL.change_osl_mode(mode)
-
-    def get_sensor(self, name, dimensions):
-        i = self.sim.model.sensor_name2id(name)
-        return self.sim.data.sensordata[i:i+dimensions]         
-class runningAvg:
-    def __init__(self, size):
-        self.size = size
-        self.data = []
-        
-    def add(self, x):
-        self.data.append(x)
-        if len(self.data) > self.size:
-            self.data.pop(0)
-            
-    def get(self):
-        return np.mean(self.data)        
-        
-   
-        
 if __name__ == "__main__":
     from motion_imitation.utils.config import Config
     cfg = Config('0202', False, create_dirs=False)
@@ -661,16 +391,24 @@ if __name__ == "__main__":
     cfg_p.env_start_first = True
     env = HumanoidEnv(cfg)
     # env_f = HumanoidEnvFreezeKnee(cfg_f, cfg)
-    env_p = HumanoidEnvProthesis(cfg_p, cfg)
+    # env_p = HumanoidEnvProthesis(cfg_p, cfg)
     print("HumanoidEnv",env.observation_space, env.action_space)
     # print("HumanoidEnvFreezeKnee",env_f.observation_space, env_f.action_space)
-    print("HumanoidEnvProthesis", env_p.observation_space, env_p.action_space)
+    # print("HumanoidEnvProthesis", env_p.observation_space, env_p.action_space)
     
     # print(env.reset().shape)
     
-    print(env_p.reset().shape)
-    print(env_p.get_osl_sens())
-    print(env_p.model.sensor_names)
+    # print(env_p.reset().shape)
+    # print(env_p.get_osl_sens())
+    # print(env_p.model.sensor_names)
     
-    print(env_p.sim.data.get_sensor('ltouch'), env_p.sim.data.get_sensor('lforce'))
-    print(env_p.get_osl_sens())
+    # print(env_p.sim.data.get_sensor('ltouch'), env_p.sim.data.get_sensor('lforce'))
+    # print(env_p.get_osl_sens())
+    # print(env_p.action_space.high, env_p.action_space.low)
+    
+    # Access the contact forces
+
+    
+
+
+

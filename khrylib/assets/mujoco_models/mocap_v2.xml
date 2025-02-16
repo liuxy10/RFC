@@ -120,7 +120,7 @@
     </body>
   </worldbody>
   <actuator>
-    <motor gear="1" joint="lfemur_z" name="lfemur_z"/>
+    <motor gear="1" joint="lfemur_z" name="lfemur_z"/> 
     <motor gear="1" joint="lfemur_y" name="lfemur_y"/>
     <motor gear="1" joint="lfemur_x" name="lfemur_x"/>
     <motor gear="1" joint="ltibia_x" name="ltibia_x"/>
