@@ -2,5 +2,7 @@
     "remote.SSH.configFile": {
         "ForwardX11": "yes"
     },
-    "docwriter.style": "Google"
+    "docwriter.style": "Google",
+    "github.copilot.editor.enableAutoCompletions": true
+    
 }
