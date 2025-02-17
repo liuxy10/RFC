@@ -148,7 +148,7 @@ class MyVisulizer(Visualizer):
                 fig, axs = plt.subplots(3, 1, figsize=(10, 10))
                 fig, axs = visualize_grfs(fig, axs, grfs)
                 plt.show()
-            contact_video = False
+            contact_video = True
             if contact_video:
                 out_name = f'{args.cfg}_{"expert" if args.record_expert else args.iter}_skeleton.mp4'
                 frames_to_video(f'{args.video_dir}/frame_skeleton', args.video_dir, 5, out_name)

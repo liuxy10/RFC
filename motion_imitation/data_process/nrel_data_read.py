@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from khrylib.utils.tools import *
+import cv2
     
 def process_force_data(csv_file):
     df = pd.read_csv(csv_file)
@@ -58,10 +59,10 @@ def process_motion_data(csv_file):
     
     # Other body parts
     body_parts = {  # with joint name commented here
-        'lclavicle': ([24, 25, 29], [0, 0, None]), # 'Left Should'
+        'lclavicle': ([27, 28, 29], [0, 0, None]), # 'Left Should'
         'lhumerus': ([33, 34, 35], [0, 0, None]), # 'Left Elbow'
         'lradius': ([39, 42, 40, 43, 41, 44], [0, 0, None]), # 'Left wrist'
-        'rclavicle': ([48, 49, 50], [0, 0, None]), # 'Rright Should'
+        'rclavicle': ([48, 49, 50], [0, 0, None]), # 'Right Should'
         'rhumerus': ([54, 55, 56], [0, 0, None]), # 'Right Elbow'
         'rradius': ([60, 63, 61, 64, 62, 65], [0, 0, None]), # 'Rwrist'
         'lowerback': ([75, 78, 79, 73, 77, 80], [0, 30, None]), # 'Pelv'
@@ -72,6 +73,8 @@ def process_motion_data(csv_file):
         'rtibia': ([102, 103, 104], [0, 0, None]), # 'Rknee'
         'rfoot': ([108, 109, 110], [0, 0, None]) # 'Rank'
     }
+    
+    
 
     body_tree = {
         'root': ['lhipjoint', 'rhipjoint', 'lowerback'],
@@ -115,7 +118,14 @@ def process_motion_data(csv_file):
                 (raw.iloc[:, cols[2]] + raw.iloc[:, cols[3]])/2 - Norm[1] + (offsets[1] or 0),
                 (raw.iloc[:, cols[4]] + raw.iloc[:, cols[5]])/2 + (offsets[2] or 0)
             ])
-    
+            
+    # Head coordinates (average of 4 markers)
+    Head = np.column_stack([
+        (raw.iloc[:, [0, 3, 6, 9]].mean(axis=1) - Norm[0]),
+        (raw.iloc[:, [1, 4, 7, 10]].mean(axis=1) - Norm[1]),
+        (raw.iloc[:, [2, 5, 8, 11]].mean(axis=1))
+    ])
+    coordinates['head'] = Head
     # Find foot strike indices
     foot_strikes = df[(df.iloc[:, 1] == 'Right') & (df.iloc[:, 2] == 'Foot Strike')].index
     steps = foot_strikes[-22:-1]
@@ -125,10 +135,16 @@ def process_motion_data(csv_file):
 
 if __name__ == "__main__":
     # Process motion data
-    # fname = 'data/nrel/no-rail-W1_High K2/no-rail-W1_High K2.csv'
-    fname = 'data/nrel/Walking_passive01_K4/Walking_passive01_K4.csv'
-    coordinates, step_times, body_tree = process_motion_data(fname)
-    force_data, moment_data, cop_data = process_force_data(fname)
+    # fpath = 'data/nrel/no-rail-W1_High K2/no-rail-W1_High K2.csv'
+    dt = 0.01
+    # fname = 'Walking_passive01_K4'  
+    # fdir = 'data/nrel/Walking_passive01_K4'
+    fdir = 'data/nrel/no-rail-W1_High K2'
+    fname = 'no-rail-W1_High K2'
+    frame_dir = f'{fdir}/frame_skeleton'
+    fpath = os.path.join(fdir, f'{fname}.csv')
+    coordinates, step_times, body_tree = process_motion_data(fpath)
+    force_data, moment_data, cop_data = process_force_data(fpath)
     # Print coordinates and step times
     print("Coordinates:")
     for part, coords in coordinates.items():
@@ -157,41 +173,52 @@ if __name__ == "__main__":
         plt.legend()
         plt.show()
         
-    # visualize by frame 
-
-    for i in range(0, coords.shape[0], 200):
-        fig = plt.figure(figsize=(10, 10))
-        ax = fig.add_subplot(111, projection='3d')
-        chosen_parts_coms = {part: coords[i] for part, coords in coordinates.items()}
-        visualize_skeleton(fig, ax, chosen_parts_coms, body_tree)
-        plt.show()
+    # Loop through frames and save them
+    for i in range(0, coordinates['head'].shape[0], 100):
+        try: 
+            print(f"Processing frame {i}/{coordinates['head'].shape[0]}")
+            fig = plt.figure(figsize=(10, 10))
+            ax = fig.add_subplot(111, projection='3d')
+            chosen_parts_coms = {part: coords[i] for part, coords in coordinates.items()}
+            visualize_skeleton(fig, ax, chosen_parts_coms, body_tree)
+            fig.canvas.draw()
+            data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
+            save_image_hwc(data,  f'{frame_dir}/%04d.png' % i) 
+            plt.close(fig)
+        except ValueError:
+            print(f"Error processing frame {i}")
+    
+    # Release the video writer object
+    out_name = f'{fname}_skeleton.mp4'
+    frames_to_video(frame_dir, fdir, 10, out_name)
     # visualize the force data using matplotlib
-    
-    fig = plt.figure(figsize=(10, 10))
-    ax = fig.add_subplot(313)
-    fig, axs = plt.subplots(3, 1, figsize=(10, 15))
+    plot_force = False
+    if plot_force: 
+        fig = plt.figure(figsize=(10, 10))
+        ax = fig.add_subplot(313)
+        fig, axs = plt.subplots(3, 1, figsize=(10, 15))
 
-    # Plot Fx
-    axs[0].plot(force_data.index, force_data['RFx'], label='Right Fx')
-    axs[0].plot(force_data.index, force_data['LFx'], label='Left Fx')
-    axs[0].set_ylabel('Fx')
-    axs[0].legend()
+        # Plot Fx
+        axs[0].plot(force_data.index, force_data['RFx'], label='Right Fx')
+        axs[0].plot(force_data.index, force_data['LFx'], label='Left Fx')
+        axs[0].set_ylabel('Fx')
+        axs[0].legend()
 
-    # Plot Fy
-    axs[1].plot(force_data.index, force_data['RFy'], label='Right Fy')
-    axs[1].plot(force_data.index, force_data['LFy'], label='Left Fy')
-    axs[1].set_ylabel('Fy')
-    axs[1].legend()
+        # Plot Fy
+        axs[1].plot(force_data.index, force_data['RFy'], label='Right Fy')
+        axs[1].plot(force_data.index, force_data['LFy'], label='Left Fy')
+        axs[1].set_ylabel('Fy')
+        axs[1].legend()
 
-    # Plot Fz
-    axs[2].plot(force_data.index, force_data['RFz'], label='Right Fz')
-    axs[2].plot(force_data.index, force_data['LFz'], label='Left Fz')
-    axs[2].set_ylabel('Fz')
-    axs[2].legend()
+        # Plot Fz
+        axs[2].plot(force_data.index, force_data['RFz'], label='Right Fz')
+        axs[2].plot(force_data.index, force_data['LFz'], label='Left Fz')
+        axs[2].set_ylabel('Fz')
+        axs[2].legend()
 
-    plt.xlabel('Time')
-    plt.show()
-    
+        plt.xlabel('Time')
+        plt.show()
+        
 
     
     
