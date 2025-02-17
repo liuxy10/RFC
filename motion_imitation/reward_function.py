@@ -53,7 +53,7 @@ def world_rfc_implicit_reward(env, state, action, info):
     com_reward = math.exp(-k_c * (com_dist ** 2))
     # residual force reward
     if w_vf > 0.0:
-        vf = action[-env.vf_dim:]
+        vf = action[env.ndof: (env.ndof + env.vf_dim)]
         vf_reward = math.exp(-k_vf * (np.linalg.norm(vf) ** 2))
     else:
         vf_reward = 0.0
@@ -122,7 +122,7 @@ def world_rfc_explicit_reward(env, state, action, info):
     com_dist = np.linalg.norm(cur_com - e_com)
     com_reward = math.exp(-k_c * (com_dist ** 2))
     # residual force reward
-    vf = action[-env.vf_dim:]
+    vf = action[env.ndof: (env.ndof + env.vf_dim)]
     vf_loss = 0
     cp_loss = 0
     for i, body in enumerate(env.vf_bodies):
@@ -190,7 +190,7 @@ def local_rfc_implicit_reward(env, state, action, info):
     root_vel_reward = math.exp(-k_rl * (root_linv_dist ** 2) - k_ra * (root_angv_dist ** 2))
     # residual force reward
     if w_vf > 0.0:
-        vf = action[-env.vf_dim:]
+        vf = action[env.ndof: (env.ndof + env.vf_dim)]
         vf_reward = math.exp(-k_vf * (np.linalg.norm(vf) ** 2))
     else:
         vf_reward = 0.0
@@ -250,7 +250,7 @@ def local_rfc_explicit_reward(env, state, action, info):
     root_angv_dist = np.linalg.norm(cur_rangv - e_rangv)
     root_vel_reward = math.exp(-k_rl * (root_linv_dist ** 2) - k_ra * (root_angv_dist ** 2))
     # residual force reward
-    vf = action[-env.vf_dim:]
+    vf = action[env.ndof: (env.ndof + env.vf_dim)]
     vf_loss = 0
     cp_loss = 0
     for i, body in enumerate(env.vf_bodies):

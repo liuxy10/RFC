@@ -17,9 +17,32 @@ from scipy.linalg import cho_solve, cho_factor
 
 class HumanoidImpAwareEnv(HumanoidEnv):
     def __init__(self, cfg):
-        super().__init__(cfg)
         self.jkp, self.jkd = cfg.jkp, cfg.jkd  # inital value of joint stiffness, damping, reference position, scale
-    
+        self.lower_index = [0, 14] # lower body index from yml config file
+        super().__init__(cfg)
+        
+
+    def set_spaces(self):
+        cfg = self.cfg
+        self.ndof = self.model.actuator_ctrlrange.shape[0]
+        self.vf_dim = 0
+        if cfg.residual_force:
+            if cfg.residual_force_mode == 'implicit':
+                self.vf_dim = 6 
+            else:
+                if cfg.residual_force_bodies == 'all':
+                    self.vf_bodies = self.model.body_names[1:]
+                else:
+                    self.vf_bodies = cfg.residual_force_bodies
+                self.body_vf_dim = 6 + cfg.residual_force_torque * 3
+                self.vf_dim = self.body_vf_dim * len(self.vf_bodies)
+        self.action_dim = self.ndof + self.vf_dim + (self.lower_index[1] - self.lower_index[0])
+        self.action_space = spaces.Box(low=-np.ones(self.action_dim), high=np.ones(self.action_dim), dtype=np.float32)
+        self.obs_dim = self.get_obs().size
+        high = np.inf * np.ones(self.obs_dim)
+        low = -high
+        self.observation_space = spaces.Box(low, high, dtype=np.float32)
+        
     def get_full_obs(self):
         data = self.data
         qpos = data.qpos.copy()
@@ -38,30 +61,15 @@ class HumanoidImpAwareEnv(HumanoidEnv):
             obs.append(qvel[:6])
         elif self.cfg.obs_vel == 'full': # set to True
             obs.append(qvel)
-        # phase
+        # phase # todo: change it to gait phase
         if self.cfg.obs_phase:
             phase = self.get_phase()
             obs.append(np.array([phase]))
-            
+        # joint impedance
+        obs.append(np.concatenate((self.jkp[self.lower_index[0]: self.lower_index[1]], 
+                                   self.jkd[self.lower_index[0]: self.lower_index[1]])))
         obs = np.concatenate(obs)
         return obs
-
-
-    def compute_desired_accel(self, qpos_err, qvel_err, k_p, k_d):
-        dt = self.model.opt.timestep
-        nv = self.model.nv
-        M = np.zeros(nv * nv)
-        mjf.mj_fullM(self.model, M, self.data.qM)
-        M.resize(self.model.nv, self.model.nv)
-        C = self.data.qfrc_bias.copy() 
-        K_p = np.diag(k_p)
-        K_d = np.diag(k_d)
-        # solve for acceleration based on LQR control
-        q_accel = cho_solve(cho_factor(M + K_d*dt, overwrite_a=True, check_finite=False),
-                            -C[:, None] - K_p.dot(qpos_err[:, None]) - K_d.dot(qvel_err[:, None]), 
-                            overwrite_b=True, 
-                            check_finite=False) 
-        return q_accel.squeeze()
 
     def compute_torque(self, ctrl):
         cfg = self.cfg
@@ -74,20 +82,45 @@ class HumanoidImpAwareEnv(HumanoidEnv):
 
         k_p = np.zeros(qvel.shape[0])
         k_d = np.zeros(qvel.shape[0])
-        
+        k_p[6:] = self.jkp.copy()
+        k_d[6:] = self.jkd.copy()
         # TODO" k_p, k_d should be set to the updated joint stiffness and damping
         
         qpos_err = np.concatenate((np.zeros(6), qpos[7:] + qvel[6:]*dt - target_pos))
         qvel_err = qvel
         q_accel = self.compute_desired_accel(qpos_err, qvel_err, k_p, k_d)
         qvel_err += q_accel * dt
-        torque = -cfg.jkp * qpos_err[6:] - cfg.jkd * qvel_err[6:]
+        torque = - k_p[6:] * qpos_err[6:] - k_d[6:] * qvel_err[6:]
         return torque
 
+    def update_impedance(self, ctrl):
+        self.jkp[self.lower_index[0]: self.lower_index[1]] += ctrl[-(self.lower_index[1] - self.lower_index[0]):]
     
+    def do_simulation(self, action, n_frames):
+        t0 = time.time()
+        cfg = self.cfg
+        for i in range(n_frames):
+            ctrl = action
+            self.update_impedance(ctrl.copy())
+            if cfg.action_type == 'position': # used action type is position
+                torque = self.compute_torque(ctrl)
+            elif cfg.action_type == 'torque':
+                torque = ctrl * cfg.a_scale
+            torque = np.clip(torque, -cfg.torque_lim, cfg.torque_lim)
+            self.data.ctrl[:] = torque
+
+            """ Residual Force Control (RFC) """
+            if cfg.residual_force:
+                vf = ctrl[-self.vf_dim:].copy() # vfs are at the last of action
+                if cfg.residual_force_mode == 'implicit': # True
+                    self.rfc_implicit(vf)
+                else:
+                    self.rfc_explicit(vf)
+            self.sim.step()
 
     def reset_model(self):
         cfg = self.cfg
+        self.jkd, self.jkp = cfg.jkd, cfg.jkp
         if self.expert is not None:
             ind = 0 if self.cfg.env_start_first else self.np_random.randint(self.expert['len'])
             self.start_ind = ind
@@ -97,6 +130,7 @@ class HumanoidImpAwareEnv(HumanoidEnv):
             self.init_qvel_p = init_vel.copy()
             init_pose[7:] += self.np_random.normal(loc=0.0, scale=cfg.env_init_noise, size=self.model.nq - 7)# 
             self.set_state(init_pose, init_vel)
+            
             self.bquat = self.get_body_quat()
             self.update_expert()
         else:
