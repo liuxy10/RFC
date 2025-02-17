@@ -2,7 +2,7 @@ from khrylib.utils.transformation import euler_matrix
 from lxml.etree import XMLParser, parse, ElementTree, Element, SubElement
 import math
 import re
-from bvh import Bvh
+from bvh import Bvh # bvh is a python package for reading bvh files
 import numpy as np
 
 
