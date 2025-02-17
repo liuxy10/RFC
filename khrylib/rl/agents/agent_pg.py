@@ -5,6 +5,29 @@ import time
 
 
 class AgentPG(Agent):
+    """
+    AgentPG is a reinforcement learning agent that uses policy gradients for training.
+
+    Attributes:
+        tau (float): The discount factor for advantage estimation.
+        optimizer_policy (torch.optim.Optimizer): Optimizer for the policy network.
+        optimizer_value (torch.optim.Optimizer): Optimizer for the value network.
+        opt_num_epochs (int): Number of epochs to optimize the policy.
+        value_opt_niter (int): Number of iterations to optimize the value network.
+
+    Methods:
+        __init__(tau=0.95, optimizer_policy=None, optimizer_value=None, opt_num_epochs=1, value_opt_niter=1, **kwargs):
+            Initializes the AgentPG with the given parameters.
+        
+        update_value(states, returns):
+            Updates the value network (critic) using the provided states and returns.
+        
+        update_policy(states, actions, returns, advantages, exps):
+            Updates the policy network using the provided states, actions, returns, advantages, and exploration indicators.
+        
+        update_params(batch):
+            Updates the parameters of the agent using the provided batch of data.
+    """
 
     def __init__(self, tau=0.95, optimizer_policy=None, optimizer_value=None,
                  opt_num_epochs=1, value_opt_niter=1, **kwargs):
@@ -33,7 +56,7 @@ class AgentPG(Agent):
             log_probs = self.policy_net.get_log_prob(self.trans_policy(states)[ind], actions[ind])
             policy_loss = -(log_probs * advantages[ind]).mean()
             self.optimizer_policy.zero_grad()
-            policy_loss.backward()
+            policy_loss.backward() 
             self.optimizer_policy.step()
 
     def update_params(self, batch):

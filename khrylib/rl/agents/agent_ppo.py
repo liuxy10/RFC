@@ -4,6 +4,26 @@ from khrylib.rl.agents import AgentPG
 
 
 class AgentPPO(AgentPG):
+    """
+    Agent implementing Proximal Policy Optimization (PPO) algorithm.
+
+    Args:
+        clip_epsilon (float): Clipping parameter for PPO.
+        mini_batch_size (int): Size of mini-batches for training.
+        use_mini_batch (bool): Whether to use mini-batches for training.
+        policy_grad_clip (list): List of tuples containing parameters and max norm for gradient clipping.
+        **kwargs: Additional arguments passed to the base class.
+
+    Methods:
+        update_policy(states, actions, returns, advantages, exps):
+            Update the policy network using PPO algorithm.
+
+        clip_policy_grad():
+            Clip the gradients of the policy network.
+
+        ppo_loss(states, actions, advantages, fixed_log_probs, ind):
+            Compute the PPO loss.
+    """
 
     def __init__(self, clip_epsilon=0.2, mini_batch_size=64, use_mini_batch=False,
                  policy_grad_clip=None, **kwargs):

@@ -210,7 +210,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         for i in range(n_frames):
             ctrl = action
             if cfg.action_type == 'position': # used action type is position
-                torque = self.compute_torque(ctrl) # where we add osl control and overwrite the knee and ankle torque
+                torque = self.compute_torque(ctrl)
             elif cfg.action_type == 'torque':
                 torque = ctrl * cfg.a_scale
             torque = np.clip(torque, -cfg.torque_lim, cfg.torque_lim)
@@ -345,21 +345,6 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 poss.append(contact.pos)
         return forces, poss
 
-    
-    def visualize_by_frame(self, show = False, label =  "normal"):
-        body_pos = {n: self.get_body_position(n) for n in self.model.body_names if n != "world"}
-        fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
-        forces, poss = self.get_contact_force()
-        ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
-        ax.set_title(label)
-        if len(forces) > 0: 
-            visualize_3d_forces(fig, ax, forces, poss)
-        fig, ax = visualize_skeleton(fig, ax, body_pos, self.body_tree)
-        
-        if show:
-            plt.show()
-        return fig, ax
-        
     def get_ground_reaction_force(self):
         forces, poss = self.get_contact_force()
         force_sum, pos_sum, force_sum_magnitude = get_sum_force(forces, poss)
@@ -380,6 +365,22 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         F_cartesian = J_transpose_pinv @ self.data.qfrc_applied
         
         return F_cartesian
+    
+    
+    def visualize_by_frame(self, show = False, label =  "normal"):
+        body_pos = {n: self.get_body_position(n) for n in self.model.body_names if n != "world"}
+        fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
+        forces, poss = self.get_contact_force()
+        ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
+        ax.set_title(label)
+        if len(forces) > 0: 
+            visualize_3d_forces(fig, ax, forces, poss)
+        fig, ax = visualize_skeleton(fig, ax, body_pos, self.body_tree)
+        
+        if show:
+            plt.show()
+        return fig, ax
+        
    
 if __name__ == "__main__":
     from motion_imitation.utils.config import Config

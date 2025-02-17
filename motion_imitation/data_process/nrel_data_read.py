@@ -6,7 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from khrylib.utils.tools import *
-    
+import cv2
+
 def process_force_data(csv_file):
     df = pd.read_csv(csv_file)
     # Find index of 'Trajectories'
@@ -14,7 +15,7 @@ def process_force_data(csv_file):
     treadmil_index = df[df.iloc[:, 0] == 'Devices'].index[0]
     # Read CSV file
     raw = df.iloc[treadmil_index+5:trajectories_index, :41].astype(float)
-    
+
     # Define column names
     columns = [
         'Frame', 'Sub Frame', # 2
@@ -23,38 +24,44 @@ def process_force_data(csv_file):
         'CFx', 'CFy', 'CFz', 'CMx', 'CMy', 'CMz', 'CCx', 'CCy', 'CCz' # 2 + 15 + 15 + 9
     ]
     raw.columns = columns[:41]  # Assign column names to the raw data
-    
+
     # Extract force data
     force_data = raw.iloc[:, [2, 3, 4, 17, 18, 19, 32, 33, 34]].astype(float)
-    
+
     # Extract moment data
     moment_data = raw.iloc[:, [5, 6, 7, 20, 21, 22, 35, 36, 37]].astype(float)
-    
+
     # Extract CoP data
     cop_data = raw.iloc[:, [8, 9, 10, 23, 24, 25, 38, 39, 40]].astype(float)
-    
+
     return force_data, moment_data, cop_data
 
-def process_motion_data(csv_file):
+def process_motion_data(csv_file, dt = 0.01):
     # Read CSV file
     df = pd.read_csv(csv_file)
-    
+
     # Find index of 'Trajectories'
     trajectories_index = df[df.iloc[:, 0] == 'Trajectories'].index[0]
     # Extract raw data
     raw = df.iloc[trajectories_index+5:, 2:119].astype(float)
-    
+
     # Calculate normalization from Clavicle
     Clav = raw.iloc[:, 18:21]
     Norm = [np.nanmean(Clav.iloc[:, 0]), np.nanmean(Clav.iloc[:, 1])]
-    walking_speed = .6 # m/s
-    total_time = 60 # seconds
-    Norm[1] += walking_speed * total_time * np.linspace(0, 1, len(raw)) * 1000
+    # Extract treadmill speed from the CSV file
+    treadmill_speed = float(df.columns[0].split(':')[1].split()[0])
+    total_time = len(raw) * dt
+    print(f"Total time: {total_time} seconds")
+    print(f"Time step (dt): {dt} seconds")
+    print(f"Walking speed: {treadmill_speed} m/s")
+    Norm[1] += treadmill_speed * total_time * np.linspace(0, 1, len(raw)) * 1000 # Add treadmill speed to y-axis
     # Calculate body part coordinatespip install pandas
 
-    # Other body parts (find the column index to be csv column number - 3)
+    # body parts
     body_parts = {  # with joint name commented here
-        'lclavicle': ([24, 25, 29], [0, 0, None]), # 'Left Should'
+        
+        'lowerneck': ([12, 13, 14], [0, 0, None]), # 'Neck'
+        'lclavicle': ([27, 28, 29], [0, 0, None]), # 'Left Should'
         'lhumerus': ([33, 34, 35], [0, 0, None]), # 'Left Elbow'
         'lradius': ([39, 42, 40, 43, 41, 44], [0, 0, None]), # 'Left wrist'
         'rclavicle': ([48, 49, 50], [0, 0, None]), # 'Right Should'
@@ -68,8 +75,6 @@ def process_motion_data(csv_file):
         'rtibia': ([102, 103, 104], [0, 0, None]), # 'Rknee'
         'rfoot': ([108, 109, 110], [0, 0, None]) # 'Rank'
     }
-    
-    
 
     body_tree = {
         'root': ['lhipjoint', 'rhipjoint', 'lowerback'],
@@ -98,7 +103,6 @@ def process_motion_data(csv_file):
     }
 
 
-    
     coordinates = {}
     for part, (cols, offsets) in body_parts.items():
         if len(cols) == 3:
@@ -113,83 +117,135 @@ def process_motion_data(csv_file):
                 (raw.iloc[:, cols[2]] + raw.iloc[:, cols[3]])/2 - Norm[1] + (offsets[1] or 0),
                 (raw.iloc[:, cols[4]] + raw.iloc[:, cols[5]])/2 + (offsets[2] or 0)
             ])
-    
+    # Head coordinates (average of 4 markers)
+    coordinates["head"] = np.column_stack([
+        (raw.iloc[:, [0,3,6,9]].mean(axis=1) - Norm[0]),
+        (raw.iloc[:, [1,4,7,10]].mean(axis=1) - Norm[1]),
+        (raw.iloc[:, [2,5,8,11]].mean(axis=1))
+    ]) # not used in this project
+    coordinates['upperback'] = np.column_stack([
+        (raw.iloc[:, [12, 15]].mean(axis=1) - Norm[0]), # C7 & T10
+        (raw.iloc[:, [13, 16]].mean(axis=1) - Norm[1]), 
+        (raw.iloc[:, [14, 17]].mean(axis=1))
+    ])
+    coordinates['lowerback'] = np.column_stack([
+        (raw.iloc[:, [15, 15, 75, 78]].mean(axis=1) - Norm[0]), # T10 + (LPSI, RPSI)
+        (raw.iloc[:, [16, 16, 76, 79]].mean(axis=1) - Norm[1]), 
+        (raw.iloc[:, [17, 17, 77, 80]].mean(axis=1))
+    ])
+    coordinates['thorax'] = np.column_stack([
+        (raw.iloc[:, [12, 18]].mean(axis=1) - Norm[0]), # C7 & CLAV
+        (raw.iloc[:, [13, 19]].mean(axis=1) - Norm[1]), 
+        (raw.iloc[:, [14, 20]].mean(axis=1))
+    ])
+    coordinates['lhipjoint'] = np.column_stack([
+        (raw.iloc[:, [75, 69]].mean(axis=1) - Norm[0]), # LASI & LPSI
+        (raw.iloc[:, [76, 70]].mean(axis=1) - Norm[1]),
+        (raw.iloc[:, [77, 71]].mean(axis=1))
+    ])
+    coordinates['rhipjoint'] = np.column_stack([
+        (raw.iloc[:, [72, 78]].mean(axis=1) - Norm[0]), # RASI & RPSI
+        (raw.iloc[:, [73, 79]].mean(axis=1) - Norm[1]),
+        (raw.iloc[:, [74, 80]].mean(axis=1))
+    ])
     # Find foot strike indices
     foot_strikes = df[(df.iloc[:, 1] == 'Right') & (df.iloc[:, 2] == 'Foot Strike')].index
     steps = foot_strikes[-22:-1]
     step_times = np.round(df.iloc[steps, 3].astype(float) * 100)
-    
+
     return coordinates, step_times, body_tree
 
-if __name__ == "__main__":
-    # Process motion data
-    # fname = 'data/nrel/no-rail-W1_High K2/no-rail-W1_High K2.csv'
-    fname = 'data/nrel/Walking_passive01_K4/Walking_passive01_K4.csv'
-    coordinates, step_times, body_tree = process_motion_data(fname)
-    force_data, moment_data, cop_data = process_force_data(fname)
-    # Print coordinates and step times
-    print("Coordinates:")
-    for part, coords in coordinates.items():
-        print(f"{part}: {coords.shape}")
-    
-    print("\nStep times:")
-    print(step_times)
-    
-    print("\nForce data:")
-    print(force_data.head())
-    
-    print("\nMoment data:")
-    print(moment_data.head())
-    
-    print("\nCoP data:")
-    print(cop_data.head())
-
-    # visualize the motion using matplotlib
-    plot_motion = False
-    if plot_motion:
-        fig = plt.figure(figsize=(10, 10))
-        ax = fig.add_subplot(111, projection='3d')
-        
-        for part, coords in coordinates.items():
-            ax.plot(coords[:, 0], coords[:, 1], coords[:, 2], label=part)
-        plt.legend()
-        plt.show()
-        
-    # visualize by frame 
-
-    for i in range(0, coords.shape[0], 200):
-        fig = plt.figure(figsize=(10, 10))
-        ax = fig.add_subplot(111, projection='3d')
-        chosen_parts_coms = {part: coords[i] for part, coords in coordinates.items()}
-        visualize_skeleton(fig, ax, chosen_parts_coms, body_tree)
-        plt.show()
-    # visualize the force data using matplotlib
-    
+def plot_force_data(force_data):
     fig = plt.figure(figsize=(10, 10))
     ax = fig.add_subplot(313)
     fig, axs = plt.subplots(3, 1, figsize=(10, 15))
-
-        # Plot Fx
-        axs[0].plot(force_data.index, force_data['RFx'], label='Right Fx')
-        axs[0].plot(force_data.index, force_data['LFx'], label='Left Fx')
-        axs[0].set_ylabel('Fx')
-        axs[0].legend()
-
-        # Plot Fy
-        axs[1].plot(force_data.index, force_data['RFy'], label='Right Fy')
-        axs[1].plot(force_data.index, force_data['LFy'], label='Left Fy')
-        axs[1].set_ylabel('Fy')
-        axs[1].legend()
-
-        # Plot Fz
-        axs[2].plot(force_data.index, force_data['RFz'], label='Right Fz')
-        axs[2].plot(force_data.index, force_data['LFz'], label='Left Fz')
-        axs[2].set_ylabel('Fz')
-        axs[2].legend()
-
+    # Plot Fx
+    axs[0].plot(force_data.index, force_data['RFx'], label='Right Fx')
+    axs[0].plot(force_data.index, force_data['LFx'], label='Left Fx')
+    axs[0].set_ylabel('Fx')
+    axs[0].legend()
+    # Plot Fy
+    axs[1].plot(force_data.index, force_data['RFy'], label='Right Fy')
+    axs[1].plot(force_data.index, force_data['LFy'], label='Left Fy')
+    axs[1].set_ylabel('Fy')
+    axs[1].legend()
+    # Plot Fz
+    axs[2].plot(force_data.index, force_data['RFz'], label='Right Fz')
+    axs[2].plot(force_data.index, force_data['LFz'], label='Left Fz')
+    axs[2].set_ylabel('Fz')
+    axs[2].legend()
     plt.xlabel('Time')
     plt.show()
-    
+def print_data(coordinates, step_times, force_data, moment_data, cop_data):
+    print("Coordinates:")
+    for part, coords in coordinates.items():
+        print(f"{part}: {coords.shape}")
 
+    print("\nStep times:")
+    print(step_times)
+
+    print("\nForce data:")
+    print(force_data.head())
+
+    print("\nMoment data:")
+    print(moment_data.head())
+
+    print("\nCoP data:")
+    print(cop_data.head())  
+def plot_motion(coordinates):
+    fig = plt.figure(figsize=(10, 10))
+    ax = fig.add_subplot(111, projection='3d')
+
+    for part, coords in coordinates.items():
+        ax.plot(coords[:, 0], coords[:, 1], coords[:, 2], label=part)
+    plt.legend()
+    plt.show()
+
+def save_skeleton_frame(frame_dir, coordinates, body_tree, freq = 10):
+    for i in range(0, coordinates['head'].shape[0], freq):
+        try: 
+            print(f"Processing frame {i}/{coordinates['head'].shape[0]}")
+            fig = plt.figure(figsize=(10, 10))
+            ax = fig.add_subplot(111, projection='3d')
+            chosen_parts_coms = {part: coords[i] for part, coords in coordinates.items()}
+            visualize_skeleton(fig, ax, chosen_parts_coms, body_tree)
+            ax.view_init(elev=0, azim=0)
+            fig.canvas.draw()
+            data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
+            save_image_hwc(data,  f'{frame_dir}/%04d.png' % i) 
+            plt.close(fig)
+        except ValueError:
+            print(f"Error processing frame {i}")
+            
+
+if __name__ == "__main__":
+    # Process motion data
+    # fpath = 'data/nrel/no-rail-W1_High K2/no-rail-W1_High K2.csv'
+    dt = 0.01
+    fname = 'Walking_passive01_K4'  
+    fdir = 'data/nrel/Walking_passive01_K4'
+    # fdir = 'data/nrel/no-rail-W1_High K2'
+    # fname = 'no-rail-W1_High K2'
+    frame_dir = f'{fdir}/frame_skeleton'
+    fpath = os.path.join(fdir, f'{fname}.csv')
+    coordinates, step_times, body_tree = process_motion_data(fpath, dt = 0.01)
+    force_data, moment_data, cop_data = process_force_data(fpath)
+
+    # visualize the motion using matplotlib
+    plot_motion = False
+    if plot_motion: plot_motion(coordinates)
+
+    # Loop through frames and save them
+    save_skeleton_frame(frame_dir, coordinates, body_tree)
     
-    
+    # Release the video writer object
+    out_name = f'{fname}_skeleton.mp4'
+    frames_to_video(frame_dir, fdir, 10, out_name)
+    # visualize the force data using matplotlib
+    plot_force = False
+    if plot_force: 
+        plot_force_data(force_data)
+        # Print coordinates and step times
+        print_data(coordinates, step_times, force_data, moment_data, cop_data)
+
+            

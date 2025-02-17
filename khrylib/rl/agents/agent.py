@@ -9,6 +9,59 @@ os.environ["OMP_NUM_THREADS"] = "1"
 
 
 class Agent:
+    """
+    Agent class for reinforcement learning.
+
+    This class handles the interaction between the agent and the environment, 
+    including sampling actions, updating policies, and managing the agent's state.
+
+    Attributes:
+        env: The environment in which the agent operates.
+        policy_net: The policy network used by the agent to select actions.
+        value_net: The value network used by the agent to evaluate states.
+        dtype: The data type used for tensors.
+        device: The device (CPU/GPU) used for computation.
+        gamma: The discount factor for future rewards.
+        custom_reward: A custom reward function, if any.
+        end_reward: A flag indicating whether to add an end reward.
+        mean_action: A flag indicating whether to use the mean action.
+        render: A flag indicating whether to render the environment.
+        running_state: A function to preprocess the state.
+        num_threads: The number of threads to use for sampling.
+        noise_rate: The rate of noise to add to actions.
+        traj_cls: The class used for trajectory batches.
+        logger_cls: The class used for logging.
+        sample_modules: The modules used for sampling.
+        update_modules: The modules used for updating.
+
+    Methods:
+        __init__(self, env, policy_net, value_net, dtype, device, gamma, custom_reward=None, 
+            Initializes the agent with the given parameters.
+
+        sample_worker(self, pid, queue, min_batch_size):
+            Worker function for sampling trajectories.
+
+        pre_episode(self):
+            Hook for pre-episode processing.
+
+        push_memory(self, memory, state, action, mask, next_state, reward, exp):
+            Pushes a transition into memory.
+
+        pre_sample(self):
+            Hook for pre-sampling processing.
+
+        sample(self, min_batch_size):
+            Samples trajectories from the environment.
+
+        trans_policy(self, states):
+            Transforms states before passing them to the policy network.
+
+        trans_value(self, states):
+            Transforms states before passing them to the value network.
+
+        set_noise_rate(self, noise_rate):
+            Sets the noise rate for action selection.
+    """
 
     def __init__(self, env, policy_net, value_net, dtype, device, gamma, custom_reward=None,
                  end_reward=True, mean_action=False, render=False, running_state=None, num_threads=1):
@@ -31,6 +84,29 @@ class Agent:
         self.update_modules = [policy_net, value_net]
 
     def sample_worker(self, pid, queue, min_batch_size):
+        """
+        Sample worker function for collecting experience from the environment.
+
+        Args:
+            pid (int): Process ID for the worker.
+            queue (multiprocessing.Queue): Queue for sending collected experience and logs.
+            min_batch_size (int): Minimum number of steps to collect before returning.
+
+        Returns:
+            If queue is None, returns a tuple (memory, logger):
+                memory (Memory): Collected experience.
+                logger (Logger): Logger with episode information.
+            Otherwise, puts a list [pid, memory, logger] into the queue.
+
+        The function performs the following steps:
+            1. Initializes the random seed for the worker.
+            2. Creates a new Memory object and a Logger instance.
+            3. Collects experience by interacting with the environment until the minimum batch size is reached.
+            4. Resets the environment and starts a new episode.
+            5. Selects actions using the policy network and collects rewards and next states.
+            6. Logs the steps and stores the experience in memory.
+            7. Ends the episode and sampling, then returns or queues the collected data.
+        """
         torch.randn(pid)
         if hasattr(self.env, 'np_random'):
             self.env.np_random.rand(pid)

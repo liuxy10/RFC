@@ -187,6 +187,8 @@ def visualize_skeleton(fig, ax, coms, tree):
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
+    ax.view_init(elev=0, azim=0)
+    ax.set_aspect('equal')
     
     # Add a plane at z=0
     xx, yy = np.meshgrid(np.linspace(mid_x - max_range, mid_x + max_range, 10),
