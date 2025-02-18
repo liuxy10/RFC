@@ -20,7 +20,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--cfg', default=None)
 parser.add_argument('--render', action='store_true', default=False)
 parser.add_argument('--test', action='store_true', default=False)
-parser.add_argument('--num_threads', type=int, default=20)
+parser.add_argument('--num_threads', type=int, default=1)
 parser.add_argument('--gpu_index', type=int, default=0)
 parser.add_argument('--iter', type=int, default=0)
 parser.add_argument('--show_noise', action='store_true', default=False)
@@ -42,10 +42,10 @@ logger = create_logger(os.path.join(cfg.log_dir, 'log.txt'), file_handle=not arg
 """environment"""
 env = HumanoidEnv(cfg)
 env.seed(cfg.seed)
-actuators = env.model.actuator_names 
+actuators = env.model.actuator_names
 state_dim = env.observation_space.shape[0]
 action_dim = env.action_space.shape[0]
-running_state = ZFilter((state_dim,), clip=5) # online normalization
+running_state = ZFilter((state_dim,), clip=5)
 
 """define actor and critic"""
 policy_net = PolicyGaussian(MLP(state_dim, cfg.policy_hsize, cfg.policy_htype), action_dim, log_std=cfg.log_std, fix_std=cfg.fix_std)
@@ -83,7 +83,6 @@ agent = AgentPPO(env=env, dtype=dtype, device=device, running_state=running_stat
 
 
 def pre_iter_update(i_iter):
-    """ update adaptive parameters """ 
     cfg.update_adaptive_params(i_iter)
     agent.set_noise_rate(cfg.adp_noise_rate)
     set_optimizer_lr(optimizer_policy, cfg.adp_policy_lr)
@@ -101,13 +100,13 @@ def main_loop():
         for i_iter in tqdm(range(args.iter, cfg.max_iter_num)):
             """generate multiple trajectories that reach the minimum batch_size"""
             pre_iter_update(i_iter)
-            batch, log = agent.sample(cfg.min_batch_size) # sample trajectories 
+            batch, log = agent.sample(cfg.min_batch_size)
             if cfg.end_reward:
                 agent.env.end_reward = log.avg_c_reward * cfg.gamma / (1 - cfg.gamma)   
 
             """update networks"""
             t0 = time.time()
-            agent.update_params(batch) # update policy and value networks
+            agent.update_params(batch)
             t1 = time.time()
 
             """logging"""

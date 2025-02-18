@@ -94,7 +94,9 @@ class HumanoidImpAwareEnv(HumanoidEnv):
         return torque
 
     def update_impedance(self, ctrl):
-        self.jkp[self.lower_index[0]: self.lower_index[1]] += ctrl[-(self.lower_index[1] - self.lower_index[0]):]
+        self.jkp[self.lower_index[0]: self.lower_index[1]] += ctrl[-(self.lower_index[1] - self.lower_index[0]):] * 0.1 # learning rate can be changed as well
+        # print(self.jkp[self.lower_index[0]: self.lower_index[1]])
+        self.jkp[self.lower_index[0]: self.lower_index[1]] = np.clip(self.jkp[self.lower_index[0]: self.lower_index[1]], 0, 500) 
     
     def do_simulation(self, action, n_frames):
         t0 = time.time()
