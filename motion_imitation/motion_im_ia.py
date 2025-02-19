@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--cfg', default='0202')
 parser.add_argument('--render', action='store_true', default=False)
 parser.add_argument('--test', action='store_true', default=False)
-parser.add_argument('--num_threads', type=int, default=8)
+parser.add_argument('--num_threads', type=int, default=2)
 parser.add_argument('--max_iter_num', type=int, default=100)
 parser.add_argument('--gpu_index', type=int, default=0)
 parser.add_argument('--iter', type=int, default=0)
@@ -31,7 +31,9 @@ args = parser.parse_args()
 if args.render:
     args.num_threads = 1
 cfg = Config(args.cfg, args.test, create_dirs=not (args.render or args.iter > 0))
-cfg.cfg_dir = '%s/motion_im_ia/%s' % (cfg.base_dir, args.cfg)
+cfg.tb_dir = '%s/motion_im_ia/%s/tb' % (cfg.base_dir, args.cfg)
+cfg.save_model_interval = 1
+
 dtype = torch.float64
 torch.set_default_dtype(dtype)
 device = torch.device('cuda', index=args.gpu_index) if torch.cuda.is_available() else torch.device('cpu')

@@ -21,14 +21,17 @@ parser.add_argument('--cfg', default=None)
 parser.add_argument('--render', action='store_true', default=False)
 parser.add_argument('--test', action='store_true', default=False)
 parser.add_argument('--num_threads', type=int, default=1)
+parser.add_argument('--max_iter_num', type=int, default=100)
 parser.add_argument('--gpu_index', type=int, default=0)
 parser.add_argument('--iter', type=int, default=0)
 parser.add_argument('--show_noise', action='store_true', default=False)
+parser.add_argument('--save_model_interval', default=None)
 args = parser.parse_args()
 if args.render:
     args.num_threads = 1
 cfg = Config(args.cfg, args.test, create_dirs=not (args.render or args.iter > 0))
-
+if args.save_model_interval is not None:
+    cfg.save_model_interval = int(args.save_model_interval)
 dtype = torch.float64
 torch.set_default_dtype(dtype)
 device = torch.device('cuda', index=args.gpu_index) if torch.cuda.is_available() else torch.device('cpu')
@@ -97,7 +100,7 @@ def main_loop():
         pre_iter_update(args.iter)
         agent.sample(1e8)
     else:
-        for i_iter in tqdm(range(args.iter, cfg.max_iter_num)):
+        for i_iter in tqdm(range(args.iter, args.max_iter_num)):
             """generate multiple trajectories that reach the minimum batch_size"""
             pre_iter_update(i_iter)
             batch, log = agent.sample(cfg.min_batch_size)
@@ -114,7 +117,7 @@ def main_loop():
             logger.info(
                 '{}\tT_sample {:.2f}\tT_update {:.2f}\tETA {}\texpert_R_avg {:.4f} {}'
                 '\texpert_R_range ({:.4f}, {:.4f})\teps_len {:.2f}'
-                .format(i_iter, log.sample_time, t1 - t0, get_eta_str(i_iter, cfg.max_iter_num, t1 - t0 + log.sample_time), log.avg_c_reward,
+                .format(i_iter, log.sample_time, t1 - t0, get_eta_str(i_iter, args.max_iter_num, t1 - t0 + log.sample_time), log.avg_c_reward,
                         np.array2string(c_info, formatter={'all': lambda x: '%.4f' % x}, separator=','),
                         log.min_c_reward, log.max_c_reward, log.avg_episode_len))
 

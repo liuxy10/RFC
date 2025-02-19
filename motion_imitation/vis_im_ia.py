@@ -14,19 +14,20 @@ from khrylib.rl.core.policy_gaussian import PolicyGaussian
 from khrylib.rl.core.critic import Value
 from khrylib.models.mlp import MLP
 from motion_imitation.envs.humanoid_im import HumanoidEnv
+from motion_imitation.envs.humanoid_ia import HumanoidImpAwareEnv
 from motion_imitation.utils.config import Config
 import glfw
 parser = argparse.ArgumentParser()
 parser.add_argument('--cfg', default='0202')
 parser.add_argument('--vis_model_file', default='mocap_v2_vis')
-parser.add_argument('--iter', type=int, default=800)
+parser.add_argument('--iter', type=int, default=73)
 parser.add_argument('--focus', action='store_true', default=True)
 parser.add_argument('--hide_expert', action='store_true', default=False)
 parser.add_argument('--preview', action='store_true', default=False)
 parser.add_argument('--record', action='store_true', default=False)
 parser.add_argument('--record_expert', action='store_true', default=False)
 parser.add_argument('--azimuth', type=float, default=45)
-parser.add_argument('--video_dir', default='out/videos/normal')
+parser.add_argument('--video_dir', default='out/videos/ia')
 args = parser.parse_args()
 cfg = Config(args.cfg, False, create_dirs=False)
 cfg.env_start_first = True
@@ -37,7 +38,7 @@ dtype = torch.float64
 torch.set_default_dtype(dtype)
 torch.manual_seed(cfg.seed)
 torch.set_grad_enabled(False)
-env = HumanoidEnv(cfg)
+env = HumanoidImpAwareEnv(cfg)
 env.seed(cfg.seed)
 
 actuators = env.model.actuator_names
@@ -196,7 +197,7 @@ class MyVisulizer(Visualizer):
 
 vis = MyVisulizer(f'{args.vis_model_file}.xml')
 torch.cuda.empty_cache()
-# if args.record:
-#     vis.record_video()
-# else:
-#     vis.show_animation()
+if args.record:
+    vis.record_video()
+else:
+    vis.show_animation()
