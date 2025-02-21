@@ -14,8 +14,11 @@ from khrylib.rl.core.policy_gaussian import PolicyGaussian
 from khrylib.rl.core.critic import Value
 from khrylib.models.mlp import MLP
 from motion_imitation.envs.humanoid_im import HumanoidEnv
+from motion_imitation.envs.humanoid_ia import HumanoidImpAwareEnv
 from motion_imitation.utils.config import Config
 import glfw
+
+from motion_imitation.reward_function import reward_func
 parser = argparse.ArgumentParser()
 parser.add_argument('--cfg', default='0202')
 parser.add_argument('--vis_model_file', default='mocap_v2_vis')
@@ -26,18 +29,21 @@ parser.add_argument('--preview', action='store_true', default=False)
 parser.add_argument('--record', action='store_true', default=False)
 parser.add_argument('--record_expert', action='store_true', default=False)
 parser.add_argument('--azimuth', type=float, default=45)
+parser.add_argument('--imp_aware', action='store_true', default=False)
 parser.add_argument('--video_dir', default='out/videos/normal')
 args = parser.parse_args()
 cfg = Config(args.cfg, False, create_dirs=False)
 cfg.env_start_first = True
 logger = create_logger(os.path.join(cfg.log_dir, 'log_eval.txt'))
-
+if args.imp_aware:
+    args.video_dir = 'out/videos/ia'
+    change_config_path_via_args(cfg, args.cfg, '_ia')
 """make and seed env"""
 dtype = torch.float64
 torch.set_default_dtype(dtype)
 torch.manual_seed(cfg.seed)
 torch.set_grad_enabled(False)
-env = HumanoidEnv(cfg)
+env = HumanoidImpAwareEnv(cfg) if args.imp_aware else HumanoidEnv(cfg)
 env.seed(cfg.seed)
 
 actuators = env.model.actuator_names
@@ -54,6 +60,8 @@ policy_net.load_state_dict(model_cp['policy_dict'])
 value_net.load_state_dict(model_cp['value_dict'])
 running_state = model_cp['running_state']
 
+# reward functions
+custom_reward = reward_func[cfg.reward_id]
 
 class MyVisulizer(Visualizer):
 
@@ -66,17 +74,17 @@ class MyVisulizer(Visualizer):
         self.env_vis.viewer.cam.elevation = -8.0
         self.env_vis.viewer.cam.distance = 5.0
         self.T = 12
+        
+        
 
     def data_generator(self):
         while True:
-            poses = {'pred': [], 'gt': []}
-            forces = []
-            grfs = []
+            poses = {'pred': [], 'gt': [], 'target': []}
+            forces, grfs, jkps = [], [], []
             state = env.reset()
             if running_state is not None:
                 state = running_state(state, update=False)
-            
-            
+            action = env.action_space.sample()
             for t in range(1000): 
                 
                 epos = env.get_expert_attr('qpos', env.get_expert_index(t)).copy()
@@ -89,19 +97,8 @@ class MyVisulizer(Visualizer):
                     epos[3:7] = quaternion_multiply(cycle_h, epos[3:7])
                 poses['gt'].append(epos) 
                 poses['pred'].append(env.data.qpos.copy())
+                poses['target'].append(np.concatenate([np.zeros(7), env.get_target_pose(action)]))
                 
-    
-                print(t, 
-                    #   env.compute_global_force(),
-                    # env.data.efc_J.shape # this is 500* 38 but only non-zeros till index 22
-                    # env.data.efc_J[np.nonzero(env.data.efc_J)],
-                      "env.data.qfrc_applied", env.data.qfrc_applied.shape,
-                      "env.data.qfrc_actuator",env.data.qfrc_actuator.shape,
-                      "env.data.actuator_force", env.data.actuator_force.shape,
-                    #   env.get_contact_force()
-                    #   env.get_end_effector_position("rfoot"),
-                    #   env.get_ground_reaction_force()
-                    )
                 save_by_frame = True
                 if save_by_frame:
                     fig, ax = env.visualize_by_frame(show = False) 
@@ -120,21 +117,42 @@ class MyVisulizer(Visualizer):
                 # print(env.data.actuator_force.copy())
                 f, cop, f_m = env.get_ground_reaction_force()
                 grfs.append(f)
+                jkps.append(env.jkp[env.lower_index[0]: env.lower_index[1]].copy())
                 if running_state is not None:
                     next_state = running_state(next_state, update=False)
                 if done:
                     print(f"fail: {info['fail']}")
                     break
                 state = next_state
+                
+                print(t, 
+                    #   env.compute_global_force(),
+                    # env.data.efc_J.shape # this is 500* 38 but only non-zeros till index 22
+                    # env.data.efc_J[np.nonzero(env.data.efc_J)],
+                    #   "env.data.qfrc_applied", env.data.qfrc_applied.shape,
+                    #   "env.data.qfrc_actuator",env.data.qfrc_actuator.shape,
+                    #   "env.data.actuator_force", env.data.actuator_force.shape,
+                    # custom_reward(env, state, action, info) # reward in real time
+                    # env.get_target_pose(action) - env.sim.data.qpos[7:], # difference between target and current pose
+                    env.jkp[env.lower_index[0]: env.lower_index[1]], # kp values
+                    #   env.get_contact_force()
+                    #   env.get_end_effector_position("rfoot"),
+                    #   env.get_ground_reaction_force()
+                    )
 
-            poses['gt'] = np.vstack(poses['gt'])
-            poses['pred'] = np.vstack(poses['pred'])
-            plot_pose = False
+            poses['gt'],  poses['pred'], poses['target'] = np.vstack(poses['gt']), np.vstack(poses['pred']), np.vstack(poses['target'])
+            plot_pose = True
             if plot_pose:
                 fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(10, 12))
                 fig, axs = visualize_poses(fig, axs, poses, env.body_qposaddr)
                 plt.show()
-            plot_torque = True
+            plot_impedance = True
+            if plot_impedance:
+                jkps = np.vstack(jkps)
+                fig, axs = plt.subplots(nrows=1, ncols=1, figsize=(6, 6))
+                fig, axs = visualize_impedance(fig, axs, jkps)
+                plt.show()
+            plot_torque = False
             if plot_torque:
                 forces = np.vstack(forces)
                 print("virtual force dim = ", forces.shape)
@@ -143,11 +161,11 @@ class MyVisulizer(Visualizer):
                 # plt.show()
                 visualize_force(forces, env.model.actuator_names)
             self.num_fr = poses['pred'].shape[0]
-            plot_grfs = True
+            plot_grfs = False
             if plot_grfs:
                 fig, axs = plt.subplots(3, 1, figsize=(10, 10))
                 fig, axs = visualize_grfs(fig, axs, grfs)
-                plt.show()
+                plt.show() 
             contact_video = True
             if contact_video:
                 out_name = f'{args.cfg}_{"expert" if args.record_expert else args.iter}_skeleton.mp4'

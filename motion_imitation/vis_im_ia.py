@@ -32,7 +32,7 @@ args = parser.parse_args()
 cfg = Config(args.cfg, False, create_dirs=False)
 cfg.env_start_first = True
 logger = create_logger(os.path.join(cfg.log_dir, 'log_eval.txt'))
-
+change_config_path_via_args(cfg, args.cfg, '_ia')
 """make and seed env"""
 dtype = torch.float64
 torch.set_default_dtype(dtype)
@@ -99,6 +99,7 @@ class MyVisulizer(Visualizer):
                       "env.data.qfrc_applied", env.data.qfrc_applied.shape,
                       "env.data.qfrc_actuator",env.data.qfrc_actuator.shape,
                       "env.data.actuator_force", env.data.actuator_force.shape,
+                      "env.data.ctrl", env.data.ctrl[-14:], 
                     #   env.get_contact_force()
                     #   env.get_end_effector_position("rfoot"),
                     #   env.get_ground_reaction_force()

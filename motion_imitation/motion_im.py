@@ -12,6 +12,7 @@ from khrylib.rl.agents import AgentPPO
 from khrylib.models.mlp import MLP
 from torch.utils.tensorboard import SummaryWriter
 from motion_imitation.envs.humanoid_im import HumanoidEnv
+from motion_imitation.envs.humanoid_ia import HumanoidImpAwareEnv
 from motion_imitation.utils.config import Config
 from motion_imitation.reward_function import reward_func
 from tqdm import tqdm
@@ -26,10 +27,13 @@ parser.add_argument('--gpu_index', type=int, default=0)
 parser.add_argument('--iter', type=int, default=0)
 parser.add_argument('--show_noise', action='store_true', default=False)
 parser.add_argument('--save_model_interval', default=None)
+parser.add_argument('--imp_aware', action='store_true', default=False)
 args = parser.parse_args()
 if args.render:
     args.num_threads = 1
 cfg = Config(args.cfg, args.test, create_dirs=not (args.render or args.iter > 0))
+if args.imp_aware:
+    change_config_path_via_args(cfg, args.cfg, '_ia')
 if args.save_model_interval is not None:
     cfg.save_model_interval = int(args.save_model_interval)
 dtype = torch.float64
@@ -43,7 +47,7 @@ tb_logger = SummaryWriter(cfg.tb_dir) if not args.render else None
 logger = create_logger(os.path.join(cfg.log_dir, 'log.txt'), file_handle=not args.render)
 
 """environment"""
-env = HumanoidEnv(cfg)
+env = HumanoidImpAwareEnv(cfg) if args.imp_aware else HumanoidEnv(cfg)
 env.seed(cfg.seed)
 actuators = env.model.actuator_names
 state_dim = env.observation_space.shape[0]

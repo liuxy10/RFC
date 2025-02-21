@@ -12,7 +12,14 @@ from mpl_toolkits.mplot3d import Axes3D
 import glob
 import re
 
-
+def change_config_path_via_args(cfg, cfg_num, postdix = ''):
+    cfg.cfg_dir = '%s/motion_im%s/%s' % (cfg.base_dir, postdix, cfg_num)
+    cfg.model_dir = '%s/models' % cfg.cfg_dir
+    cfg.result_dir = '%s/results' % cfg.cfg_dir
+    cfg.log_dir = '%s/log' % cfg.cfg_dir
+    cfg.tb_dir = '%s/tb' % cfg.cfg_dir
+    cfg.video_dir = '%s/videos' % cfg.cfg_dir
+    cfg.tb_dir = '%s/motion_im%s/%s/tb' % (cfg.base_dir, postdix, cfg_num)
 
 def get_sum_force(forces, poss):
     forces = np.array(forces)
@@ -106,15 +113,25 @@ def visualize_poses(fig, axs, poses, body_qposaddr):
             if idx < poses['gt'].shape[1]: 
                 gt = poses['gt'][:, idx ]
                 pred = poses['pred'][:, idx ]
+                target = poses['target'][:, idx ]
                 mse = np.mean((gt - pred) ** 2)
                 axs[i, j].plot(gt, 'r', label='gt')
                 axs[i, j].plot(pred, 'b', label='pred')
+                axs[i, j].plot(target, 'r:', label='target')
                 axs[i, j].set_ylim([-np.pi, np.pi])
                 # body_name = [name for name, addr in body_qposaddr.items() if addr[0] == idx][0]
                 # axs[i, j].set_title(f"idx = {idx}, {body_name} MSE: {mse:.4f}", fontsize=4)
                 axs[i, j].set_title(f'MSE: {mse:.4f}')
             if i == 0 and j == 0:
                 axs[i, j].legend()
+    plt.tight_layout()
+    return fig, axs
+
+def  visualize_impedance(fig, axs, jkps):
+    for i in range(jkps[0].shape[0]):
+        axs.plot(jkps[:,i] - jkps[0,i], label= f'jkp {i}, init = {jkps[0,i]:.2f}')
+    axs.legend()
+    axs.set_title('Joint stiffness changes')
     plt.tight_layout()
     return fig, axs
 
@@ -130,15 +147,19 @@ def visualize_torques(fig, axs, vfs):
     return fig, axs
 
 def visualize_3d_forces(fig, ax, forces, positions):
-    # Plot the positions
-    positions = np.array(positions)
-    ax.scatter(positions[:, 0], positions[:, 1], positions[:, 2], c='r', marker='o')
-    
-    # Plot the forces
-    for pos, force in zip(positions, forces):
-        ax.quiver(pos[0], pos[1], pos[2], force[0], force[1], force[2], length=np.linalg.norm(force)/500.0, normalize=True)
-        ax.text(pos[0] + force[0]/500.0 * 1.1, pos[1] + force[1]/500.0 * 1.1, pos[2] + force[2] /500.0* 1.1, f'{np.linalg.norm(force):.2f}', color='blue', fontsize=8)
-    
+    if type(forces) is list:
+        # Plot the positions
+        positions = np.array(positions)
+        ax.scatter(positions[:, 0], positions[:, 1], positions[:, 2], c='r', marker='o')
+        
+        # Plot the forces
+        for pos, force in zip(positions, forces):
+            ax.quiver(pos[0], pos[1], pos[2], force[0], force[1], force[2], length=np.linalg.norm(force)/500.0, normalize=True)
+            ax.text(pos[0] + force[0]/500.0 * 1.1, pos[1] + force[1]/500.0 * 1.1, pos[2] + force[2] /500.0* 1.1, f'{np.linalg.norm(force):.2f}', color='blue', fontsize=8)
+            
+    else:
+        ax.quiver(positions[0], positions[1], positions[2], forces[0], forces[1], forces[2], length=np.linalg.norm(forces)/500.0, normalize=True)
+        ax.scatter(positions[0], positions[1], positions[2], c='r', marker='o')
     return fig, ax
 
 

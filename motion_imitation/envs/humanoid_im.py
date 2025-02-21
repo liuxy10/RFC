@@ -31,6 +31,8 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             self.knee_qveladdr = self.sim.model.get_joint_qvel_addr("ltibia_x")
         except:
             self.knee_qveladdr = self.sim.model.get_joint_qvel_addr("knee")
+        self.jkp, self.jkd = cfg.jkp, cfg.jkd  # inital value of joint stiffness, damping, reference position, scale
+        self.lower_index = [0, 14] # lower body index from yml config file
         self.bquat = self.get_body_quat()
         self.prev_bquat = None
         self.set_model_params()
@@ -165,11 +167,10 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
     def compute_torque(self, ctrl):
         cfg = self.cfg
         dt = self.model.opt.timestep
-        ctrl_joint = ctrl[:self.ndof] * cfg.a_scale
+        target_pos = self.get_target_pose(ctrl)
+        
         qpos = self.data.qpos.copy()
         qvel = self.data.qvel.copy()
-        base_pos = cfg.a_ref
-        target_pos = base_pos + ctrl_joint
 
         k_p = np.zeros(qvel.shape[0])
         k_d = np.zeros(qvel.shape[0])
@@ -181,6 +182,8 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         qvel_err += q_accel * dt
         torque = -cfg.jkp * qpos_err[6:] - cfg.jkd * qvel_err[6:]
         return torque
+
+
 
     """ RFC-Explicit """
     def rfc_explicit(self, vf):
@@ -349,7 +352,13 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         forces, poss = self.get_contact_force()
         force_sum, pos_sum, force_sum_magnitude = get_sum_force(forces, poss)
         return force_sum, pos_sum, force_sum_magnitude
-
+    
+    def get_target_pose(self, ctrl):
+        ctrl_joint = ctrl[:self.ndof] * self.cfg.a_scale
+        base_pos = self.cfg.a_ref
+        target_pos = base_pos + ctrl_joint
+        return target_pos
+    
     def get_applied_torque_generalized(self):
         return self.data.qfrc_applied[6:]
     
@@ -370,11 +379,12 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
     def visualize_by_frame(self, show = False, label =  "normal"):
         body_pos = {n: self.get_body_position(n) for n in self.model.body_names if n != "world"}
         fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
-        forces, poss = self.get_contact_force()
+        # forces, poss = self.get_contact_force()
+        f, cops, _ = self.get_ground_reaction_force()
         ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
         ax.set_title(label)
-        if len(forces) > 0: 
-            visualize_3d_forces(fig, ax, forces, poss)
+        if len(f) > 0: 
+            visualize_3d_forces(fig, ax, f, cops)
         fig, ax = visualize_skeleton(fig, ax, body_pos, self.body_tree)
         
         if show:

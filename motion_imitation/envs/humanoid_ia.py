@@ -17,8 +17,6 @@ from scipy.linalg import cho_solve, cho_factor
 
 class HumanoidImpAwareEnv(HumanoidEnv):
     def __init__(self, cfg):
-        self.jkp, self.jkd = cfg.jkp, cfg.jkd  # inital value of joint stiffness, damping, reference position, scale
-        self.lower_index = [0, 14] # lower body index from yml config file
         super().__init__(cfg)
         
 
@@ -74,17 +72,15 @@ class HumanoidImpAwareEnv(HumanoidEnv):
     def compute_torque(self, ctrl):
         cfg = self.cfg
         dt = self.model.opt.timestep
-        ctrl_joint = ctrl[:self.ndof] * cfg.a_scale
+        target_pos = self.get_target_pose(ctrl)
+        
         qpos = self.data.qpos.copy()
         qvel = self.data.qvel.copy()
-        base_pos = cfg.a_ref
-        target_pos = base_pos + ctrl_joint
 
         k_p = np.zeros(qvel.shape[0])
         k_d = np.zeros(qvel.shape[0])
         k_p[6:] = self.jkp.copy()
         k_d[6:] = self.jkd.copy()
-        # TODO" k_p, k_d should be set to the updated joint stiffness and damping
         
         qpos_err = np.concatenate((np.zeros(6), qpos[7:] + qvel[6:]*dt - target_pos))
         qvel_err = qvel
@@ -92,12 +88,13 @@ class HumanoidImpAwareEnv(HumanoidEnv):
         qvel_err += q_accel * dt
         torque = - k_p[6:] * qpos_err[6:] - k_d[6:] * qvel_err[6:]
         return torque
-
+    
+    
     def update_impedance(self, ctrl):
         self.jkp[self.lower_index[0]: self.lower_index[1]] += ctrl[-(self.lower_index[1] - self.lower_index[0]):] * 0.1 # learning rate can be changed as well
         # print(self.jkp[self.lower_index[0]: self.lower_index[1]])
         self.jkp[self.lower_index[0]: self.lower_index[1]] = np.clip(self.jkp[self.lower_index[0]: self.lower_index[1]], 0, 500) 
-    
+
     def do_simulation(self, action, n_frames):
         t0 = time.time()
         cfg = self.cfg
@@ -119,28 +116,7 @@ class HumanoidImpAwareEnv(HumanoidEnv):
                 else:
                     self.rfc_explicit(vf)
             self.sim.step()
-
-    def reset_model(self):
-        cfg = self.cfg
-        self.jkd, self.jkp = cfg.jkd, cfg.jkp
-        if self.expert is not None:
-            ind = 0 if self.cfg.env_start_first else self.np_random.randint(self.expert['len'])
-            self.start_ind = ind
-            init_pose = self.expert['qpos'][ind, :].copy()
-            init_vel = self.expert['qvel'][ind, :].copy()
-            self.init_qpos_p = init_pose.copy()
-            self.init_qvel_p = init_vel.copy()
-            init_pose[7:] += self.np_random.normal(loc=0.0, scale=cfg.env_init_noise, size=self.model.nq - 7)# 
-            self.set_state(init_pose, init_vel)
-            
-            self.bquat = self.get_body_quat()
-            self.update_expert()
-        else:
-            init_pose = self.data.qpos
-            init_pose[2] += 1.0
-            self.set_state(init_pose, self.data.qvel)
-        return self.get_obs()
-
+    
 
    
 if __name__ == "__main__":

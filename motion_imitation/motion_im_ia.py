@@ -22,7 +22,7 @@ parser.add_argument('--cfg', default='0202')
 parser.add_argument('--render', action='store_true', default=False)
 parser.add_argument('--test', action='store_true', default=False)
 parser.add_argument('--num_threads', type=int, default=2)
-parser.add_argument('--max_iter_num', type=int, default=100)
+parser.add_argument('--max_iter_num', type=int, default=200)
 parser.add_argument('--gpu_index', type=int, default=0)
 parser.add_argument('--iter', type=int, default=0)
 parser.add_argument('--show_noise', action='store_true', default=False)
@@ -31,7 +31,8 @@ args = parser.parse_args()
 if args.render:
     args.num_threads = 1
 cfg = Config(args.cfg, args.test, create_dirs=not (args.render or args.iter > 0))
-cfg.tb_dir = '%s/motion_im_ia/%s/tb' % (cfg.base_dir, args.cfg)
+
+change_config_path_via_args(cfg, args.cfg, '_ia')
 cfg.save_model_interval = 1
 
 dtype = torch.float64
