@@ -51,12 +51,12 @@ class AgentPPO(AgentPG):
 
                 optim_iter_num = int(math.floor(states.shape[0] / self.mini_batch_size))
                 for i in range(optim_iter_num):
-                    ind = slice(i * self.mini_batch_size, min((i + 1) * self.mini_batch_size, states.shape[0]))
+                    ind = slice(i * self.mini_batch_size, min((i + 1) * self.mini_batch_size, states.shape[0])) # mini-batch indices
                     states_b, actions_b, advantages_b, returns_b, fixed_log_probs_b, exps_b = \
-                        states[ind], actions[ind], advantages[ind], returns[ind], fixed_log_probs[ind], exps[ind]
+                        states[ind], actions[ind], advantages[ind], returns[ind], fixed_log_probs[ind], exps[ind] # mini-batch data
                     ind = exps_b.nonzero(as_tuple=False).squeeze(1)
-                    self.update_value(states_b, returns_b)
-                    surr_loss = self.ppo_loss(states_b, actions_b, advantages_b, fixed_log_probs_b, ind)
+                    self.update_value(states_b, returns_b) # update value network
+                    surr_loss = self.ppo_loss(states_b, actions_b, advantages_b, fixed_log_probs_b, ind) # compute PPO loss
                     self.optimizer_policy.zero_grad()
                     surr_loss.backward()
                     self.clip_policy_grad()
@@ -74,12 +74,12 @@ class AgentPPO(AgentPG):
         if self.policy_grad_clip is not None:
             for params, max_norm in self.policy_grad_clip:
                 torch.nn.utils.clip_grad_norm_(params, max_norm)
-
+    
     def ppo_loss(self, states, actions, advantages, fixed_log_probs, ind):
         log_probs = self.policy_net.get_log_prob(self.trans_policy(states)[ind], actions[ind])
         ratio = torch.exp(log_probs - fixed_log_probs[ind])
         advantages = advantages[ind]
-        surr1 = ratio * advantages
-        surr2 = torch.clamp(ratio, 1.0 - self.clip_epsilon, 1.0 + self.clip_epsilon) * advantages
+        surr1 = ratio * advantages # PPO's optimistic surrogate (L^CLIP)
+        surr2 = torch.clamp(ratio, 1.0 - self.clip_epsilon, 1.0 + self.clip_epsilon) * advantages # PPO's pessimistic surrogate (L^CLIP)
         surr_loss = -torch.min(surr1, surr2).mean()
         return surr_loss

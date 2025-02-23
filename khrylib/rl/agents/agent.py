@@ -73,7 +73,7 @@ class Agent:
         self.gamma = gamma
         self.custom_reward = custom_reward
         self.end_reward = end_reward
-        self.mean_action = mean_action
+        self.mean_action = mean_action # mean action is a flag for exploration
         self.running_state = running_state
         self.render = render
         self.num_threads = num_threads
@@ -123,7 +123,7 @@ class Agent:
             for t in range(10000):
                 state_var = tensor(state).unsqueeze(0)
                 trans_out = self.trans_policy(state_var)
-                mean_action = self.mean_action or self.env.np_random.binomial(1, 1 - self.noise_rate)
+                mean_action = self.mean_action or self.env.np_random.binomial(1, 1 - self.noise_rate) # epsilon-greedy
                 action = self.policy_net.select_action(trans_out, mean_action)[0].numpy()
                 action = int(action) if self.policy_net.type == 'discrete' else action.astype(np.float64)
                 next_state, env_reward, done, info = self.env.step(action)
@@ -142,8 +142,8 @@ class Agent:
                 # logging
                 logger.step(self.env, env_reward, c_reward, c_info, info)
 
-                mask = 0 if done else 1
-                exp = 1 - mean_action
+                mask = 0 if done else 1 # 0 for done, 1 for not done
+                exp = 1 - mean_action # 1 for exploration, 0 for exploitation
                 self.push_memory(memory, state, action, mask, next_state, reward, exp)
 
                 if pid == 0 and self.render:
