@@ -43,7 +43,8 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
 
         self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
         self.max_vf = 30.0 # N
-        
+        self.grf_normalized = get_ideal_grf(total_idx = 75, rhs_index = [0,30,60], offset_period = 15, stance_period = 18) 
+        self.mass = self.model.body_subtreemass[0]
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
         # print(expert_meta)
@@ -323,6 +324,26 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
 ### xinyi's code
 ##############################################################################################################
 
+    def forward_kinematics(self, qpos):
+        assert type(qpos) == np.ndarray, "Joint angles must be a numpy array"
+        assert qpos.shape[0] == self.nq, "Joint angles must have the same length as the number of degrees of freedom"
+        # Set the joint angles
+        self.sim.data.qpos = qpos
+
+        # Forward kinematics
+        self.sim.forward()
+
+        # Get the positions of all bodies in the body tree
+        body_positions = {}
+        for body_name in self.body_tree:
+            try:
+                body_pos = self.get_body_position(body_name)
+                body_positions[body_name] = body_pos
+            except KeyError:
+                pass
+
+        return body_positions
+    
     def get_body_position(self, body_name):
         sim = self.sim
         body_id = sim.model.body_name2id(body_name)
@@ -334,11 +355,13 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
     def get_contact_force(self):
         forces = []
         poss = []
+        ids = []
         for contact_id in range(self.data.ncon): 
             contact = self.data.contact[contact_id]
             if contact.efc_address >= 0 and contact.dim > 1 and contact.pos[2] <= 0.1:
                 assert contact.dim == 3, "contact force dimension should be 3"
-                
+                ids.append(self.model.body_id2name(self.model.geom_bodyid[contact.geom2]))
+                # print(ids)
                 mat = np.transpose(contact.frame.reshape(3, 3))
                 force_local = np.zeros(6)
                 mjf.mj_contactForce(self.sim.model, self.data, contact_id, force_local)
@@ -346,12 +369,18 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                     
                 forces.append(force_global)
                 poss.append(contact.pos)
-        return forces, poss
+        return forces, poss, ids 
 
     def get_ground_reaction_force(self):
-        forces, poss = self.get_contact_force()
+        forces, poss, ids = self.get_contact_force()
         force_sum, pos_sum, force_sum_magnitude = get_sum_force(forces, poss)
         return force_sum, pos_sum, force_sum_magnitude
+    
+    def get_grf_rl(self):
+        forces, poss, ids = self.get_contact_force()
+        force_sum_r, pos_sum_r, force_sum_magnitude_r = get_sum_force([forces[ids == 'rfoot']], [poss[ids == 'rfoot']]) if len(ids) > 0 else np.zeros(3), None, 0
+{}, poss[ids == 'lfoot']) if len(ids) > 0 else np.zeros(3), None, 0
+        return force_sum_r, pos_sum_r, force_sum_magnitude_r, force_sum_l, pos_sum_l, force_sum_magnitude_l
     
     def get_target_pose(self, ctrl):
         ctrl_joint = ctrl[:self.ndof] * self.cfg.a_scale

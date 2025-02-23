@@ -145,6 +145,7 @@ def local_rfc_implicit_reward(env, state, action, info):
     w_p, w_v, w_e, w_rp, w_rv, w_vf = ws.get('w_p', 0.5), ws.get('w_v', 0.0), ws.get('w_e', 0.2), ws.get('w_rp', 0.1), ws.get('w_rv', 0.1), ws.get('w_vf', 0.1)
     k_p, k_v, k_e, k_vf = ws.get('k_p', 2), ws.get('k_v', 0.005), ws.get('k_e', 20), ws.get('k_vf', 1)
     k_rh, k_rq, k_rl, k_ra = ws.get('k_rh', 300), ws.get('k_rq', 300), ws.get('k_rl', 5.0), ws.get('k_ra', 0.5)
+    k_grf, w_grf = ws.get('k_grf', 30), ws.get('w_grf', 0.0)
     v_ord = ws.get('v_ord', 2)
     
     # data from env
@@ -188,6 +189,11 @@ def local_rfc_implicit_reward(env, state, action, info):
     root_linv_dist = np.linalg.norm(cur_rlinv_local - e_rlinv_local) 
     root_angv_dist = np.linalg.norm(cur_rangv - e_rangv)
     root_vel_reward = math.exp(-k_rl * (root_linv_dist ** 2) - k_ra * (root_angv_dist ** 2))
+    # grf reward
+    grf_r, _,_, grf_l, _,_ = env.get_grf_rl()
+    grf_z_dist_r = abs(env.grf_normalized[t,0] - grf_r[2]/env.mass * 9.81)
+    grf_z_dist_l = abs(env.grf_normalized[t,1] - grf_l[2]/env.mass * 9.81)
+    grf_reward = math.exp(-k_grf * (grf_z_dist_r**2 + grf_z_dist_l**2))
     # residual force reward
     if w_vf > 0.0:
         vf = action[env.ndof: (env.ndof + env.vf_dim)]
@@ -195,9 +201,9 @@ def local_rfc_implicit_reward(env, state, action, info):
     else:
         vf_reward = 0.0
     # overall reward
-    reward = w_p * pose_reward + w_v * vel_reward + w_e * ee_reward + w_rp * root_pose_reward + w_rv * root_vel_reward + w_vf * vf_reward
-    reward /= w_p + w_v + w_e + w_rp + w_rv + w_vf
-    return reward, np.array([pose_reward, vel_reward, ee_reward, root_pose_reward, root_vel_reward, vf_reward])
+    reward = w_p * pose_reward + w_v * vel_reward + w_e * ee_reward + w_rp * root_pose_reward + w_rv * root_vel_reward + w_vf * vf_reward + w_grf * grf_reward
+    reward /= w_p + w_v + w_e + w_rp + w_rv + w_vf + w_grf
+    return reward, np.array([pose_reward, vel_reward, ee_reward, root_pose_reward, root_vel_reward, vf_reward, grf_reward])
 
 
 def local_rfc_explicit_reward(env, state, action, info):
