@@ -12,6 +12,39 @@ from mpl_toolkits.mplot3d import Axes3D
 import glob
 import re
 
+
+from scipy.interpolate import CubicSpline
+import matplotlib.pyplot as plt
+
+def generate_interpolated_grf(t):
+    # Define key timing points and force values
+    time_points = [0, 15, 50, 85, 100]  # Percentage of stance phase
+    force_points = [0, 1.0, 0.8, 1.0, 0]  # Normalized to body weight
+
+    # Create cubic spline interpolation
+    cs = CubicSpline(time_points, force_points, bc_type='natural')
+    
+    return cs(t)
+# hard coded for 0202
+def get_ideal_grf(total_idx = 75, rhs_index = [0,30,60], offset_period = 15, stance_period = 18):
+    grf = np.zeros((total_idx, 2))
+    t_per_cycle = rhs_index[1] - rhs_index[0]
+    
+    # for 0 row (right)
+    for i in rhs_index: 
+        if i + stance_period > total_idx:
+            grf[i:, 0] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i))[:total_idx-i]
+            continue
+    
+        if i + stance_period + offset_period > total_idx:
+            grf[i:, 1] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i - offset_period))[:total_idx-i-offset_period]
+            continue
+        
+        grf [i:i+stance_period,0] = generate_interpolated_grf(np.linspace(0, 100, stance_period))  # High-resolution time point
+        grf [i+offset_period:i+stance_period+offset_period, 1] = generate_interpolated_grf(np.linspace(0, 100, stance_period))
+        
+    return grf
+
 def change_config_path_via_args(cfg, cfg_num, postdix = ''):
     cfg.cfg_dir = '%s/motion_im%s/%s' % (cfg.base_dir, postdix, cfg_num)
     cfg.model_dir = '%s/models' % cfg.cfg_dir
@@ -22,16 +55,16 @@ def change_config_path_via_args(cfg, cfg_num, postdix = ''):
     cfg.tb_dir = '%s/motion_im%s/%s/tb' % (cfg.base_dir, postdix, cfg_num)
 
 def get_sum_force(forces, poss):
-    forces = np.array(forces)
-    poss = np.array(poss)
-    total_force = np.sum(forces, axis=0)
+    forces = np.array(forces) if len(forces) > 0 else np.zeros((1,3))
+    poss = np.array(poss) if len(poss) > 0 else np.zeros((1,3))
+    total_force = np.sum(forces, axis=0) 
     total_force_magnitude = np.linalg.norm(total_force)
     
     if total_force_magnitude == 0:
         cop = np.zeros(3)
         total_force = np.zeros(3)
     else:
-        cop = np.sum(poss * np.linalg.norm(forces, axis=1)[:, np.newaxis], axis=0) / total_force_magnitude
+        cop = np.sum(poss * np.linalg.norm(forces, axis=1)[:, np.newaxis], axis=0) / total_force_magnitude # TODO: CHANGE THIS TO BE INNER PRODUCT OF POS AND FORCE
     
     return total_force, cop, total_force_magnitude
 

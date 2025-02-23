@@ -132,9 +132,9 @@ class MyVisulizer(Visualizer):
                     #   "env.data.qfrc_applied", env.data.qfrc_applied.shape,
                     #   "env.data.qfrc_actuator",env.data.qfrc_actuator.shape,
                     #   "env.data.actuator_force", env.data.actuator_force.shape,
-                    # custom_reward(env, state, action, info) # reward in real time
+                    custom_reward(env, state, action, info) # reward in real time
                     # env.get_target_pose(action) - env.sim.data.qpos[7:], # difference between target and current pose
-                    env.jkp[env.lower_index[0]: env.lower_index[1]], # kp values
+                    # env.jkp[env.lower_index[0]: env.lower_index[1]] # kp values
                     #   env.get_contact_force()
                     #   env.get_end_effector_position("rfoot"),
                     #   env.get_ground_reaction_force()

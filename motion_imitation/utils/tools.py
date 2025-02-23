@@ -14,23 +14,23 @@ def get_expert(expert_qpos, expert_meta, env):
         env.data.qpos[:] = qpos
         env.sim.forward()
         rq_rmh = de_heading(qpos[3:7])
-        ee_pos = env.get_ee_pos(env.cfg.obs_coord)
+        ee_pos = env.get_ee_pos(env.cfg.obs_coord) # ee_pos in obs_coord
         ee_wpos = env.get_ee_pos(None)
         bquat = env.get_body_quat()
         com = env.get_com()
         head_pos = env.get_body_com('head').copy()
         if i > 0:
             prev_qpos = expert_qpos[i - 1]
-            qvel = get_qvel_fd_new(prev_qpos, qpos, env.dt)
+            qvel = get_qvel_fd_new(prev_qpos, qpos, env.dt) # finite difference
             qvel = qvel.clip(-10.0, 10.0)
             rlinv = qvel[:3].copy()
             rlinv_local = transform_vec(qvel[:3].copy(), qpos[3:7], env.cfg.obs_coord)
             rangv = qvel[3:6].copy()
-            expert['qvel'].append(qvel)
-            expert['rlinv'].append(rlinv)
+            expert['qvel'].append(qvel) 
+            expert['rlinv'].append(rlinv) 
             expert['rlinv_local'].append(rlinv_local)
             expert['rangv'].append(rangv)
-        expert['ee_pos'].append(ee_pos)
+        expert['ee_pos'].append(ee_pos) 
         expert['ee_wpos'].append(ee_wpos)
         expert['bquat'].append(bquat)
         expert['com'].append(com)
