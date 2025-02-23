@@ -158,7 +158,7 @@ def visualize_3d_forces(fig, ax, forces, positions):
             ax.text(pos[0] + force[0]/500.0 * 1.1, pos[1] + force[1]/500.0 * 1.1, pos[2] + force[2] /500.0* 1.1, f'{np.linalg.norm(force):.2f}', color='blue', fontsize=8)
             
     else:
-        ax.quiver(positions[0], positions[1], positions[2], forces[0], forces[1], forces[2], length=np.linalg.norm(forces)/500.0, normalize=True)
+        ax.quiver(positions[0], positions[1], positions[2], forces[0], forces[1], forces[2], length=np.linalg.norm(forces), normalize=True)
         ax.scatter(positions[0], positions[1], positions[2], c='r', marker='o')
     return fig, ax
 
@@ -173,6 +173,7 @@ def visualize_skeleton(fig, ax, coms, tree):
 
     # Convert dictionary values to a numpy array
     coms_array = np.array(list(coms.values()))
+    coms_array = coms_array[~np.isnan(coms_array).any(axis=1)]
 
     # Set equal scaling
     max_range = np.array([coms_array[:, 0].max() - coms_array[:, 0].min(), 

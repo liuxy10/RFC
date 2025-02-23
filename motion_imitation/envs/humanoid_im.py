@@ -323,6 +323,26 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
 ### xinyi's code
 ##############################################################################################################
 
+    def forward_kinematics(self, qpos):
+        assert type(qpos) == np.ndarray, "Joint angles must be a numpy array"
+        assert qpos.shape[0] == self.nq, "Joint angles must have the same length as the number of degrees of freedom"
+        # Set the joint angles
+        self.sim.data.qpos = qpos
+
+        # Forward kinematics
+        self.sim.forward()
+
+        # Get the positions of all bodies in the body tree
+        body_positions = {}
+        for body_name in self.body_tree:
+            try:
+                body_pos = self.get_body_position(body_name)
+                body_positions[body_name] = body_pos
+            except KeyError:
+                pass
+
+        return body_positions
+    
     def get_body_position(self, body_name):
         sim = self.sim
         body_id = sim.model.body_name2id(body_name)

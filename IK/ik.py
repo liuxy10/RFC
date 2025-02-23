@@ -2,6 +2,55 @@ import numpy as np
 from scipy.optimize import minimize
 import matplotlib.pyplot as plt
 
+from motion_imitation.envs.humanoid_im import HumanoidEnv
+vis_file = 'mocap_v2.xml'
+env = HumanoidEnv(vis_file)
+
+
+def inverse_kinematics(forward_kinematics_fn, 
+                       target_position, 
+                       initial_joints,
+                       max_iterations=1000, 
+                       learning_rate=0.01, tolerance=1e-4):
+    
+    # Trim target_position and initial_joints to contain common body names
+    common_bodies = set(target_position.keys()) & set(initial_joints.keys())
+    target_position = {body: target_position[body] for body in common_bodies}
+    initial_joints = {body: initial_joints[body] for body in common_bodies}
+    
+    # Convert target_position and initial_joints to numpy arrays
+    target_position = np.array(list(target_position.values()))
+    initial_joints = np.array(list(initial_joints.values()))
+    
+    current_joints = initial_joints.copy()
+    
+    for iteration in range(max_iterations):
+        # Get current end effector position
+        current_position = forward_kinematics_fn(current_joints)
+        
+        # Calculate position error
+        position_error = target_position - current_position
+        error_magnitude = np.linalg.norm(position_error)
+        
+        # Check convergence
+        if error_magnitude < tolerance:
+            break
+            
+        # Compute Jacobian numerically
+        jacobian = np.zeros((3, len(current_joints)))
+        epsilon = 1e-6
+        for i in range(len(current_joints)):
+            perturbed_joints = current_joints.copy()
+            perturbed_joints[i] += epsilon
+            perturbed_position = forward_kinematics_fn(perturbed_joints)
+            jacobian[:,i] = (perturbed_position - current_position) / epsilon
+        
+        # Update joints using gradient descent
+        joint_update = learning_rate * jacobian.T @ position_error
+        current_joints += joint_update
+        
+    return current_joints
+
 class InvertedPendulum:
     def __init__(self, L=1.0):
         self.L = L  # Length of pendulum

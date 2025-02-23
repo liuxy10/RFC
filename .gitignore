@@ -7,3 +7,4 @@ events.out.*
 *.png
 # *.mp4
 *.amc
+.vscode/* 

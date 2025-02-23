@@ -101,9 +101,9 @@ class MyVisulizer(Visualizer):
                 
                 save_by_frame = True
                 if save_by_frame:
-                    fig, ax = env.visualize_by_frame(show = False) 
-                    frame_dir = f'{args.video_dir}/frame_skeleton'
+                    fig, ax = env.visualize_by_frame(show = False)
                     fig.canvas.draw()
+                    frame_dir = f'{args.video_dir}/frame_skeleton'
                     data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
                     save_image_hwc(data,  f'{frame_dir}/%04d.png' % t) 
                     plt.close(fig)
@@ -185,7 +185,7 @@ class MyVisulizer(Visualizer):
             self.env_vis.viewer.cam.lookat[:2] = self.env_vis.data.qpos[:2]
         self.env_vis.sim_forward()
 
-    def record_video(self):
+    def record_video(self, skeleton = False):
         frame_dir = f'{args.video_dir}/frames'
         if os.path.exists(frame_dir):
             shutil.rmtree(frame_dir)
@@ -193,15 +193,22 @@ class MyVisulizer(Visualizer):
         for fr in range(self.num_fr):
             self.fr = fr
             self.update_pose()
-            for _ in range(200): 
-                self.render()
-            if not args.preview:
-                t0 = time.time()
-                # save_screen_shots(self.env_vis.viewer.window,f'{frame_dir}/%04d.png' % fr,  autogui = True)
-                
-                width, height = glfw.get_window_size(self.env_vis.viewer.window)
-                data = self.env_vis._get_viewer("human").read_pixels(width, height, depth=False)
-                save_image_hwc(data[::-1, :, [0,1,2]],  f'{frame_dir}/%04d.png' % fr)
+            if skeleton: 
+                fig, ax = self.env_vis.visualize_by_frame(show = False, label =  "expert")
+                fig.canvas.draw()
+                frame_dir = f'{args.video_dir}/frame_skeleton_exp'
+                data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
+                save_image_hwc(data,  f'{frame_dir}/%04d.png' % fr) 
+            else:
+                for _ in range(200): 
+                    self.render()
+                if not args.preview:
+                    t0 = time.time()
+                    # save_screen_shots(self.env_vis.viewer.window,f'{frame_dir}/%04d.png' % fr,  autogui = True)
+                    
+                    width, height = glfw.get_window_size(self.env_vis.viewer.window)
+                    data = self.env_vis._get_viewer("human").read_pixels(width, height, depth=False)
+                    save_image_hwc(data[::-1, :, [0,1,2]],  f'{frame_dir}/%04d.png' % fr)
                 print('%d/%d, %.3f' % (fr, self.num_fr, time.time() - t0))
 
         if not args.preview:
@@ -214,6 +221,7 @@ class MyVisulizer(Visualizer):
 
 vis = MyVisulizer(f'{args.vis_model_file}.xml')
 torch.cuda.empty_cache()
+vis.record_video(skeleton = True) # record ground truth skeleton
 # if args.record:
 #     vis.record_video()
 # else:
