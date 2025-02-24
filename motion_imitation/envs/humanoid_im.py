@@ -43,8 +43,9 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
 
         self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
         self.max_vf = 30.0 # N
-        self.grf_normalized = get_ideal_grf(total_idx = 75, rhs_index = [0,30,60], offset_period = 15, stance_period = 18) 
+        self.grf_normalized = get_ideal_grf(total_idx = 100, rhs_index = [3,33,63], offset_period = 15, stance_period = 18) 
         self.mass = self.model.body_subtreemass[0]
+    
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
         # print(expert_meta)
@@ -365,21 +366,25 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 mat = np.transpose(contact.frame.reshape(3, 3))
                 force_local = np.zeros(6)
                 mjf.mj_contactForce(self.sim.model, self.data, contact_id, force_local)
-                force_global = (mat @ force_local[:3, None]).ravel()
+                force_global = (mat @ force_local[:3, None]).ravel().copy()
                     
                 forces.append(force_global)
-                poss.append(contact.pos)
-        return forces, poss, ids 
+                poss.append(contact.pos.copy())
+        return np.array(forces), np.array(poss), np.array(ids)
 
     def get_ground_reaction_force(self):
         forces, poss, ids = self.get_contact_force()
+        # print(ids)
         force_sum, pos_sum, force_sum_magnitude = get_sum_force(forces, poss)
         return force_sum, pos_sum, force_sum_magnitude
     
     def get_grf_rl(self):
         forces, poss, ids = self.get_contact_force()
-        force_sum_r, pos_sum_r, force_sum_magnitude_r = get_sum_force([forces[ids == 'rfoot']], [poss[ids == 'rfoot']]) if len(ids) > 0 else np.zeros(3), None, 0
-{}, poss[ids == 'lfoot']) if len(ids) > 0 else np.zeros(3), None, 0
+        # print( ids, ids == 'rfoot', ids == 'lfoot')
+        (force_sum_r, pos_sum_r, force_sum_magnitude_r) = get_sum_force(forces[ids == 'rfoot'], poss[ids == 'rfoot']) if len(ids) > 0 else (np.zeros(3), None, 0)
+        (force_sum_l, pos_sum_l, force_sum_magnitude_l) = get_sum_force(forces[ids == 'lfoot'], poss[ids == 'lfoot']) if len(ids) > 0 else (np.zeros(3), None, 0)
+        # print(force_sum_l[2], force_sum_r[2])
+        assert force_sum_r.shape == (3,) and force_sum_l.shape == (3,), "Force sum should be a 3D vector"
         return force_sum_r, pos_sum_r, force_sum_magnitude_r, force_sum_l, pos_sum_l, force_sum_magnitude_l
     
     def get_target_pose(self, ctrl):
@@ -405,16 +410,27 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         return F_cartesian
     
     
-    def visualize_by_frame(self, show = False, label =  "normal"):
+    def visualize_by_frame(self, show = False, label =  "normal", plot_lr = True):
         body_pos = {n: self.get_body_position(n) for n in self.model.body_names if n != "world"}
         fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
         # forces, poss = self.get_contact_force()
-        f, cops, _ = self.get_ground_reaction_force()
         ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
         ax.set_title(label)
+        f, cops, _ = self.get_ground_reaction_force()
         if len(f) > 0: 
-            visualize_3d_forces(fig, ax, f, cops)
+            if plot_lr:
+                fs_r, cop_r, fm_r, fs_l, cop_l, fm_l = self.get_grf_rl()
+                visualize_3d_forces(fig, ax, fs_l, cop_l)
+                visualize_3d_forces(fig, ax, fs_r, cop_r)
+                
+            else:
+                visualize_3d_forces(fig, ax, f, cops)
         fig, ax = visualize_skeleton(fig, ax, body_pos, self.body_tree)
+        
+        # visualize_3d_forces(fig, ax, np.array([force_data[k].to_numpy()[i] for k in ('RFx', 'RFy', 'RFz')]), 
+        #                         np.array([cop_data[k].to_numpy()[i] for k in ('RCx', 'RCy', 'RCz')]), sc = 500)
+        # visualize_3d_forces(fig, ax, np.array([force_data[k].to_numpy()[i] for k in ('LFx', 'LFy', 'LFz')]), 
+        #                         np.array([cop_data[k].to_numpy()[i] for k in ('LCx', 'LCy', 'LCz')]), sc = 500)
         
         if show:
             plt.show()

@@ -26,22 +26,22 @@ def generate_interpolated_grf(t):
     
     return cs(t)
 # hard coded for 0202
-def get_ideal_grf(total_idx = 75, rhs_index = [0,30,60], offset_period = 15, stance_period = 18):
+def get_ideal_grf(total_idx = 76, rhs_index = [0,30,60], offset_period = 15, stance_period = 18):
     grf = np.zeros((total_idx, 2))
-    t_per_cycle = rhs_index[1] - rhs_index[0]
+    # t_per_cycle = rhs_index[1] - rhs_index[0]
     
-    # for 0 row (right)
+    # for 1 row (right), 0 row (left)
     for i in rhs_index: 
         if i + stance_period > total_idx:
-            grf[i:, 0] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i))[:total_idx-i]
+            grf[i:, 1] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i))[:total_idx-i]
             continue
     
         if i + stance_period + offset_period > total_idx:
-            grf[i:, 1] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i - offset_period))[:total_idx-i-offset_period]
+            grf[i:, 0] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i - offset_period))[:total_idx-i-offset_period]
             continue
         
-        grf [i:i+stance_period,0] = generate_interpolated_grf(np.linspace(0, 100, stance_period))  # High-resolution time point
-        grf [i+offset_period:i+stance_period+offset_period, 1] = generate_interpolated_grf(np.linspace(0, 100, stance_period))
+        grf [i:i+stance_period,1] = generate_interpolated_grf(np.linspace(0, 100, stance_period))  # High-resolution time point
+        grf [i+offset_period:i+stance_period+offset_period, 0] = generate_interpolated_grf(np.linspace(0, 100, stance_period))
         
     return grf
 
@@ -65,17 +65,18 @@ def get_sum_force(forces, poss):
         total_force = np.zeros(3)
     else:
         cop = np.sum(poss * np.linalg.norm(forces, axis=1)[:, np.newaxis], axis=0) / total_force_magnitude # TODO: CHANGE THIS TO BE INNER PRODUCT OF POS AND FORCE
-    
+    assert total_force.shape == (3,), f"Total force shape is {total_force.shape}"
+    assert cop.shape == (3,), f"COP shape is {cop.shape}"
+    assert total_force_magnitude.shape == (), f"Total force magnitude shape is {total_force_magnitude.shape}"
     return total_force, cop, total_force_magnitude
 
-
-
    
-def visualize_grfs(fig, axs, grfs):
-    grfs = np.array(grfs)
+def visualize_grfs(fig, axs, grfs, lab = ''):
+    if type(grfs) is list:
+        grfs = np.array(grfs)
     label = 'xyz'
     for i in range(3):
-        axs[i].plot(grfs[:,i], label = f'GRF {label[i]}')
+        axs[i].plot(grfs[:,i], label = f'GRF {label[i]} {lab}')
         axs[i].set_ylabel('N')
         axs[i].legend()
     plt.tight_layout()
@@ -179,20 +180,23 @@ def visualize_torques(fig, axs, vfs):
     plt.tight_layout()
     return fig, axs
 
-def visualize_3d_forces(fig, ax, forces, positions):
+def visualize_3d_forces(fig, ax, forces, positions, sc = 500):
     if type(forces) is list:
         # Plot the positions
         positions = np.array(positions)
         ax.scatter(positions[:, 0], positions[:, 1], positions[:, 2], c='r', marker='o')
-        
+        print(forces)
         # Plot the forces
         for pos, force in zip(positions, forces):
-            ax.quiver(pos[0], pos[1], pos[2], force[0], force[1], force[2], length=np.linalg.norm(force)/500.0, normalize=True)
-            ax.text(pos[0] + force[0]/500.0 * 1.1, pos[1] + force[1]/500.0 * 1.1, pos[2] + force[2] /500.0* 1.1, f'{np.linalg.norm(force):.2f}', color='blue', fontsize=8)
+            ax.quiver(pos[0], pos[1], pos[2], force[0], force[1], force[2], length=np.linalg.norm(force)/sc, normalize=True)
+            ax.text(pos[0] + force[0]/sc * 1.1, pos[1] + force[1]/sc * 1.1, pos[2] + force[2] /sc* 1.1, f'{np.linalg.norm(force):.2f}', color='blue', fontsize=8)
             
     else:
-        ax.quiver(positions[0], positions[1], positions[2], forces[0], forces[1], forces[2], length=np.linalg.norm(forces), normalize=True)
-        ax.scatter(positions[0], positions[1], positions[2], c='r', marker='o')
+        if forces is not None and positions is not None:
+            ax.quiver(positions[0], positions[1], positions[2], forces[0], forces[1], forces[2], length=np.linalg.norm(forces)/sc, normalize=True)
+            ax.scatter(positions[0], positions[1], positions[2], c='r', marker='o')
+            ax.text(positions[0] + forces[0]/sc * 1.1, positions[1] + forces[1]/sc * 1.1, positions[2] + forces[2] /sc* 1.1, f'{np.linalg.norm(forces):.2f}', color='blue', fontsize=8)
+
     return fig, ax
 
 

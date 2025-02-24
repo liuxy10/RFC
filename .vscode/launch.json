@@ -7,7 +7,7 @@
             "type": "debugpy",
             "request": "launch",
             "name": "test nrel data reader",
-            "python":"/root/anaconda3/envs/rfc/bin/python", 
+            "python": "${command:python.interpreterPath}",
             "program": "${workspaceFolder}/motion_imitation/data_process/nrel_data_read.py",
             "console": "integratedTerminal"
         },
@@ -17,7 +17,7 @@
             "type": "debugpy",
             "request": "launch",
             "name": "Launch motion_im.py",
-            "python":"/root/anaconda3/envs/rfc/bin/python", 
+            "python":"${command:python.interpreterPath}", 
             "program": "${workspaceFolder}/motion_imitation/motion_im.py",
             "console": "integratedTerminal"
         },
@@ -25,7 +25,7 @@
             "type": "debugpy",
             "request": "launch",
             "name": "test biped.py",
-            "python":"/root/anaconda3/envs/rfc/bin/python", 
+            "python":"${command:python.interpreterPath}", 
             "program": "${workspaceFolder}/mujoco_test/13_2D_biped/biped.py",
             "console": "integratedTerminal"
         },
@@ -33,7 +33,7 @@
             "type": "debugpy",
             "request": "launch",
             "name": "Launch vis_im.py",
-            "python":"/root/anaconda3/envs/rfc/bin/python", 
+            "python":"${command:python.interpreterPath}", 
             "program": "${workspaceFolder}/motion_imitation/vis_im.py",
             "args": [
                 "--cfg",

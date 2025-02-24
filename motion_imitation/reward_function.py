@@ -145,7 +145,7 @@ def local_rfc_implicit_reward(env, state, action, info):
     w_p, w_v, w_e, w_rp, w_rv, w_vf = ws.get('w_p', 0.5), ws.get('w_v', 0.0), ws.get('w_e', 0.2), ws.get('w_rp', 0.1), ws.get('w_rv', 0.1), ws.get('w_vf', 0.1)
     k_p, k_v, k_e, k_vf = ws.get('k_p', 2), ws.get('k_v', 0.005), ws.get('k_e', 20), ws.get('k_vf', 1)
     k_rh, k_rq, k_rl, k_ra = ws.get('k_rh', 300), ws.get('k_rq', 300), ws.get('k_rl', 5.0), ws.get('k_ra', 0.5)
-    k_grf, w_grf = ws.get('k_grf', 30), ws.get('w_grf', 0.0)
+    k_grf, w_grf = ws.get('k_grf', 5), ws.get('w_grf', 0.05)
     v_ord = ws.get('v_ord', 2)
     
     # data from env
@@ -171,29 +171,47 @@ def local_rfc_implicit_reward(env, state, action, info):
     e_bquat = env.get_expert_attr('bquat', ind)
     e_bangvel = env.get_expert_attr('bangvel', ind)
     # pose reward
-    pose_diff = multi_quat_norm(multi_quat_diff(cur_bquat[4:], e_bquat[4:]))    # ignore root
-    pose_diff *= cfg.b_diffw
-    pose_dist = np.linalg.norm(pose_diff)
-    pose_reward = math.exp(-k_p * (pose_dist ** 2))
+    if w_p > 0.0:
+        pose_diff = multi_quat_norm(multi_quat_diff(cur_bquat[4:], e_bquat[4:]))    # ignore root
+        pose_diff *= cfg.b_diffw
+        pose_dist = np.linalg.norm(pose_diff)
+        pose_reward = math.exp(-k_p * (pose_dist ** 2))
+    else:
+        pose_reward = 0.0
     # velocity reward
-    vel_dist = np.linalg.norm(cur_bangvel[3:] - e_bangvel[3:], ord=v_ord)  # ignore root
-    vel_reward = math.exp(-k_v * (vel_dist ** 2))
+    if w_v > 0.0:
+        vel_dist = np.linalg.norm(cur_bangvel[3:] - e_bangvel[3:], ord=v_ord)  # ignore root
+        vel_reward = math.exp(-k_v * (vel_dist ** 2))
+    else:
+        vel_reward = 0.0    
     # ee reward
-    ee_dist = np.linalg.norm(cur_ee - e_ee)
-    ee_reward = math.exp(-k_e * (ee_dist ** 2))
+    if w_e > 0.0:
+        ee_dist = np.linalg.norm(cur_ee - e_ee)
+        ee_reward = math.exp(-k_e * (ee_dist ** 2)) 
+    else:
+        ee_reward = 0.0
     # root position reward
-    root_height_dist = cur_qpos[2] - e_qpos[2]
-    root_quat_dist = multi_quat_norm(multi_quat_diff(cur_rq_rmh, e_rq_rmh))[0]
-    root_pose_reward = math.exp(-k_rh * (root_height_dist ** 2) - k_rq * (root_quat_dist ** 2))
+    if w_rp > 0.0:
+        root_height_dist = cur_qpos[2] - e_qpos[2]
+        root_quat_dist = multi_quat_norm(multi_quat_diff(cur_rq_rmh, e_rq_rmh))[0]
+        root_pose_reward = math.exp(-k_rh * (root_height_dist ** 2) - k_rq * (root_quat_dist ** 2))
+    else:
+        root_pose_reward = 0.0
     # root velocity reward
-    root_linv_dist = np.linalg.norm(cur_rlinv_local - e_rlinv_local) 
-    root_angv_dist = np.linalg.norm(cur_rangv - e_rangv)
-    root_vel_reward = math.exp(-k_rl * (root_linv_dist ** 2) - k_ra * (root_angv_dist ** 2))
+    if w_rv > 0.0:
+        root_linv_dist = np.linalg.norm(cur_rlinv_local - e_rlinv_local) 
+        root_angv_dist = np.linalg.norm(cur_rangv - e_rangv)
+        root_vel_reward = math.exp(-k_rl * (root_linv_dist ** 2) - k_ra * (root_angv_dist ** 2))
+    else:
+        root_vel_reward = 0.0
     # grf reward
-    grf_r, _,_, grf_l, _,_ = env.get_grf_rl()
-    grf_z_dist_r = abs(env.grf_normalized[t,0] - grf_r[2]/env.mass * 9.81)
-    grf_z_dist_l = abs(env.grf_normalized[t,1] - grf_l[2]/env.mass * 9.81)
-    grf_reward = math.exp(-k_grf * (grf_z_dist_r**2 + grf_z_dist_l**2))
+    if w_grf > 0.0:
+        grf_r, _,_, grf_l, _,_ = env.get_grf_rl()
+        grf_z_dist_r = env.grf_normalized[t-1,0] - grf_r[2]/env.mass / 9.81
+        grf_z_dist_l = env.grf_normalized[t-1,1] - grf_l[2]/env.mass / 9.81
+        grf_reward = math.exp(-k_grf * grf_z_dist_l**2 -k_grf * grf_z_dist_r**2)
+    else:
+        grf_reward = 0.0
     # residual force reward
     if w_vf > 0.0:
         vf = action[env.ndof: (env.ndof + env.vf_dim)]

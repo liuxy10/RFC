@@ -80,12 +80,12 @@ class MyVisulizer(Visualizer):
     def data_generator(self):
         while True:
             poses = {'pred': [], 'gt': [], 'target': []}
-            forces, grfs, jkps = [], [], []
+            forces, grfs, jkps = [], {'l':[], 'r':[]}, []
             state = env.reset()
             if running_state is not None:
                 state = running_state(state, update=False)
             action = env.action_space.sample()
-            for t in range(1000): 
+            for t in range(env.expert['len']): 
                 
                 epos = env.get_expert_attr('qpos', env.get_expert_index(t)).copy()
                 # print(epos.shape)
@@ -108,7 +108,7 @@ class MyVisulizer(Visualizer):
                     save_image_hwc(data,  f'{frame_dir}/%04d.png' % t) 
                     plt.close(fig)
                     
-                print("*"*20)
+                # print("*"*20)
                 state_var = tensor(state, dtype=dtype).unsqueeze(0)
                 action = policy_net.select_action(state_var, mean_action=True)[0].cpu().numpy()
                 
@@ -116,8 +116,7 @@ class MyVisulizer(Visualizer):
                 forces.append(env.data.actuator_force.copy()) # env.data.qfrc_actuator.copy()[6:]) #np.hstack([env.data.qfrc_applied[:6].copy(), env.data.qfrc_actuator[6:].copy()])) 
                 # print(env.data.actuator_force.copy())
                 f, cop, f_m = env.get_ground_reaction_force()
-                grfs.append(f)
-                jkps.append(env.jkp[env.lower_index[0]: env.lower_index[1]].copy())
+                
                 if running_state is not None:
                     next_state = running_state(next_state, update=False)
                 if done:
@@ -125,6 +124,10 @@ class MyVisulizer(Visualizer):
                     break
                 state = next_state
                 
+                grf_r, _, _, grf_l, _, _ = env.get_grf_rl()
+                grfs['l'].append(grf_l)
+                grfs['r'].append(grf_r)
+                jkps.append(env.jkp[env.lower_index[0]: env.lower_index[1]].copy())
                 print(t, 
                     #   env.compute_global_force(),
                     # env.data.efc_J.shape # this is 500* 38 but only non-zeros till index 22
@@ -132,7 +135,10 @@ class MyVisulizer(Visualizer):
                     #   "env.data.qfrc_applied", env.data.qfrc_applied.shape,
                     #   "env.data.qfrc_actuator",env.data.qfrc_actuator.shape,
                     #   "env.data.actuator_force", env.data.actuator_force.shape,
-                    custom_reward(env, state, action, info) # reward in real time
+                    # env.get_grf_rl(), # cur ground reaction force
+                    "grf_desired",env.grf_normalized[t], "|", 
+                    "grf_current", np.array([grf_r[2],grf_l[2]]) /9.81 / env.mass,"|"
+                    "rew", custom_reward(env, state, action, info)[1][-1] # reward in real time
                     # env.get_target_pose(action) - env.sim.data.qpos[7:], # difference between target and current pose
                     # env.jkp[env.lower_index[0]: env.lower_index[1]] # kp values
                     #   env.get_contact_force()
@@ -141,12 +147,15 @@ class MyVisulizer(Visualizer):
                     )
 
             poses['gt'],  poses['pred'], poses['target'] = np.vstack(poses['gt']), np.vstack(poses['pred']), np.vstack(poses['target'])
-            plot_pose = True
+            
+            np.save("grf_r.npy", np.array(grfs['r']))
+            np.save("grf_l.npy", np.array(grfs['l']))
+            plot_pose = False
             if plot_pose:
                 fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(10, 12))
                 fig, axs = visualize_poses(fig, axs, poses, env.body_qposaddr)
                 plt.show()
-            plot_impedance = True
+            plot_impedance = False
             if plot_impedance:
                 jkps = np.vstack(jkps)
                 fig, axs = plt.subplots(nrows=1, ncols=1, figsize=(6, 6))
@@ -161,10 +170,14 @@ class MyVisulizer(Visualizer):
                 # plt.show()
                 visualize_force(forces, env.model.actuator_names)
             self.num_fr = poses['pred'].shape[0]
-            plot_grfs = False
+            plot_grfs = True
             if plot_grfs:
                 fig, axs = plt.subplots(3, 1, figsize=(10, 10))
-                fig, axs = visualize_grfs(fig, axs, grfs)
+                print(np.vstack(grfs['l']).shape, grfs['l'][0].shape)
+                fig, axs = visualize_grfs(fig, axs, np.vstack(grfs['l'])/env.mass/9.81,'left')
+                fig, axs = visualize_grfs(fig, axs, np.vstack(grfs['r'])/env.mass/9.81,'right')
+                axs[2] = plt.plot(env.grf_normalized[:,0],'r:', label = 'left ideal')
+                axs[2] = plt.plot(env.grf_normalized[:,1],'b:',label = 'right ideal')
                 plt.show() 
             contact_video = True
             if contact_video:
@@ -221,7 +234,7 @@ class MyVisulizer(Visualizer):
 
 vis = MyVisulizer(f'{args.vis_model_file}.xml')
 torch.cuda.empty_cache()
-vis.record_video(skeleton = True) # record ground truth skeleton
+# vis.record_video(skeleton = True) # record ground truth skeleton
 # if args.record:
 #     vis.record_video()
 # else:

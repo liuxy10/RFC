@@ -222,9 +222,9 @@ def save_skeleton_frame(frame_dir, coordinates,  body_tree, force_data, cop_data
         chosen_parts_coms = {part: coords[i] for part, coords in coordinates.items()}
         if force_data is not None:
             visualize_3d_forces(fig, ax, np.array([force_data[k].to_numpy()[i] for k in ('RFx', 'RFy', 'RFz')]), 
-                                np.array([cop_data[k].to_numpy()[i] for k in ('RCx', 'RCy', 'RCz')]))
+                                np.array([cop_data[k].to_numpy()[i] for k in ('RCx', 'RCy', 'RCz')]), sc = 500)
             visualize_3d_forces(fig, ax, np.array([force_data[k].to_numpy()[i] for k in ('LFx', 'LFy', 'LFz')]), 
-                                np.array([cop_data[k].to_numpy()[i] for k in ('LCx', 'LCy', 'LCz')]))
+                                np.array([cop_data[k].to_numpy()[i] for k in ('LCx', 'LCy', 'LCz')]), sc = 500)
         visualize_skeleton(fig, ax, chosen_parts_coms, body_tree)
         ax.view_init(elev=0, azim=0)
         plt.show()
