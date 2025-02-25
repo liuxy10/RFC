@@ -137,7 +137,7 @@ class MyVisulizer(Visualizer):
                     #   "env.data.actuator_force", env.data.actuator_force.shape,
                     # env.get_grf_rl(), # cur ground reaction force
                     "grf_desired",env.grf_normalized[t], "|", 
-                    "grf_current", np.array([grf_r[2],grf_l[2]]) /9.81 / env.mass,"|"
+                    "grf_current", np.array([grf_r[2],grf_l[2], grf_r[1],grf_l[1]]) /9.81 / env.mass,"|"
                     "rew", custom_reward(env, state, action, info)[1][-1] # reward in real time
                     # env.get_target_pose(action) - env.sim.data.qpos[7:], # difference between target and current pose
                     # env.jkp[env.lower_index[0]: env.lower_index[1]] # kp values
@@ -173,11 +173,14 @@ class MyVisulizer(Visualizer):
             plot_grfs = True
             if plot_grfs:
                 fig, axs = plt.subplots(3, 1, figsize=(10, 10))
-                print(np.vstack(grfs['l']).shape, grfs['l'][0].shape)
+                axs[1].plot(env.grf_normalized[:,2],'r:', label = 'left ideal') # ap
+                axs[1].plot(env.grf_normalized[:,3],'b:',label = 'right ideal') # ap
+                axs[2].plot(env.grf_normalized[:,0],'r:', label = 'left ideal') # vert
+                axs[2].plot(env.grf_normalized[:,1],'b:',label = 'right ideal') # vert
+                # print(np.vstack(grfs['l']).shape, grfs['l'][0].shape)
                 fig, axs = visualize_grfs(fig, axs, np.vstack(grfs['l'])/env.mass/9.81,'left')
                 fig, axs = visualize_grfs(fig, axs, np.vstack(grfs['r'])/env.mass/9.81,'right')
-                axs[2] = plt.plot(env.grf_normalized[:,0],'r:', label = 'left ideal')
-                axs[2] = plt.plot(env.grf_normalized[:,1],'b:',label = 'right ideal')
+                
                 plt.show() 
             contact_video = True
             if contact_video:

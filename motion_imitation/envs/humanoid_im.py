@@ -420,18 +420,14 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         if len(f) > 0: 
             if plot_lr:
                 fs_r, cop_r, fm_r, fs_l, cop_l, fm_l = self.get_grf_rl()
-                visualize_3d_forces(fig, ax, fs_l, cop_l)
-                visualize_3d_forces(fig, ax, fs_r, cop_r)
+                visualize_3d_forces(fig, ax, fs_l, cop_l, sc = 500)
+                visualize_3d_forces(fig, ax, fs_r, cop_r, sc = 500)
                 
             else:
                 visualize_3d_forces(fig, ax, f, cops)
         fig, ax = visualize_skeleton(fig, ax, body_pos, self.body_tree)
         
-        # visualize_3d_forces(fig, ax, np.array([force_data[k].to_numpy()[i] for k in ('RFx', 'RFy', 'RFz')]), 
-        #                         np.array([cop_data[k].to_numpy()[i] for k in ('RCx', 'RCy', 'RCz')]), sc = 500)
-        # visualize_3d_forces(fig, ax, np.array([force_data[k].to_numpy()[i] for k in ('LFx', 'LFy', 'LFz')]), 
-        #                         np.array([cop_data[k].to_numpy()[i] for k in ('LCx', 'LCy', 'LCz')]), sc = 500)
-        
+
         if show:
             plt.show()
         return fig, ax

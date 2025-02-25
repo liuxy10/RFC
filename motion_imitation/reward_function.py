@@ -207,9 +207,11 @@ def local_rfc_implicit_reward(env, state, action, info):
     # grf reward
     if w_grf > 0.0:
         grf_r, _,_, grf_l, _,_ = env.get_grf_rl()
-        grf_z_dist_r = env.grf_normalized[t-1,0] - grf_r[2]/env.mass / 9.81
-        grf_z_dist_l = env.grf_normalized[t-1,1] - grf_l[2]/env.mass / 9.81
-        grf_reward = math.exp(-k_grf * grf_z_dist_l**2 -k_grf * grf_z_dist_r**2)
+        grf_z_dist_r = env.grf_normalized[t,0] - grf_r[2]/env.mass / 9.81
+        grf_z_dist_l = env.grf_normalized[t,1] - grf_l[2]/env.mass / 9.81
+        grf_ap_dist_r = env.grf_normalized[t,2] - grf_r[1]/env.mass / 9.81
+        grf_ap_dist_l = env.grf_normalized[t,3] - grf_l[1]/env.mass / 9.81
+        grf_reward = math.exp(-k_grf * ( grf_z_dist_r**2 + grf_z_dist_l**2 + grf_ap_dist_r**2 + grf_ap_dist_l**2))
     else:
         grf_reward = 0.0
     # residual force reward

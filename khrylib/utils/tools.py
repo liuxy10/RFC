@@ -17,33 +17,36 @@ from scipy.interpolate import CubicSpline
 import matplotlib.pyplot as plt
 
 def generate_interpolated_grf(t):
-    # Define key timing points and force values
+    # Define key timing points and force values for vertical and AP forces
     time_points = [0, 15, 50, 85, 100]  # Percentage of stance phase
-    force_points = [0, 1.0, 0.8, 1.0, 0]  # Normalized to body weight
+    force_vert_points = [0, 1.0, 0.8, 1.0, 0]  # Normalized to body weight
+    force_ap_points = [0, -0.2, 0, 0.2, 0]  # Example AP force values
 
-    # Create cubic spline interpolation
-    cs = CubicSpline(time_points, force_points, bc_type='natural')
+    # Create cubic spline interpolation for vertical and AP forces
+    cs_vert = CubicSpline(time_points, force_vert_points, bc_type='natural')
+    cs_ap = CubicSpline(time_points, force_ap_points, bc_type='natural')
     
-    return cs(t)
+    return cs_vert(t), cs_ap(t)
+
 # hard coded for 0202
 def get_ideal_grf(total_idx = 76, rhs_index = [0,30,60], offset_period = 15, stance_period = 18):
     grf = np.zeros((total_idx, 2))
-    # t_per_cycle = rhs_index[1] - rhs_index[0]
-    
+    grf_ap = np.zeros((total_idx, 2))
+
     # for 1 row (right), 0 row (left)
     for i in rhs_index: 
         if i + stance_period > total_idx:
-            grf[i:, 1] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i))[:total_idx-i]
+            grf[i:, 1], grf_ap[i:, 1] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i))[:total_idx-i]
             continue
     
         if i + stance_period + offset_period > total_idx:
-            grf[i:, 0] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i - offset_period))[:total_idx-i-offset_period]
+            grf[i:, 0], grf_ap[i:, 1] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i - offset_period))[:total_idx-i-offset_period]
             continue
         
-        grf [i:i+stance_period,1] = generate_interpolated_grf(np.linspace(0, 100, stance_period))  # High-resolution time point
-        grf [i+offset_period:i+stance_period+offset_period, 0] = generate_interpolated_grf(np.linspace(0, 100, stance_period))
+        grf [i:i+stance_period,1], grf_ap[i:i+stance_period,1] = generate_interpolated_grf(np.linspace(0, 100, stance_period))  # High-resolution time point
+        grf [i+offset_period:i+stance_period+offset_period, 0], grf_ap[i+offset_period:i+stance_period+offset_period, 0] = generate_interpolated_grf(np.linspace(0, 100, stance_period))
         
-    return grf
+    return np.hstack([grf, -grf_ap])
 
 def change_config_path_via_args(cfg, cfg_num, postdix = ''):
     cfg.cfg_dir = '%s/motion_im%s/%s' % (cfg.base_dir, postdix, cfg_num)
@@ -77,7 +80,7 @@ def visualize_grfs(fig, axs, grfs, lab = ''):
     label = 'xyz'
     for i in range(3):
         axs[i].plot(grfs[:,i], label = f'GRF {label[i]} {lab}')
-        axs[i].set_ylabel('N')
+        axs[i].set_ylabel('/BW')
         axs[i].legend()
     plt.tight_layout()
     return fig, axs
