@@ -74,12 +74,12 @@ def get_sum_force(forces, poss):
     return total_force, cop, total_force_magnitude
 
    
-def visualize_grfs(fig, axs, grfs, lab = ''):
+def visualize_grfs(fig, axs, grfs, lab = '', color = 'r'):
     if type(grfs) is list:
         grfs = np.array(grfs)
     label = 'xyz'
     for i in range(3):
-        axs[i].plot(grfs[:,i], label = f'GRF {label[i]} {lab}')
+        axs[i].plot(grfs[:,i], color+"-",label = f'GRF {label[i]} {lab}')
         axs[i].set_ylabel('/BW')
         axs[i].legend()
     plt.tight_layout()

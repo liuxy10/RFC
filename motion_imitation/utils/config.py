@@ -29,7 +29,12 @@ class Config:
         os.makedirs(self.model_dir, exist_ok=True)
         if create_dirs:
             recreate_dirs(self.log_dir, self.tb_dir)
-
+        # scale:
+        try:
+            self.H = cfg['H']
+            self.M = cfg['M']
+        except KeyError:
+            print('Height and Mass not assigned in config file')
         # expert
         self.motion_id = cfg['motion_id']
         self.expert_traj_file = f'data/cmu_mocap/motion/{self.motion_id}.p'

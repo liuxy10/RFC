@@ -1,6 +1,7 @@
 # data
 motion_id: '02_02'
-
+H: 1.75
+M: 75.0
 # training parameters
 gamma: 0.95
 tau: 0.95

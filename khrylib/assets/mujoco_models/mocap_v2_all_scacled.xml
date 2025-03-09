@@ -1,0 +1,156 @@
+<mujoco model="humanoid">
+  <compiler angle="degree" inertiafromgeom="true" coordinate="global" />
+  <include file="./common/materials.xml" />
+    <visual>
+    <headlight ambient=".4 .4 .4" diffuse=".8 .8 .8" specular="0.3 0.3 0.3" />
+    <map znear=".01" />
+    <quality shadowsize="2048" />
+  </visual>
+  <default>
+    <joint damping="0.0" armature="0.01" stiffness="0.0" limited="true" />
+    <geom conaffinity="7" condim="1" contype="7" margin="0.001" material="self" rgba=".98 .54 .56 1." />
+  </default>
+  <statistic extent="3" center="0 0 1" />
+  <option timestep="0.00222222222" />
+  <asset>
+    <texture type="skybox" file="./common/sky1.png" gridsize="3 4" gridlayout=".U..LFRB.D.." width="8192" height="8192" />
+    <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1=".8 .6 .4" rgb2=".8 .6 .4" type="cube" width="127" />
+  </asset>
+  <worldbody>
+    <light cutoff="100" diffuse="1 1 1" dir="-0 0 -1.3" directional="true" exponent="1" pos="0 0 1.3" specular=".1 .1 .1" />
+    <geom condim="3" friction="1. .1 .1" material="grid_new" name="floor" pos="0.0 0.0 0.0" rgba=".8 .9 .8 1" size="117.025545004681 117.025545004681 0.23405109000936203" type="plane" />
+    
+    <body name="root" user="0.0000 -0.0000 0.0000" pos="0.0 -0.0 0.0">
+      <joint armature="0.0" limited="false" name="root" pos="0.0 -0.0 0.0" stiffness="0" type="free" />
+      <geom pos="0.0 0.0 -0.028086130801123443" size="0.1287280995051491" type="sphere" mass="8.8725" />
+      <body name="lhipjoint" user="0.0963 -0.0494 -0.0918" pos="0.0 -0.0 0.0">
+        <body name="lfemur" user="0.2274 -0.0494 -0.4521" pos="0.1126955998395078 -0.05781061923231242 -0.10742945031429717">
+          <joint axis="0.0000 -1.0000 0.0000" name="lfemur_z" pos="0.1126955998395078 -0.05781061923231242 -0.10742945031429717" range="-60.0000 70.0000" type="hinge" />
+          <joint axis="-0.3420 -0.0000 0.9397" name="lfemur_y" pos="0.1126955998395078 -0.05781061923231242 -0.10742945031429717" range="-70.0000 70.0000" type="hinge" />
+          <joint axis="0.9397 0.0000 0.3420" name="lfemur_x" pos="0.1126955998395078 -0.05781061923231242 -0.10742945031429717" range="-160.0000 20.0000" type="hinge" />
+          <geom fromto="0.12065333689982612 -0.05781061923231242 -0.1294302527751772 0.2581583522803263 -0.05781061923231242 -0.5070716865052828" size="0.06085328340243412" type="capsule" mass="10.8525" />
+          <body name="ltibia" user="0.3657 -0.0494 -0.8321" pos="0.2661160893406446 -0.05781061923231242 -0.5290724889661629">
+            <joint axis="0.9397 0.0000 0.3420" name="ltibia_x" pos="0.2661160893406446 -0.05781061923231242 -0.5290724889661629" range="0.0000 170.0000" type="hinge" />
+            <geom contype="1" conaffinity="1" fromto="0.2741908519459676 -0.05781061923231242 -0.5510732914270429 0.42000468102180016 -0.05781061923231242 -0.9517687575230707" size="0.04329945165173197" type="capsule" mass="3.4274999999999998" />
+            <body name="lfoot" user="0.3731 -0.1606 -0.8523" pos="0.4279624180821185 -0.05781061923231242 -0.9737695599839506">
+              <geom contype="1" conaffinity="1" pos="0.4346328741473853 -0.1158552895546342 -0.987929650929517" size="0.07021532700280861 0.1252173331550087 0.028086130801123443" quat="0.9848 -0.0000 -0.1736 0.0000" type="box" mass="0.9974999999999999" />
+              <joint axis="-0.3420 -0.0000 0.9397" name="lfoot_z" pos="0.4279624180821185 -0.05781061923231242 -0.9737695599839506" range="-70.0000 20.0000" type="hinge" />
+              <joint axis="0.0000 -1.0000 0.0000" name="lfoot_y" pos="0.4279624180821185 -0.05781061923231242 -0.9737695599839506" range="-45.0000 45.0000" type="hinge" />
+              <joint axis="0.9397 0.0000 0.3420" name="lfoot_x" pos="0.4279624180821185 -0.05781061923231242 -0.9737695599839506" range="-45.0000 90.0000" type="hinge" />
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="rhipjoint" user="-0.0963 -0.0494 -0.0918" pos="-0.0 -0.0 0.0">
+        <body name="rfemur" user="-0.2274 -0.0494 -0.4521" pos="-0.1126955998395078 -0.05781061923231242 -0.10742945031429717">
+          <joint axis="0.0000 -1.0000 -0.0000" name="rfemur_z" pos="-0.1126955998395078 -0.05781061923231242 -0.10742945031429717" range="-70.0000 60.0000" type="hinge" />
+          <joint axis="0.3420 -0.0000 0.9397" name="rfemur_y" pos="-0.1126955998395078 -0.05781061923231242 -0.10742945031429717" range="-70.0000 70.0000" type="hinge" />
+          <joint axis="0.9397 0.0000 -0.3420" name="rfemur_x" pos="-0.1126955998395078 -0.05781061923231242 -0.10742945031429717" range="-160.0000 20.0000" type="hinge" />
+          <geom fromto="-0.12065333689982612 -0.05781061923231242 -0.1294302527751772 -0.2581583522803263 -0.05781061923231242 -0.5070716865052828" size="0.06085328340243412" type="capsule" mass="10.8525" />
+          <body name="rtibia" user="-0.3657 -0.0494 -0.8321" pos="-0.2661160893406446 -0.05781061923231242 -0.5290724889661629">
+            <joint axis="0.9397 0.0000 -0.3420" name="rtibia_x" pos="-0.2661160893406446 -0.05781061923231242 -0.5290724889661629" range="0.0000 170.0000" type="hinge" />
+            <geom contype="2" conaffinity="2" fromto="-0.2741908519459676 -0.05781061923231242 -0.5510732914270429 -0.42000468102180016 -0.05781061923231242 -0.9517687575230707" size="0.04329945165173197" type="capsule" mass="3.4274999999999998" />
+            <body name="rfoot" user="-0.3731 -0.1606 -0.8523" pos="-0.4279624180821185 -0.05781061923231242 -0.9737695599839506">
+              <geom contype="2" conaffinity="2" pos="-0.4346328741473853 -0.1158552895546342 -0.987929650929517" size="0.07021532700280861 0.1252173331550087 0.028086130801123443" quat="0.9848 -0.0000 0.1736 -0.0000" type="box" mass="0.9974999999999999" />
+              <joint axis="0.3420 -0.0000 0.9397" name="rfoot_z" pos="-0.4279624180821185 -0.05781061923231242 -0.9737695599839506" range="-20.0000 70.0000" type="hinge" />
+              <joint axis="0.0000 -1.0000 0.0000" name="rfoot_y" pos="-0.4279624180821185 -0.05781061923231242 -0.9737695599839506" range="-45.0000 45.0000" type="hinge" />
+              <joint axis="0.9397 -0.0000 -0.3420" name="rfoot_x" pos="-0.4279624180821185 -0.05781061923231242 -0.9737695599839506" range="-45.0000 90.0000" type="hinge" />
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="lowerback" user="0.0006 0.0081 0.1132" pos="0.0 -0.0 0.0">
+        <body name="upperback" user="0.0011 0.0071 0.2268" pos="0.000702153270028086 0.009479069145379162 0.1324729169452989">
+          <geom pos="0.000702153270028086 0.009479069145379162 0.144175471445767" size="0.08191788150327671" type="sphere" mass="3.9225" />
+          <joint axis="0.0000 -1.0000 0.0000" name="upperback_z" pos="0.000702153270028086 0.009479069145379162 0.1324729169452989" range="-30.0000 30.0000" type="hinge" />
+          <joint axis="0.0000 -0.0000 1.0000" name="upperback_y" pos="0.000702153270028086 0.009479069145379162 0.1324729169452989" range="-30.0000 30.0000" type="hinge" />
+          <joint axis="1.0000 0.0000 0.0000" name="upperback_x" pos="0.000702153270028086 0.009479069145379162 0.1324729169452989" range="-20.0000 45.0000" type="hinge" />
+          <body name="thorax" user="0.0010 0.0024 0.3407" pos="0.001287280995051491 0.008308813695332352 0.26541393607061653">
+            <geom pos="0.001287280995051491 0.008308813695332352 0.3286077303731443" size="0.11702554500468101" type="sphere" mass="11.617500000000001" />
+            <body name="lowerneck" user="-0.0023 -0.0083 0.4312" pos="0.0011702554500468102 0.002808613080112344 0.3987060318309482">
+              <geom pos="-0.002691587535107663 -0.009713120235388523 0.6403637822656145" size="0.09362043600374481" type="sphere" mass="5.1075" />
+              <joint axis="0.0000 -1.0000 0.0000" name="lowerneck_z" pos="0.0011702554500468102 0.002808613080112344 0.3987060318309482" range="-30.0000 30.0000" type="hinge" />
+              <joint axis="0.0000 -0.0000 1.0000" name="lowerneck_y" pos="0.0011702554500468102 0.002808613080112344 0.3987060318309482" range="-30.0000 30.0000" type="hinge" />
+              <joint axis="1.0000 0.0000 0.0000" name="lowerneck_x" pos="0.0011702554500468102 0.002808613080112344 0.3987060318309482" range="-20.0000 45.0000" type="hinge" />
+              <body name="upperneck" user="-0.0013 -0.0038 0.5212" pos="-0.002691587535107663 -0.009713120235388523 0.5046141500601845">
+                <body name="head" user="-0.0006 -0.0008 0.6176" pos="-0.0015213320850608531 -0.004446970710177878 0.6099371405643974">
+                  <camera mode="fixed" xyaxes="-1 0 0 0 0 1" />
+                </body>
+              </body>
+              <body name="lclavicle" user="0.1790 -0.0149 0.4121" pos="-0.002691587535107663 -0.009713120235388523 0.5046141500601845">
+                <geom fromto="0.011819580045472781 -0.010298247960411929 0.5030928179751236 0.19496455797779855 -0.016851678480674065 0.48378360304935125" size="0.03978868530159155" type="capsule" mass="3.9225" />
+                <joint axis="0.0000 -1.0000 0.0000" name="lclavicle_z" pos="0.0011702554500468102 0.002808613080112344 0.3987060318309482" range="0.0000 20.0000" type="hinge" />
+                <joint axis="0.0000 -0.0000 1.0000" name="lclavicle_y" pos="0.0011702554500468102 0.002808613080112344 0.3987060318309482" range="-20.0000 10.0000" type="hinge" />
+                <body name="lhumerus" user="0.4599 -0.0149 0.4121" pos="0.20947572555837898 -0.01743680620569747 0.4822622709642905">
+                  <joint axis="-0.0000 0.8660 -0.5000" name="lhumerus_z" pos="0.20947572555837898 -0.01743680620569747 0.4822622709642905" range="-90.0000 90.0000" type="hinge" />
+                  <joint axis="-1.0000 -0.0000 -0.0000" name="lhumerus_y" pos="0.20947572555837898 -0.01743680620569747 0.4822622709642905" range="-90.0000 90.0000" type="hinge" />
+                  <joint axis="0.0000 -0.5000 -0.8660" name="lhumerus_x" pos="0.20947572555837898 -0.01743680620569747 0.4822622709642905" range="-60.0000 90.0000" type="hinge" />
+                  <geom fromto="0.2299551959341982 -0.01743680620569747 0.4822622709642905 0.5177210111007088 -0.01743680620569747 0.4822622709642905" size="0.03627791895145111" type="capsule" mass="1.9725000000000001" />
+                  <body name="lradius" user="0.6374 -0.0149 0.4121" pos="0.5382004814765279 -0.01743680620569747 0.4822622709642905">
+                    <geom fromto="0.5382004814765279 -0.01743680620569747 0.4822622709642905 0.7459208238598367 -0.01743680620569747 0.4822622709642905" size="0.029256386251170254" type="capsule" mass="1.125" />
+                    <joint axis="0.0000 -0.5000 -0.8660" name="lradius_x" pos="0.5382004814765279 -0.01743680620569747 0.4822622709642905" range="-10.0000 170.0000" type="hinge" />
+                    <body name="lwrist" user="0.7261 -0.0149 0.4121" pos="0.7459208238598367 -0.01743680620569747 0.4822622709642905">
+                      <geom pos="0.7974120636618964 -0.01743680620569747 0.4822622709642905" size="0.046810218001872406" type="sphere" mass="0.4425" />
+                    </body>
+                  </body>
+                </body>
+              </body>
+              <body name="rclavicle" user="-0.1790 -0.0149 0.4121" pos="0.002691587535107663 -0.009713120235388523 0.5046141500601845">
+                <geom fromto="-0.011819580045472781 -0.010298247960411929 0.5030928179751236 -0.19496455797779855 -0.016851678480674065 0.48378360304935125" size="0.03978868530159155" type="capsule" mass="3.9225" />
+                <joint axis="0.0000 -1.0000 0.0000" name="rclavicle_z" pos="-0.0011702554500468102 0.002808613080112344 0.3987060318309482" range="-20.0000 0.0000" type="hinge" />
+                <joint axis="0.0000 -0.0000 1.0000" name="rclavicle_y" pos="-0.0011702554500468102 0.002808613080112344 0.3987060318309482" range="-10.0000 20.0000" type="hinge" />
+                <body name="rhumerus" user="-0.4599 -0.0149 0.4121" pos="-0.20947572555837898 -0.01743680620569747 0.4822622709642905">
+                  <joint axis="0.0000 0.8660 -0.5000" name="rhumerus_z" pos="-0.20947572555837898 -0.01743680620569747 0.4822622709642905" range="-90.0000 90.0000" type="hinge" />
+                  <joint axis="1.0000 -0.0000 -0.0000" name="rhumerus_y" pos="-0.20947572555837898 -0.01743680620569747 0.4822622709642905" range="-90.0000 90.0000" type="hinge" />
+                  <joint axis="0.0000 0.5000 0.8660" name="rhumerus_x" pos="-0.20947572555837898 -0.01743680620569747 0.4822622709642905" range="-90.0000 60.0000" type="hinge" />
+                  <geom fromto="-0.2299551959341982 -0.01743680620569747 0.4822622709642905 -0.5177210111007088 -0.01743680620569747 0.4822622709642905" size="0.03627791895145111" type="capsule" mass="1.9725000000000001" />
+                  <body name="rradius" user="-0.6374 -0.0149 0.4121" pos="-0.5382004814765279 -0.01743680620569747 0.4822622709642905">
+                    <geom fromto="-0.5382004814765279 -0.01743680620569747 0.4822622709642905 -0.7459208238598367 -0.01743680620569747 0.4822622709642905" size="0.029256386251170254" type="capsule" mass="1.125" />
+                    <joint axis="0.0000 0.5000 0.8660" name="rradius_x" pos="-0.5382004814765279 -0.01743680620569747 0.4822622709642905" range="-10.0000 170.0000" type="hinge" />
+                    <body name="rwrist" user="-0.7261 -0.0149 0.4121" pos="-0.7459208238598367 -0.01743680620569747 0.4822622709642905">
+                      <geom pos="-0.7974120636618964 -0.01743680620569747 0.4822622709642905" size="0.046810218001872406" type="sphere" mass="0.4425" />
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+  <actuator>
+    <motor gear="1" joint="lfemur_z" name="lfemur_z" /> 
+    <motor gear="1" joint="lfemur_y" name="lfemur_y" />
+    <motor gear="1" joint="lfemur_x" name="lfemur_x" />
+    <motor gear="1" joint="ltibia_x" name="ltibia_x" />
+    <motor gear="1" joint="lfoot_z" name="lfoot_z" />
+    <motor gear="1" joint="lfoot_y" name="lfoot_y" />
+    <motor gear="1" joint="lfoot_x" name="lfoot_x" />
+    <motor gear="1" joint="rfemur_z" name="rfemur_z" />
+    <motor gear="1" joint="rfemur_y" name="rfemur_y" />
+    <motor gear="1" joint="rfemur_x" name="rfemur_x" />
+    <motor gear="1" joint="rtibia_x" name="rtibia_x" />
+    <motor gear="1" joint="rfoot_z" name="rfoot_z" />
+    <motor gear="1" joint="rfoot_y" name="rfoot_y" />
+    <motor gear="1" joint="rfoot_x" name="rfoot_x" />
+    <motor gear="1" joint="upperback_z" name="upperback_z" />
+    <motor gear="1" joint="upperback_y" name="upperback_y" />
+    <motor gear="1" joint="upperback_x" name="upperback_x" />
+    <motor gear="1" joint="lowerneck_z" name="lowerneck_z" />
+    <motor gear="1" joint="lowerneck_y" name="lowerneck_y" />
+    <motor gear="1" joint="lowerneck_x" name="lowerneck_x" />
+    <motor gear="1" joint="lclavicle_z" name="lclavicle_z" />
+    <motor gear="1" joint="lclavicle_y" name="lclavicle_y" />
+    <motor gear="1" joint="lhumerus_z" name="lhumerus_z" />
+    <motor gear="1" joint="lhumerus_y" name="lhumerus_y" />
+    <motor gear="1" joint="lhumerus_x" name="lhumerus_x" />
+    <motor gear="1" joint="lradius_x" name="lradius_x" />
+    <motor gear="1" joint="rclavicle_z" name="rclavicle_z" />
+    <motor gear="1" joint="rclavicle_y" name="rclavicle_y" />
+    <motor gear="1" joint="rhumerus_z" name="rhumerus_z" />
+    <motor gear="1" joint="rhumerus_y" name="rhumerus_y" />
+    <motor gear="1" joint="rhumerus_x" name="rhumerus_x" />
+    <motor gear="1" joint="rradius_x" name="rradius_x" />
+  </actuator>
+</mujoco>

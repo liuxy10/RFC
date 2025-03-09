@@ -14,10 +14,30 @@ import time
 from scipy.linalg import cho_solve, cho_factor
 
 from osl.control.myoosl_control import MyoOSLController
+sys.path.append("/home/xliu227/Github/human-model-generator/code/")
+from write_xml import *
 
 class HumanoidEnv(mujoco_env.MujocoEnv):
 
     def __init__(self, cfg):
+        if cfg.H >0 and cfg.M > 0:
+            assert cfg.mujoco_model_file == 'mocap_v2.xml', f"The standard model file should be mocap_v2, instead it is {cfg.mujoco_model_file}"
+            if not path.exists(cfg.mujoco_model_file):
+                # try the default assets path
+                fullpath = path.join(Path(__file__).parent.parent.parent, 'khrylib/assets/mujoco_models', path.basename(cfg.mujoco_model_file))
+                if not path.exists(fullpath):
+                    raise IOError("File %s does not exist" % fullpath)
+            input_xml = fullpath
+            output_height_xml = fullpath.replace('.xml', '_height_scaled.xml')
+            output_xml = fullpath.replace('.xml', '_all_scacled.xml')
+            scale_humanoid_model(input_xml, output_height_xml, cfg.H)
+            assign_mass_inertia(cfg.M, linkMass, output_height_xml, output_xml)
+            print("Scaled model is saved at ", output_xml)
+            print(f"scaled height: {calculate_humanoid_height(output_xml)}")
+            cfg.mujoco_model_file = output_xml
+            scale_inertia = cfg.M /(30.9534) * (cfg.H / 1.4954 )**2
+            cfg = scale_torque_related_params(cfg, scale_inertia)
+            # exit(0)
         mujoco_env.MujocoEnv.__init__(self, cfg.mujoco_model_file, 15) # 15 is the frame skip 
         self.cfg = cfg
         self.set_cam_first = set()

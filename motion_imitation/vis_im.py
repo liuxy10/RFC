@@ -80,7 +80,7 @@ class MyVisulizer(Visualizer):
     def data_generator(self):
         while True:
             poses = {'pred': [], 'gt': [], 'target': []}
-            forces, grfs, jkps = [], {'l':[], 'r':[]}, []
+            forces, grfs, jkps= [], {'l':[], 'r':[]}, []
             state = env.reset()
             if running_state is not None:
                 state = running_state(state, update=False)
@@ -128,6 +128,7 @@ class MyVisulizer(Visualizer):
                 grfs['l'].append(grf_l)
                 grfs['r'].append(grf_r)
                 jkps.append(env.jkp[env.lower_index[0]: env.lower_index[1]].copy())
+                
                 print(t, 
                     #   env.compute_global_force(),
                     # env.data.efc_J.shape # this is 500* 38 but only non-zeros till index 22
@@ -138,13 +139,14 @@ class MyVisulizer(Visualizer):
                     # env.get_grf_rl(), # cur ground reaction force
                     "grf_desired",env.grf_normalized[t], "|", 
                     "grf_current", np.array([grf_r[2],grf_l[2], grf_r[1],grf_l[1]]) /9.81 / env.mass,"|"
-                    "rew", custom_reward(env, state, action, info)[1][-1] # reward in real time
+                    "rew", custom_reward(env, state, action, info)[1][-1]  # reward in real time
                     # env.get_target_pose(action) - env.sim.data.qpos[7:], # difference between target and current pose
                     # env.jkp[env.lower_index[0]: env.lower_index[1]] # kp values
                     #   env.get_contact_force()
                     #   env.get_end_effector_position("rfoot"),
                     #   env.get_ground_reaction_force()
                     )
+                # mses += np.array([grf_r[2],grf_l[2], grf_r[1],grf_l[1]]) /9.81 / env.mass
 
             poses['gt'],  poses['pred'], poses['target'] = np.vstack(poses['gt']), np.vstack(poses['pred']), np.vstack(poses['target'])
             
@@ -170,23 +172,33 @@ class MyVisulizer(Visualizer):
                 # plt.show()
                 visualize_force(forces, env.model.actuator_names)
             self.num_fr = poses['pred'].shape[0]
+            
+            # summarize grf stats
+            grfs['l'] = np.vstack(grfs['l'])/env.mass/9.81 # normalize by mass
+            grfs['r'] = np.vstack(grfs['r'])/env.mass/9.81 # normalize by mass
+            mse_v = np.sqrt((np.mean((grfs['l'][:,2] - env.grf_normalized[:75,1])**2) + np.mean((grfs['r'][:,2] - env.grf_normalized[:75,0])**2))/2)
+            mse_ap = np.sqrt((np.mean((grfs['l'][:,1] - env.grf_normalized[:75,3])**2) + np.mean((grfs['r'][:,1] - env.grf_normalized[:75,2])**2))/2)
+            # print states
+            print("mse_v", mse_v, "mse_ap", mse_ap)
+            
             plot_grfs = True
             if plot_grfs:
                 fig, axs = plt.subplots(3, 1, figsize=(10, 10))
-                axs[1].plot(env.grf_normalized[:,2],'r:', label = 'left ideal') # ap
-                axs[1].plot(env.grf_normalized[:,3],'b:',label = 'right ideal') # ap
-                axs[2].plot(env.grf_normalized[:,0],'r:', label = 'left ideal') # vert
-                axs[2].plot(env.grf_normalized[:,1],'b:',label = 'right ideal') # vert
+                axs[2].plot(env.grf_normalized[:,0],'r:', label = 'left ideal') # vert right
+                axs[2].plot(env.grf_normalized[:,1],'b:',label = 'right ideal') # vert left
+                axs[1].plot(env.grf_normalized[:,2],'r:', label = 'left ideal') # ap right
+                axs[1].plot(env.grf_normalized[:,3],'b:',label = 'right ideal') # ap left
+
                 # print(np.vstack(grfs['l']).shape, grfs['l'][0].shape)
-                fig, axs = visualize_grfs(fig, axs, np.vstack(grfs['l'])/env.mass/9.81,'left')
-                fig, axs = visualize_grfs(fig, axs, np.vstack(grfs['r'])/env.mass/9.81,'right')
-                
-                plt.show() 
+                fig, axs = visualize_grfs(fig, axs, grfs['l'],lab='left', color = 'r')
+                fig, axs = visualize_grfs(fig, axs, grfs['r'],'right', color = 'b')
+                plt.show()
+                 
             contact_video = True
             if contact_video:
                 out_name = f'{args.cfg}_{"expert" if args.record_expert else args.iter}_skeleton.mp4'
                 frames_to_video(f'{args.video_dir}/frame_skeleton', args.video_dir, 5, out_name)
-                
+            
             yield poses
 
     def update_pose(self):
