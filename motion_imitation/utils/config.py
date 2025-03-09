@@ -17,7 +17,7 @@ class Config:
             assert(len(files) == 1)
             cfg = yaml.safe_load(open(files[0], 'r'))
         # create dirs
-        base_dir = '/tmp' if test else 'results'
+        base_dir = '/tmp' if test else 'results_hw' # changed this for human-like mass dist
         self.base_dir = os.path.expanduser(base_dir)
 
         self.cfg_dir = '%s/motion_im/%s' % (self.base_dir, cfg_id)
