@@ -30,7 +30,7 @@ parser.add_argument('--record', action='store_true', default=False)
 parser.add_argument('--record_expert', action='store_true', default=False)
 parser.add_argument('--azimuth', type=float, default=45)
 parser.add_argument('--imp_aware', action='store_true', default=False)
-parser.add_argument('--video_dir', default='out/videos/normal')
+parser.add_argument('--video_dir', default='out/videos/normal_hw')
 args = parser.parse_args()
 cfg = Config(args.cfg, False, create_dirs=False)
 cfg.env_start_first = True
