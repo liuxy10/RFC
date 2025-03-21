@@ -114,6 +114,9 @@ class MyVisulizerPK(Visualizer):
             if save_by_frame:
                 fig, ax = env_p.visualize_by_frame(show = True, label = "Prothesis (red is prothesis)") 
                 frame_dir = f'{args.video_dir}/frame_skeleton/'
+                vfs = env.data.qfrc_applied[:3].copy()
+                com_root = env.data.subtree_com[0,:].copy() 
+                visualize_3d_forces(fig, ax, vfs, com_root, sc = 500)
                 data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
                 save_image_hwc(data,  f'{frame_dir}/%04d.png' % t) 
                 plt.close(fig)

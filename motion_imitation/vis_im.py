@@ -22,7 +22,7 @@ from motion_imitation.reward_function import reward_func
 parser = argparse.ArgumentParser()
 parser.add_argument('--cfg', default='0202')
 parser.add_argument('--vis_model_file', default='mocap_v2_vis')
-parser.add_argument('--iter', type=int, default=800)
+parser.add_argument('--iter', type=int, default=410)
 parser.add_argument('--focus', action='store_true', default=True)
 parser.add_argument('--hide_expert', action='store_true', default=False)
 parser.add_argument('--preview', action='store_true', default=False)
@@ -30,7 +30,7 @@ parser.add_argument('--record', action='store_true', default=False)
 parser.add_argument('--record_expert', action='store_true', default=False)
 parser.add_argument('--azimuth', type=float, default=45)
 parser.add_argument('--imp_aware', action='store_true', default=False)
-parser.add_argument('--video_dir', default='out/videos/normal_hw')
+parser.add_argument('--video_dir', default='out/videos/normal') # need to be manually switched
 args = parser.parse_args()
 cfg = Config(args.cfg, False, create_dirs=False)
 cfg.env_start_first = True
@@ -88,20 +88,29 @@ class MyVisulizer(Visualizer):
             for t in range(env.expert['len']): 
                 
                 epos = env.get_expert_attr('qpos', env.get_expert_index(t)).copy()
-                # print(epos.shape)
+                # epos_old = epos # print(epos.shape)
                 if env.expert['meta']['cyclic']:
                     init_pos = env.expert['init_pos']
                     cycle_h = env.expert['cycle_relheading']
                     cycle_pos = env.expert['cycle_pos']
                     epos[:3] = quat_mul_vec(cycle_h, epos[:3] - init_pos) + cycle_pos
+                    # vel = (epos[:3] - epos_old[:3])/env.model.opt.timestep
+                    # print("vel", vel, "dt", env.model.opt.timestep)
+                    # epos_old = epos.copy()
                     epos[3:7] = quaternion_multiply(cycle_h, epos[3:7])
-                poses['gt'].append(epos) 
-                poses['pred'].append(env.data.qpos.copy())
-                poses['target'].append(np.concatenate([np.zeros(7), env.get_target_pose(action)]))
-                
-                save_by_frame = True
+                poses['gt'].append(epos[7:].copy()) 
+                poses['pred'].append(env.data.qpos[7:].copy())
+                poses['target'].append(env.get_target_pose(action))
+                print('com vel abs',  np.linalg.norm(env.data.qvel[:3]), "dt low level ctrl", env.model.opt.timestep, "high level ctrl frames", env.frame_skip)
+                print('com displacement',  np.linalg.norm(env.data.qvel[:3]) * env.model.opt.timestep * env.frame_skip)
+
+                save_by_frame = True #False
                 if save_by_frame:
                     fig, ax = env.visualize_by_frame(show = False)
+                    vfs = env.data.qfrc_applied[:3].copy()
+                    com_root = env.data.subtree_com[0,:].copy() 
+                    visualize_3d_forces(fig, ax, vfs, com_root, sc = 20)
+                    
                     fig.canvas.draw()
                     frame_dir = f'{args.video_dir}/frame_skeleton'
                     data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
@@ -113,9 +122,9 @@ class MyVisulizer(Visualizer):
                 action = policy_net.select_action(state_var, mean_action=True)[0].cpu().numpy()
                 
                 next_state, reward, done,info = env.step(action)
-                forces.append(env.data.actuator_force.copy()) # env.data.qfrc_actuator.copy()[6:]) #np.hstack([env.data.qfrc_applied[:6].copy(), env.data.qfrc_actuator[6:].copy()])) 
+                forces.append(env.data.ctrl.copy()/env.mass) # env.data.qfrc_actuator.copy()[6:]) #np.hstack([env.data.qfrc_applied[:6].copy(), env.data.qfrc_actuator[6:].copy()])) 
                 # print(env.data.actuator_force.copy())
-                f, cop, f_m = env.get_ground_reaction_force()
+                # f, cop, f_m = env.get_ground_reaction_force()
                 
                 if running_state is not None:
                     next_state = running_state(next_state, update=False)
@@ -146,52 +155,57 @@ class MyVisulizer(Visualizer):
                     #   env.get_end_effector_position("rfoot"),
                     #   env.get_ground_reaction_force()
                     )
+                # print(env.data.actuator_length.copy())
                 # mses += np.array([grf_r[2],grf_l[2], grf_r[1],grf_l[1]]) /9.81 / env.mass
 
             poses['gt'],  poses['pred'], poses['target'] = np.vstack(poses['gt']), np.vstack(poses['pred']), np.vstack(poses['target'])
             
             np.save("grf_r.npy", np.array(grfs['r']))
             np.save("grf_l.npy", np.array(grfs['l']))
-            plot_pose = False
+            plot_pose = True
             if plot_pose:
-                fig, axs = plt.subplots(nrows=poses['gt'].shape[1]//4+1, ncols=4, figsize=(10, 12))
-                fig, axs = visualize_poses(fig, axs, poses, env.body_qposaddr)
+                fig, axs = visualize_poses( poses, env.model.actuator_names)
                 plt.show()
+                
+            # plot_residual_force = True
+            # if plot_residual_force: 
+            #     fig, axs = plt.subplots(nrows=3, ncols=1, figsize=(12, 6))
+            #     fig, axs = visualize_residual_force(fig, axs, env)
             plot_impedance = False
             if plot_impedance:
                 jkps = np.vstack(jkps)
                 fig, axs = plt.subplots(nrows=1, ncols=1, figsize=(6, 6))
                 fig, axs = visualize_impedance(fig, axs, jkps)
                 plt.show()
-            plot_torque = False
+            plot_torque = True
             if plot_torque:
                 forces = np.vstack(forces)
                 print("virtual force dim = ", forces.shape)
                 # fig, axs = plt.subplots(nrows=2, ncols=1, figsize=(6, 10))
                 # fig, axs = visualize_torques(fig, axs, forces)
-                # plt.show()
+                # 
                 visualize_force(forces, env.model.actuator_names)
             self.num_fr = poses['pred'].shape[0]
             
             # summarize grf stats
             grfs['l'] = np.vstack(grfs['l'])/env.mass/9.81 # normalize by mass
             grfs['r'] = np.vstack(grfs['r'])/env.mass/9.81 # normalize by mass
-            mse_v = np.sqrt((np.mean((grfs['l'][:,2] - env.grf_normalized[:75,1])**2) + np.mean((grfs['r'][:,2] - env.grf_normalized[:75,0])**2))/2)
-            mse_ap = np.sqrt((np.mean((grfs['l'][:,1] - env.grf_normalized[:75,3])**2) + np.mean((grfs['r'][:,1] - env.grf_normalized[:75,2])**2))/2)
+            mse_v = np.sqrt((np.mean((grfs['l'][:,2] - env.grf_normalized[:grfs['l'].shape[0],1])**2) + np.mean((grfs['r'][:,2] - env.grf_normalized[:grfs['l'].shape[0],0])**2))/2)
+            mse_ap = np.sqrt((np.mean((grfs['l'][:,1] - env.grf_normalized[:grfs['l'].shape[0],3])**2) + np.mean((grfs['r'][:,1] - env.grf_normalized[:grfs['l'].shape[0],2])**2))/2)
             # print states
             print("mse_v", mse_v, "mse_ap", mse_ap)
             
             plot_grfs = True
             if plot_grfs:
                 fig, axs = plt.subplots(3, 1, figsize=(10, 10))
-                axs[2].plot(env.grf_normalized[:,0],'r:', label = 'left ideal') # vert right
-                axs[2].plot(env.grf_normalized[:,1],'b:',label = 'right ideal') # vert left
-                axs[1].plot(env.grf_normalized[:,2],'r:', label = 'left ideal') # ap right
-                axs[1].plot(env.grf_normalized[:,3],'b:',label = 'right ideal') # ap left
+                axs[2].plot(env.grf_normalized[:,0],'r:', label = 'right ideal') # vert right
+                axs[2].plot(env.grf_normalized[:,1],'b:',label = 'left ideal') # vert left
+                axs[1].plot(env.grf_normalized[:,2],'r:', label = 'right ideal') # ap right
+                axs[1].plot(env.grf_normalized[:,3],'b:',label = 'left ideal') # ap left
 
                 # print(np.vstack(grfs['l']).shape, grfs['l'][0].shape)
-                fig, axs = visualize_grfs(fig, axs, grfs['l'],lab='left', color = 'r')
-                fig, axs = visualize_grfs(fig, axs, grfs['r'],'right', color = 'b')
+                fig, axs = visualize_grfs(fig, axs, grfs['l'],lab='left', color = 'b')
+                fig, axs = visualize_grfs(fig, axs, grfs['r'],'right', color = 'r')
                 plt.show()
                  
             contact_video = True

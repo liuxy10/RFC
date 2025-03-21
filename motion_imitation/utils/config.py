@@ -17,7 +17,16 @@ class Config:
             assert(len(files) == 1)
             cfg = yaml.safe_load(open(files[0], 'r'))
         # create dirs
-        base_dir = '/tmp' if test else 'results_hw' # changed this for human-like mass dist
+        base_dir = '/tmp' if test else 'results' # changed this for human-like mass dist
+                # scale:
+        try:
+            self.H = cfg['H']
+            self.M = cfg['M']
+            if self.H > 0 and self.M > 0:
+                base_dir = 'results_hw' # changed this for human-like mass dist
+        except KeyError:
+            print('Height and Mass not assigned in config file')
+        
         self.base_dir = os.path.expanduser(base_dir)
 
         self.cfg_dir = '%s/motion_im/%s' % (self.base_dir, cfg_id)
@@ -29,12 +38,7 @@ class Config:
         os.makedirs(self.model_dir, exist_ok=True)
         if create_dirs:
             recreate_dirs(self.log_dir, self.tb_dir)
-        # scale:
-        try:
-            self.H = cfg['H']
-            self.M = cfg['M']
-        except KeyError:
-            print('Height and Mass not assigned in config file')
+
         # expert
         self.motion_id = cfg['motion_id']
         self.expert_traj_file = f'data/cmu_mocap/motion/{self.motion_id}.p'

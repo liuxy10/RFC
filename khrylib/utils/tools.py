@@ -80,8 +80,9 @@ def visualize_grfs(fig, axs, grfs, lab = '', color = 'r'):
     label = 'xyz'
     for i in range(3):
         axs[i].plot(grfs[:,i], color+"-",label = f'GRF {label[i]} {lab}')
-        axs[i].set_ylabel('/BW')
+        axs[i].set_ylabel(f'GRF_{label[i]}/BW')
         axs[i].legend()
+        axs[i].grid()
     plt.tight_layout()
     return fig, axs
 
@@ -143,34 +144,66 @@ def visualize_phases(fig, axs, osl_infos):
     plt.tight_layout()
     return fig, axs
 
-def visualize_poses(fig, axs, poses, body_qposaddr): 
-    for i in range(poses['gt'].shape[1]//4+1):
-        for j in range(4):
-            idx = i*4 + j
-            if idx < poses['gt'].shape[1]: 
-                gt = poses['gt'][:, idx ]
-                pred = poses['pred'][:, idx ]
-                target = poses['target'][:, idx ]
-                mse = np.mean((gt - pred) ** 2)
-                axs[i, j].plot(gt, 'r', label='gt')
-                axs[i, j].plot(pred, 'b', label='pred')
-                axs[i, j].plot(target, 'r:', label='target')
-                axs[i, j].set_ylim([-np.pi, np.pi])
-                # body_name = [name for name, addr in body_qposaddr.items() if addr[0] == idx][0]
-                # axs[i, j].set_title(f"idx = {idx}, {body_name} MSE: {mse:.4f}", fontsize=4)
-                axs[i, j].set_title(f'MSE: {mse:.4f}')
-            if i == 0 and j == 0:
-                axs[i, j].legend()
+def visualize_poses(poses, joint_names): 
+    
+    num_poses = poses['gt'].shape[1]
+    num_cols = 4
+    num_rows = num_poses // num_cols + (num_poses % num_cols > 0)
+    
+    fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(15, num_rows * 3))
+    axs = axs.flatten()
+    for i, (force, name) in enumerate(zip(poses['pred'].T, joint_names)):
+        axs[i].plot(force, 'r',label=name + ' pred')
+    for i, (force, name) in enumerate(zip(poses['gt'].T, joint_names)):
+        axs[i].plot(force, 'b', label=name + ' gt')
+        mse = np.mean((force - poses['pred'][:,i]) ** 2)
+    # for i, (force, name) in enumerate(zip(poses['target'].T, joint_names)):
+    #     axs[i].plot(force, 'r:', label=name + ' target')
+        
+        axs[i].set_title(name + f', MSE: {mse:.4f}')
+        axs[i].set_ylabel('qpos (rad)')
+        axs[i].legend()
+        axs[i].grid()
+    for j in range(i + 1, len(axs)):
+        fig.delaxes(axs[j])
+        
+    plt.tight_layout()
+    plt.show()
+    return fig, axs
+
+
+def visualize_impedance(fig, axs, jkps):
+    for i in range(jkps[0].shape[0]):
+        axs.plot(jkps[:,i] - jkps[0,i], label= f'jkp {i}, init = {jkps[0,i]:.2f}')
+        axs.grid()
+    axs.legend()
+    axs.set_title('Joint stiffness changes')
+    
     plt.tight_layout()
     return fig, axs
 
-def  visualize_impedance(fig, axs, jkps):
-    for i in range(jkps[0].shape[0]):
-        axs.plot(jkps[:,i] - jkps[0,i], label= f'jkp {i}, init = {jkps[0,i]:.2f}')
-    axs.legend()
-    axs.set_title('Joint stiffness changes')
+
+def visualize_force( actuator_forces, actuator_names):
+    num_actuators = len(actuator_names)
+    num_cols = 4
+    num_rows = num_actuators // num_cols + (num_actuators % num_cols > 0)
+    
+    fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(15, num_rows * 3))
+    axs = axs.flatten()
+    
+    for i, (force, name) in enumerate(zip(actuator_forces.T, actuator_names)):
+        axs[i].plot(force, label=name)
+        axs[i].set_title(name)
+        axs[i].set_ylabel('torque (Nm/kg)')
+        axs[i].legend()
+        axs[i].grid()
+    for j in range(i + 1, len(axs)):
+        fig.delaxes(axs[j])
+        
     plt.tight_layout()
+    plt.show()
     return fig, axs
+
 
 def visualize_torques(fig, axs, vfs):
     for i in range(vfs[0].shape[0]):
@@ -203,44 +236,47 @@ def visualize_3d_forces(fig, ax, forces, positions, sc = 500):
     return fig, ax
 
 
-def visualize_skeleton(fig, ax, coms, tree):
+def visualize_skeleton(fig, ax, joints, tree, coms = None):
     """
-    visualzie the skeletons specifed by the coms and tree
+    visualzie the skeletons specifed by the joints and tree
     """
-    # Plot the COMs
-    for name, com in coms.items():
+    # Plot the joints
+    for name, com in joints.items():
         ax.scatter(com[0], com[1], com[2], c='r', marker='o')
 
     # Convert dictionary values to a numpy array
-    coms_array = np.array(list(coms.values()))
-    coms_array = coms_array[~np.isnan(coms_array).any(axis=1)]
+    joints_array = np.array(list(joints.values()))
+    joints_array = joints_array[~np.isnan(joints_array).any(axis=1)]
 
     # Set equal scaling
-    max_range = np.array([coms_array[:, 0].max() - coms_array[:, 0].min(), 
-                          coms_array[:, 1].max() - coms_array[:, 1].min(), 
-                          coms_array[:, 2].max() - coms_array[:, 2].min()]).max() / 2.0 + 0.3
+    max_range = np.array([joints_array[:, 0].max() - joints_array[:, 0].min(), 
+                          joints_array[:, 1].max() - joints_array[:, 1].min(), 
+                          joints_array[:, 2].max() - joints_array[:, 2].min()]).max() / 2.0 + 0.3
     
     # link the component from parent to child
    
     for parent, children in tree.items():
         for child in children:
             try: 
-                parent_com = coms[parent]
-                child_com = coms[child]
+                parent_com = joints[parent]
+                child_com = joints[child]
                 ax.plot([parent_com[0], child_com[0]], 
                         [parent_com[1], child_com[1]], 
                         [parent_com[2], child_com[2]], 'k-')
-                if child == 'lfoot' or child == 'ltibia': # seems like prothetic side
+                if child == 'lfoot' : # seems like prothetic side
                     ax.plot([parent_com[0], child_com[0]], 
                         [parent_com[1], child_com[1]], 
                         [parent_com[2], child_com[2]], 'r-')
                     
             except KeyError:
                 pass
-
-    mid_x = (coms_array[:, 0].max() + coms_array[:, 0].min()) * 0.5
-    mid_y = (coms_array[:, 1].max() + coms_array[:, 1].min()) * 0.5
-    mid_z = (coms_array[:, 2].max() + coms_array[:, 2].min()) * 0.5
+    
+    if coms is not None: 
+        for com in coms.values():
+            ax.scatter(com[0][0], com[0][1], com[0][2], c='b', marker='o') 
+    mid_x = (joints_array[:, 0].max() + joints_array[:, 0].min()) * 0.5
+    mid_y = (joints_array[:, 1].max() + joints_array[:, 1].min()) * 0.5
+    mid_z = (joints_array[:, 2].max() + joints_array[:, 2].min()) * 0.5
 
     ax.set_xlim(mid_x - max_range, mid_x + max_range)
     ax.set_ylim(mid_y - max_range, mid_y + max_range)
@@ -258,27 +294,6 @@ def visualize_skeleton(fig, ax, coms, tree):
     zz = np.zeros_like(xx)
     ax.plot_surface(xx, yy, zz, alpha=0.2, color='gray')
     return fig, ax
-
-def visualize_force( actuator_forces, actuator_names):
-    num_actuators = len(actuator_names)
-    num_cols = 4
-    num_rows = num_actuators // num_cols + (num_actuators % num_cols > 0)
-    
-    fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(15, num_rows * 3))
-    axs = axs.flatten()
-    
-    for i, (force, name) in enumerate(zip(actuator_forces.T, actuator_names)):
-        axs[i].plot(force, label=name)
-        axs[i].set_title(name)
-        axs[i].set_ylabel('Force (N)')
-        axs[i].legend()
-    
-    for j in range(i + 1, len(axs)):
-        fig.delaxes(axs[j])
-    
-    plt.tight_layout()
-    plt.show()
-    return fig, axs
 
 def frames_to_video(frame_dir, out_dir, fps=30, filename='output.mp4'):
 

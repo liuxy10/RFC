@@ -140,7 +140,7 @@ class MujocoEnv:
     def set_custom_key_callback(self, key_func):
         self._get_viewer('human').custom_key_callback = key_func
 
-    def get_body_com(self, body_name):
+    def get_body_frame_position(self, body_name):
         return self.data.get_body_xpos(body_name)
 
     def state_vector(self):

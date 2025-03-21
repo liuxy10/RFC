@@ -35,10 +35,10 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             print("Scaled model is saved at ", output_xml)
             print(f"scaled height: {calculate_humanoid_height(output_xml)}")
             cfg.mujoco_model_file = output_xml
-            scale_inertia = cfg.M /(30.9534) * (cfg.H / 1.4954 )**2
+            scale_inertia = cfg.M /(30.9534) * (cfg.H / 1.4954 )**2 # scale inertia proportional to mass and the square of the height 
             cfg = scale_torque_related_params(cfg, scale_inertia)
             # exit(0)
-        mujoco_env.MujocoEnv.__init__(self, cfg.mujoco_model_file, 15) # 15 is the frame skip 
+        mujoco_env.MujocoEnv.__init__(self, cfg.mujoco_model_file, frame_skip = 15) # 15 is the frame skip 
         self.cfg = cfg
         self.set_cam_first = set()
         # env specific
@@ -179,13 +179,14 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         C = self.data.qfrc_bias.copy() 
         K_p = np.diag(k_p)
         K_d = np.diag(k_d)
-        # solve for acceleration based on LQR control
+        # solve for desired acceleration of all the joints (M qdd + C =τ)
         q_accel = cho_solve(cho_factor(M + K_d*dt, overwrite_a=True, check_finite=False),
                             -C[:, None] - K_p.dot(qpos_err[:, None]) - K_d.dot(qvel_err[:, None]), 
                             overwrite_b=True, 
                             check_finite=False) 
         return q_accel.squeeze()
-
+    
+    # lower level controller: impdance based control 
     def compute_torque(self, ctrl):
         cfg = self.cfg
         dt = self.model.opt.timestep
@@ -204,7 +205,6 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         qvel_err += q_accel * dt
         torque = -cfg.jkp * qpos_err[6:] - cfg.jkd * qvel_err[6:]
         return torque
-
 
 
     """ RFC-Explicit """
@@ -228,7 +228,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         vf[:3] = quat_mul_vec(hq, vf[:3])
         self.vf = vf
         self.data.qfrc_applied[:vf.shape[0]] = vf # qfrc_applied is the residual force applied to the body
-
+        
     def do_simulation(self, action, n_frames):
         t0 = time.time()
         cfg = self.cfg
@@ -265,10 +265,10 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         # do simulation
         self.do_simulation(a, self.frame_skip) 
         self.cur_t += 1
-        self.bquat = self.get_body_quat()
+        self.bquat = self.get_body_quat() 
         self.update_expert()
         # get obs
-        head_pos = self.get_body_com('head')
+        head_pos = self.get_body_frame_position('head')
         reward = 1.0
         if cfg.env_term_body == 'head':
             fail = self.expert is not None and head_pos[2] < self.expert['head_height_lb'] - 0.1
@@ -358,18 +358,20 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         body_positions = {}
         for body_name in self.body_tree:
             try:
-                body_pos = self.get_body_position(body_name)
+                body_pos = self.get_body_frame_position(body_name)
                 body_positions[body_name] = body_pos
             except KeyError:
                 pass
 
         return body_positions
     
-    def get_body_position(self, body_name):
-        sim = self.sim
-        body_id = sim.model.body_name2id(body_name)
-        return sim.data.body_xpos[body_id]
+    def get_body_com(self, body_name):
+        body_id = self.sim.model.body_name2id(body_name)
+        return self.sim.data.xipos[body_id] # data.body_xpos is the position of the body FRAME in world frame, which is joint position
     
+    def get_body_mass(self, body_name):
+        body_id = self.sim.model.body_name2id(body_name)
+        return self.sim.model.body_mass[body_id] 
     def get_joint_qvel_addr(self, joint_name):
         return self.sim.model.get_joint_qvel_addr(joint_name)
 
@@ -431,11 +433,14 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
     
     
     def visualize_by_frame(self, show = False, label =  "normal", plot_lr = True):
-        body_pos = {n: self.get_body_position(n) for n in self.model.body_names if n != "world"}
+        joint_pos = {n: self.get_body_frame_position(n) for n in self.model.body_names if n != "world"}
+        body_com_pos = {n: [self.get_body_com(n), self.get_body_mass(n)] for n in self.model.body_names if n != "world"}
         fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
         # forces, poss = self.get_contact_force()
         ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
         ax.set_title(label)
+        # visualize residual force on the root
+
         f, cops, _ = self.get_ground_reaction_force()
         if len(f) > 0: 
             if plot_lr:
@@ -445,7 +450,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 
             else:
                 visualize_3d_forces(fig, ax, f, cops)
-        fig, ax = visualize_skeleton(fig, ax, body_pos, self.body_tree)
+        fig, ax = visualize_skeleton(fig, ax, joint_pos, self.body_tree, body_com_pos)
         
 
         if show:

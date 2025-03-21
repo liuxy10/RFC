@@ -44,8 +44,8 @@ class HumanoidVisEnv(mujoco_env.MujocoEnv):
     def visualize_by_frame(self, show = False, label =  "normal"):
         # print(self.model.body_names)
         # exit()
-        body_pos_pred = {n: self.get_body_position(n) for n in self.model.body_names if n != "world" and "1_" not in n}
-        body_pos_gt = {n: self.get_body_position(n) for n in self.model.body_names if n != "world" and "1_" in n}
+        body_pos_pred = {n: self.get_body_frame_position(n) for n in self.model.body_names if n != "world" and "1_" not in n}
+        body_pos_gt = {n: self.get_body_frame_position(n) for n in self.model.body_names if n != "world" and "1_" in n}
         
         print(body_pos_pred, body_pos_gt)
         fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
@@ -59,7 +59,7 @@ class HumanoidVisEnv(mujoco_env.MujocoEnv):
             plt.show()
         return fig, ax
     
-    def get_body_position(self, body_name):
+    def get_body_frame_position(self, body_name):
         sim = self.sim
         body_id = sim.model.body_name2id(body_name)
         return sim.data.body_xpos[body_id]
