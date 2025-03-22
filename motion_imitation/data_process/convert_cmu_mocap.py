@@ -11,6 +11,7 @@ import pickle
 import argparse
 import glfw
 
+# Argument parser to handle command-line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--render', action='store_true', default=False)
 parser.add_argument('--amc_id', type=str, default=None)
@@ -24,19 +25,20 @@ parser.add_argument('--fix_feet', action='store_true', default=False)
 parser.add_argument('--fix_angle', action='store_true', default=False)
 args = parser.parse_args()
 
+# Load the MuJoCo model
 model_file = f'khrylib/assets/mujoco_models/{args.model_file}.xml'
 model = load_model_from_path(model_file)
 sim = MjSim(model)
 body_qposaddr = get_body_qposaddr(model)
 
+# AMC file path
 amc_file = f'data/cmu_mocap/amc/{args.amc_id}.amc'
 cyclic = False
 cycle_offset = 0.0
 offset_z = 0.0
 
-
+# Function to convert AMC file to expert trajectory
 def convert_amc_file():
-
     def get_qpos(pose):
         # qpos is in the order of root_xyz, root_quat, body_xyz, body_quat
         qpos = np.zeros_like(sim.data.qpos)
@@ -74,7 +76,7 @@ def convert_amc_file():
             expert_angles[expert_angles < -np.pi] += 2 * np.pi
     return expert_traj
 
-
+# Function to visualize the trajectory
 def visualize():
     global g_offset, select_start, select_end
 
@@ -153,7 +155,6 @@ def visualize():
 
         return True
 
-
     viewer.custom_key_callback = key_callback
     viewer.cam.azimuth = 45
     viewer.cam.elevation = -8.0
@@ -176,23 +177,27 @@ def visualize():
     select_end = g_offset + select_end
     return select_start, select_end
 
-
+# Convert AMC file to expert trajectory
 expert_traj = convert_amc_file()
 select_start = 0
 select_end = expert_traj.shape[0]
 g_offset = 0
+
+# If render flag is set, visualize the trajectory
 if args.render:
     visualize()
+
+# Print the shape of the expert trajectory
 print('expert traj shape:', expert_traj.shape)
+
+# Metadata for the trajectory
 meta = {'dt': args.dt, 'mocap_fr': args.mocap_fr, 'scale': args.scale, 'offset_z': args.offset_z,
         'cyclic': cyclic, 'cycle_offset': cycle_offset,
         'select_start': select_start, 'select_end': select_end,
         'fix_feet': args.fix_feet, 'fix_angle': args.fix_angle}
 print(meta)
 
-"""save the expert trajectory"""
+# Save the expert trajectory to a file
 expert_traj_file = f'data/cmu_mocap/motion/{args.out_id}.p'
 os.makedirs(os.path.dirname(expert_traj_file), exist_ok=True)
 pickle.dump((expert_traj, meta), open(expert_traj_file, 'wb'))
-
-

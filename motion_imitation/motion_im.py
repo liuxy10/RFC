@@ -18,7 +18,7 @@ from motion_imitation.reward_function import reward_func
 from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--cfg', default=None)
+parser.add_argument('--cfg', default='0202_wo_phase')
 parser.add_argument('--render', action='store_true', default=False)
 parser.add_argument('--test', action='store_true', default=False)
 parser.add_argument('--num_threads', type=int, default=1)
@@ -26,7 +26,7 @@ parser.add_argument('--max_iter_num', type=int, default=100)
 parser.add_argument('--gpu_index', type=int, default=0)
 parser.add_argument('--iter', type=int, default=0)
 parser.add_argument('--show_noise', action='store_true', default=False)
-parser.add_argument('--save_model_interval', default=None)
+parser.add_argument('--save_model_interval', default=1)
 parser.add_argument('--imp_aware', action='store_true', default=False)
 args = parser.parse_args()
 if args.render:

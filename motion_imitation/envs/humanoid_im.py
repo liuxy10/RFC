@@ -21,7 +21,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
 
     def __init__(self, cfg):
         if cfg.H >0 and cfg.M > 0:
-            assert cfg.mujoco_model_file == 'mocap_v2.xml', f"The standard model file should be mocap_v2, instead it is {cfg.mujoco_model_file}"
+            assert cfg.mujoco_model_file == 'mocap_v2.xml' or cfg.mujoco_model_file == 'mocap_v3.xml', f"The standard model file should be mocap_v2, instead it is {cfg.mujoco_model_file}"
             if not path.exists(cfg.mujoco_model_file):
                 # try the default assets path
                 fullpath = path.join(Path(__file__).parent.parent.parent, 'khrylib/assets/mujoco_models', path.basename(cfg.mujoco_model_file))
@@ -60,7 +60,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.load_expert()
         self.set_spaces()
         self.body_tree = build_body_tree(cfg.mujoco_model_file)
-
+        print(self.body_tree)
         self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
         self.max_vf = 30.0 # N
         self.grf_normalized = get_ideal_grf(total_idx = 100, rhs_index = [3,33,63], offset_period = 15, stance_period = 18) 
@@ -70,8 +70,11 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
         # print(expert_meta)
         # print(expert_qpos.shape)
-        self.expert = get_expert(expert_qpos, expert_meta, self)
-
+        try:
+            self.expert = get_expert(expert_qpos, expert_meta, self)
+        except ValueError:
+            self.expert = None
+        
     def set_model_params(self):
         if self.cfg.action_type == 'torque' and hasattr(self.cfg, 'j_stiff'):
             self.model.jnt_stiffness[1:] = self.cfg.j_stiff

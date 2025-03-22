@@ -1,7 +1,7 @@
 # data
-motion_id: '02_02'
-H: 1.75 # the code is designed that if H is negative, the default value will be used
-M: 75.0
+motion_id: '69_10'
+H: -1.75 # the code is designed that if H is negative, the default value will be used
+M: -75.0
 # training parameters
 gamma: 0.95
 tau: 0.95
@@ -98,7 +98,7 @@ joint_params:
   - ["rhumerus_x"     ,  400.0,  40.0,   0.0, 1.0, 100.0]
   - ["rradius_x"      ,  300.0,  30.0,  45.0, 5.0,  60.0]
 
-body_params: # weight for reward calculation in 
+body_params:
   # ["name","diff weight"]
   - ["lfemur"       , 1.0]
   - ["ltibia"       , 1.0]

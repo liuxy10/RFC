@@ -1,0 +1,2870 @@
+Subject #1 (climb, swing, hang on playground equipment) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	playground - forward jumps, turn around	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	playground - climb	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	playground - climb, hang, swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	playground - climb	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	playground - climb, go under	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	playground - climb, sit, dangle legs, descend	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	playground - climb, sit, dangle legs, jump down	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	playground - climb, sit, dangle legs, rock back, lower self to ground	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	playground - climb, hang, hold self up with arms straight, swing, drop, sit, dangle legs, go under	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	playground - climb, swing, lean back, drop	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	playground - climb, hang, lean over, jump down	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	playground - climb, pull up, dangle, sit, lower self to ground	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	playground - climb, go under, jump down	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	playground - climb, jump down, dangle, legs push off against	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #2 (various expressions and human behaviors) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc		Animated	120	Feedback
+2	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	jump, balance	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	punch/strike	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	bend over, scoop up, rise, lift arm	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	swordplay	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	swordplay	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	swordplay	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	wash self	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #3 (walk on uneven terrain) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	walk on uneven terrain		c3d	amc		Animated	120	Feedback
+
+Subject #5 (modern dance) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	dance - expressive arms, pirouette	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	dance - sideways arabesque, turn step, folding arms	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	dance - sideways arabesque, folding arms, bending back	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	dance - quasi-cou-de-pied, raised leg above hip-height, jete en tourant	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	dance - cartwheel-like start, pirouettes, jete	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	dance - small jetes, attitude/arabesque, shifted-axis pirouette, turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	dance - rond de jambe in the air, jete, turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	dance - glissade devant, glissade derriere, attitude/arabesque	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	dance - glissade devant, glissade derriere, attitude/arabesque	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	dance - sideways steps, pirouette	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	dance - arms held high, pointe tendue a terre, upper body rotation	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	dance - small jetes, pirouette	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	dance - retire derriere, attitude/arabesque	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	dance - retire derriere, attitude/arabesque	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	dance - coupe dessous, jete en tourant	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	dance - coupe dessous, grand jete en tourant	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	dance - attitude/arabesque, jete en tourant, bending back	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	dance - attitude/arabesque, jete en tourant, bending back	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	dance - attitude/arabesque, jete en tourant, bending back	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #6 (dribble, shoot basketball) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	basketball - forward dribble	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	basketball - forward dribble	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	basketball - forward dribble	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	basketball - forward dribble	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	basketball - backward dribble	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	basketball - backward dribble	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	basketball - sideways dribble	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	basketball - sideways dribble	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	basketball - forward dribble, 90-degree left turns	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	basketball - forward dribble, 90-degree right turns	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	basketball - forward dribble, 90-degree right turns, crossover dribble	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	basketball - low, fast free style dribble, dribble through legs	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	basketball - crossover dribble, shoot	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	basketball - dribble, shoot	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #7 (walk) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc		Animated	120	Feedback
+2	walk	tvd	c3d	amc		Animated	120	Feedback
+3	walk		c3d	amc		Animated	120	Feedback
+4	slow walk	tvd	c3d	amc		Animated	120	Feedback
+5	slow walk	tvd	c3d	amc		Animated	120	Feedback
+6	walk	tvd	c3d	amc		Animated	120	Feedback
+7	walk	tvd	c3d	amc		Animated	120	Feedback
+8	walk	tvd	c3d	amc		Animated	120	Feedback
+9	walk	tvd	c3d	amc		Animated	120	Feedback
+10	walk	tvd	c3d	amc		Animated	120	Feedback
+11	walk	tvd	c3d	amc		Animated	120	Feedback
+12	brisk walk	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #8 (walk) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	slow walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	walk/stride	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	walk, exaggerated stride	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	slow walk/stride	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #9 (run) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	navigate - walk forward, backward, sideways	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #10 (kick soccer ball) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	soccer - kick ball	tvd	c3d	amc		Animated	120	Feedback
+2	soccer - kick ball	tvd	c3d	amc		Animated	120	Feedback
+3	soccer - kick ball	tvd	c3d	amc		Animated	120	Feedback
+4	walk	tvd	c3d	amc		Animated	120	Feedback
+5	soccer - kick ball	tvd	c3d	amc		Animated	120	Feedback
+6	soccer - kick ball	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #11 (kick soccer ball) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	soccer - kick ball	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #12 (tai chi, walk) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc		Animated	120	Feedback
+2	walk	tvd	c3d	amc		Animated	120	Feedback
+3	walk	tvd	c3d	amc		Animated	120	Feedback
+4	tai chi	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #13 (various everyday behaviors) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	sit on high stool, stand up	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	sit on high stool, stand up	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	sit on high stool, stand up	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	sit on stepstool, chin in hand	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	sit on stepstool, hands against chin, fidget, stand up	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	sit on stepstool, hands against chin, elbow out, stand up	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	unscrew bottlecap, drink soda	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	unscrew bottlecap, drink soda, screw on bottlecap	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	drink soda	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	jump up to grab, reach for, tiptoe	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	forward jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	jump up to grab, reach for, tiptoe	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	forward jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	laugh	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	laugh	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	laugh	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	boxing	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	boxing	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	forward jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	wash windows	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	wash windows	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	wash windows	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	sweep floor	tvd	c3d	amc	mpg	Animated	120	Feedback
+24	sweep floor	tvd	c3d	amc	mpg	Animated	120	Feedback
+25	sweep floor	tvd	c3d	amc	mpg	Animated	120	Feedback
+26	direct traffic, wave	tvd	c3d	amc	mpg	Animated	120	Feedback
+27	direct traffic, wave, point	tvd	c3d	amc	mpg	Animated	120	Feedback
+28	direct traffic, wave, point	tvd	c3d	amc	mpg	Animated	120	Feedback
+29	jumping jacks, side twists, bend over, squats	tvd	c3d	amc	mpg	Animated	120	Feedback
+30	jumping jacks, side twists, squats, jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+31	jumping jacks, side twists, bend over, jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+32	forward jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+33	climb ladder	tvd	c3d	amc	mpg	Animated	120	Feedback
+34	climb ladder	tvd	c3d	amc	mpg	Animated	120	Feedback
+35	climb 3 steps	tvd	c3d	amc	mpg	Animated	120	Feedback
+36	climb 3 steps	tvd	c3d	amc	mpg	Animated	120	Feedback
+37	climb 3 steps	tvd	c3d	amc	mpg	Animated	120	Feedback
+38	climb 3 steps	tvd	c3d	amc	mpg	Animated	120	Feedback
+39	jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+40	jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+41	jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+42	jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #14 (various everyday behaviors) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	boxing	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	boxing	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	boxing	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	drink soda, screw on bottlecap	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	unscrew bottlecap, drink soda	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	jumping jacks, jog, squats, side twists, stretches	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	jump up to grab, reach for, tiptoe	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	jump up to grab, reach for, tiptoe	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	jump up to grab, reach for, tiptoe	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	wash windows	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	wash windows	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	wash windows	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	mop floor	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	jumping jacks, jog, squats, side twists, stretches	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	mop floor	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	sweep floor	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	laugh	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	laugh	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	laugh	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	jumping jacks, side twists, reach up, bend over	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	climb 3 steps	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	climb 3 steps	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	climb 3 steps	tvd	c3d	amc	mpg	Animated	120	Feedback
+24	direct traffic, wave, point	tvd	c3d	amc	mpg	Animated	120	Feedback
+25	direct traffic, wave, point	tvd	c3d	amc	mpg	Animated	120	Feedback
+26	direct traffic, wave, point	tvd	c3d	amc	mpg	Animated	120	Feedback
+27	sit on high stool, stand up	tvd	c3d	amc	mpg	Animated	120	Feedback
+28	sit on high stool, stand up	tvd	c3d	amc	mpg	Animated	120	Feedback
+29	sit on stepstool, stand up, swing legs	tvd	c3d	amc	mpg	Animated	120	Feedback
+30	sit on stepstool, ankle on other knee, hand on chin	tvd	c3d	amc	mpg	Animated	120	Feedback
+31	sit on stepstool, stand up	tvd	c3d	amc	mpg	Animated	120	Feedback
+32	sit on stepstool, stand up	tvd	c3d	amc	mpg	Animated	120	Feedback
+33	climb ladder	tvd	c3d	amc	mpg	Animated	120	Feedback
+34	climb ladder	tvd	c3d	amc	mpg	Animated	120	Feedback
+35	climb ladder	tvd	c3d	amc	mpg	Animated	120	Feedback
+36	sit on stepstool, stand up	tvd	c3d	amc	mpg	Animated	120	Feedback
+37	drink soda	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #15 (various everyday behaviors, dance moves) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk/wander	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	climb, step over, sit on, stand on stepstool	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	walk/wander	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	wash windows, paint; hand signals; dance - Egyptian walk, the Dive, the Twist, the Cabbage Patch; boxing	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	wash windows, paint; hand signals; dance - Egyptian walk, the Dive, the Twist, the Cabbage Patch; boxing	tvd	c3d	amc		Animated	120	Feedback
+6	lean forward, reach for	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	lean forward, tiptoe, reach for	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	hand signals - horizontally revolve forearms	tvd	c3d	amc		Animated	120	Feedback
+9	walk/wander	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	sit on high stool, stand up	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	wash windows, paint figure eights; hand signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	wash windows; basketball - dribble, lay-up shot, pass; throw ball; dance - Egyptian walk, the Dive, the Twist; strew	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	boxing	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	walk/wander	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #16 (run, jump, walk) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	high jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	high jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	forward jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	forward jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	forward jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	run/jog, sudden stop	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	forward jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	forward jump	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	walk, veer left	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	walk, veer left	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	walk, veer right	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	walk, veer right	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	walk, 90-degree left turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	walk, 90-degree left turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	walk, 90-degree right turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	walk, 90-degree right turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	walk, veer left	tvd	c3d	amc	mpg	Animated	120	Feedback
+24	walk, veer left	tvd	c3d	amc	mpg	Animated	120	Feedback
+25	walk, veer right	tvd	c3d	amc	mpg	Animated	120	Feedback
+26	walk, veer right	tvd	c3d	amc	mpg	Animated	120	Feedback
+27	walk, 90-degree left turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+28	walk, 90-degree left turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+29	walk, 90-degree right turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+30	walk, 90-degree right turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+31	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+32	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+33	slow walk, stop	tvd	c3d	amc	mpg	Animated	120	Feedback
+34	slow walk, stop	tvd	c3d	amc	mpg	Animated	120	Feedback
+35	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+36	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+37	run/jog, veer left	tvd	c3d	amc	mpg	Animated	120	Feedback
+38	run/jog, veer left	tvd	c3d	amc	mpg	Animated	120	Feedback
+39	run/jog, veer right	tvd	c3d	amc	mpg	Animated	120	Feedback
+40	run/jog, veer right	tvd	c3d	amc	mpg	Animated	120	Feedback
+41	run/jog, 90-degree left turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+42	run/jog, 90-degree left turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+43	run/jog, 90-degree right turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+44	run/jog, 90-degree right turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+45	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+46	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+47	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+48	run, veer left	tvd	c3d	amc	mpg	Animated	120	Feedback
+49	run, veer right	tvd	c3d	amc	mpg	Animated	120	Feedback
+50	run, veer right	tvd	c3d	amc	mpg	Animated	120	Feedback
+51	run, 90-degree left turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+52	run, 90-degree left turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+53	run, 90-degree right turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+54	run, 90-degree right turn	tvd	c3d	amc	mpg	Animated	120	Feedback
+55	run	tvd	c3d	amc	mpg	Animated	120	Feedback
+56	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+57	run/jog, sudden stop	tvd	c3d	amc	mpg	Animated	120	Feedback
+58	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #17 (different walking styles) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk with anger, frustration	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	walk with anger, frustration	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	walk stealthily	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	walk stealthily	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	walk/hobble	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	whistle, walk jauntily	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	whistle, walk jauntily	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	muscular, heavyset person's walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	muscular, heavyset person's walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	boxing	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #18 (human interaction and communication (2 subjects - subject A)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk, shake hands (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	walk, shake hands (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	A pulls B; B resists (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	A pulls B; B resists (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	A pulls B by the elbow; B resists (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	A pulls B by the elbow; B resists (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	navigate busy sidewalk; A leads the way, takes B by the arm (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	conversation - explain with hand gestures (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	conversation - explain with hand gestures, walk (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	quarrel - angry hand gestures (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	quarrel - angry hand gestures (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	friends meet, hang out; A sits, B joins A (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	run, scramble for last seat (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	run, scramble for last seat (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	chicken dance (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #19 (human interaction and communication (2 subjects - subject B)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk, shake hands (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	walk, shake hands (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	A pulls B; B resists (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	A pulls B; B resists (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	A pulls B by the elbow; B resists (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	A pulls B by the elbow; B resists (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	navigate busy sidewalk; A leads the way, takes B by the arm (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	conversation - explain with hand gestures (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	conversation - explain with hand gestures, walk (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	quarrel - angry hand gestures (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	quarrel - angry hand gestures (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	friends meet, hang out; A sits, B joins A (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	run, scramble for last seat (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	run, scramble for last seat (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	chicken dance (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #20 (human interaction - at play, formations (2 subjects - subject A)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	chicken dance (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	link arms, walk (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	link arms, walk (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	synchronized walk (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	synchronized walk (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	soldiers march (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	soldiers march (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	zombie march (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	nursery rhyme - ring around the rosey (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	360-degree two-person whip (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	high-five, walk (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	low-five, walk (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	blind man's bluff (blindfold tag) (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #21 (human interaction - at play, formations (2 subjects - subject B)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	chicken dance (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	link arms, walk (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	link arms, walk (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	synchronized walk (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	synchronized walk (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	soldiers march (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	soldiers march (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	zombie march (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	nursery rhyme - ring around the rosey (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	360-degree two-person whip (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	high-five, walk (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	low-five, walk (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	blind man's bluff (blindfold tag) (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #22 (human interaction (2 subjects - subject A)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	B sits; A pulls up B (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	A sits; B pulls up A (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	A sits, holds face in hands; B kneels, comforts A (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	B comforts A, puts one hand on A's shoulder (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	A comforts B, puts both hands on B's shoulders (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	B comforts A, puts both hands on A's shoulders (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	A comforts B, puts one hand on B's shoulder (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	hold hands, swing arms, walk (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	A gives B a shoulder rub; B sits, A stands (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	A shelters B, a younger child, from harm (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	B shelters A, a younger child, from harm (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	A stumbles into B (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	A passes soda to B; both drink (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	alternating squats (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	alternating jumping jacks (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	synchronized jumping jacks (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	rush up, arm wrestle (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	A stares down B, leans with hands on high stool (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	B stares down A, leans with hands on high stool (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	violence - A picks up high stool, threatens to strike B (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	conversation - B pounds high stool, points at A (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	walk; B catches keys thrown by A (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	walk; A catches keys thrown by B (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+24	walk; B catches wallet thrown by A (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+25	walk; A catches wallet thrown by B (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #23 (human interaction (2 subjects - subject B)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	B sits; A pulls up B (subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	A sits; B pulls up A (subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	A sits, holds face in hands; B kneels, comforts A (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	B comforts A, puts one hand on A's shoulder (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	A comforts B, puts both hands on B's shoulders (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	B comforts A, puts both hands on A's shoulders (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	A comforts B, puts one hand on B's shoulder (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	hold hands, swing arms, walk (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	A gives B a shoulder rub; B sits, A stands (subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	A shelters B, a younger child, from harm (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	B shelters A, a younger child, from harm (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	A stumbles into B (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	A passes soda to B; both drink (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	alternating squats (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	alternating jumping jacks (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	synchronized jumping jacks (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	rush up, arm wrestle (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	A stares down B, leans with hands on high stool (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	B stares down A, leans with hands on high stool (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	violence - A picks up high stool, threatens to strike B (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	conversation - B pounds high stool, points at A (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	walk; B catches keys thrown by A (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	walk; A catches keys thrown by B (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+24	walk; B catches wallet thrown by A (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+25	walk; A catches wallet thrown by B (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #24 (nursery rhymes) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #25 (nursery rhymes) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg		120	Feedback
+
+Subject #26 (nursery rhymes, basketball, bending) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	Alaska vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	Alaska vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	bend, pick up	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	bend, lift	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	bend, lift	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #27 (recreation, nursery rhymes) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	prairie dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #28 (recreation, nursery rhymes, animal behaviors (pantomime - human subject)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	prairie dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	whale (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	bear (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	snake (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	chicken (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	monkey (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	mouse (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	cat (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	elephant (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	dinosaur (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #29 (recreation, nursery rhymes, animal behaviors (pantomime - human subject)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	prairie dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	whale (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	bear (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	cat (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	fish (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	elephant (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	mouse (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	chicken (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	dinosaur (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+24	snake (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+25	monkey (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #30 (recreation, nursery rhymes, animal behaviors (pantomime - human subject)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	prairie dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	whale (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	bear (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	cat (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	elephant (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	mouse (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	chicken (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	snake (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	Tyrannosaurus rex (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	monkey (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #31 (recreation, nursery rhymes, animal behaviors (pantomime - human subject)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	prairie dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	whale (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	bear (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	cat (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	elephant (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	Tyrannosaurus rex (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	mouse (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	chicken (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	snake (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	monkey (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #32 (recreation, nursery rhymes, animal behaviors (pantomime - human subject)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	nursery rhyme - "I'm a little teapot..."	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	nursery rhyme - Cock Robin	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	Alaskan vacation	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	prairie dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	bear (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	cat (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	elephant (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	mouse (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	chicken (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	Tyrannosaurus rex (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	snake (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	monkey (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #33 (throw and catch football (2 subjects - subject A)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	football - throw, catch (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	60	Feedback
+2	football - throw, catch, jump around (2 subjects - subject A)	tvd	c3d	amc	mpg	Animated	60	Feedback
+
+Subject #34 (throw and catch football (2 subjects - subject B)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	football - throw, catch (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	60	Feedback
+2	football - throw, catch, jump around (2 subjects - subject B)	tvd	c3d	amc	mpg	Animated	60	Feedback
+
+Subject #35 (walk, run) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+24	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+25	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+26	run/jog	tvd	c3d	amc	mpg	Animated	120	Feedback
+27	navigate around obstacles	tvd	c3d	amc	mpg	Animated	120	Feedback
+28	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+29	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+30	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+31	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+32	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+33	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+34	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #36 (walk on uneven terrain) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	walk forward, turn around, walk back	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	walk forward, turn around, walk back	tvd	c3d	amc		Animated	120	Feedback
+4	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	walk forward, turn around, walk back	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+24	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+25	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+26	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+27	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+28	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+29	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+30	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+31	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+32	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+33	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+34	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+35	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+36	walk on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+37	jump/hop on uneven terrain	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #37 (walk) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	slow walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #38 (walk, run) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	run around in a circle	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	walk around, frequent turns, cyclic walk along a line	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #39 (climb, swing, hang on playground equipment) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	walk forward, turn around, walk back	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #40 (navigate from corner to corner, interact with stepstool) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+2	navigate - walk forward, backward, on a diagonal	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	navigate - walk forward, backward, on a diagonal	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	navigate - walk forward, backward, on a diagonal	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	navigate - walk forward, backward, on a diagonal	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	climb, step over, sit on, jump over stepstool	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	climb, step over, jump over stepstool	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	climb, step over, jump over stepstool	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	climb, step over, jump over stepstool	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	wait for bus	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	wait for bus	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	basketball signals	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #41 (navigate from corner to corner, interact with stepstool) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+2	navigate - walk forward, backward, sideways, on a diagonal	tvd	c3d	amc		Animated	120	Feedback
+3	navigate - walk forward, backward, sideways, on a diagonal	tvd	c3d	amc		Animated	120	Feedback
+4	navigate - walk forward, backward, on a diagonal	tvd	c3d	amc		Animated	120	Feedback
+5	navigate - walk forward, backward, on a diagonal	tvd	c3d	amc		Animated	120	Feedback
+6	navigate - walk forward, backward, on a diagonal	tvd	c3d	amc		Animated	120	Feedback
+7	climb, step over, jump over, navigate around stepstool	tvd	c3d	amc		Animated	120	Feedback
+8	climb, step over, jump over, navigate around stepstool	tvd	c3d	amc		Animated	120	Feedback
+9	climb, step over, jump over, navigate around stepstool	tvd	c3d	amc		Animated	120	Feedback
+10	basketball signals	tvd	c3d	amc		Animated	120	Feedback
+11	basketball signals	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #42 (stretch) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	stretch - rotate head, shoulders, arms, legs	tvd	c3d	amc			60	Feedback
+
+Subject #43 (swing on playground equipment) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc		Animated	120	Feedback
+2	playground - grip bar, swing body	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	playground - grip bar, swing body	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #45 (walk) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #46 (walk) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #47 (walk) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk forward, turn around, walk back	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #49 (modern dance, gymnastics) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk	tvd	c3d	amc		Animated	120	Feedback
+2	jump up and down, hop on one foot	tvd	c3d	amc		Animated	120	Feedback
+3	jump up and down, hop on one foot	tvd	c3d	amc		Animated	120	Feedback
+4	run, leap	tvd	c3d	amc		Animated	120	Feedback
+5	run, leap	tvd	c3d	amc		Animated	120	Feedback
+6	cartwheel	tvd	c3d	amc		Animated	120	Feedback
+7	cartwheel	tvd	c3d	amc		Animated	120	Feedback
+8	cartwheels	tvd	c3d	amc		Animated	120	Feedback
+9	dance - arms held high, side arabesque	tvd	c3d	amc		Animated	120	Feedback
+10	dance - fold in from side arabesque, curl inwards	tvd	c3d	amc		Animated	120	Feedback
+11	dance - fold in from side arabesque, curl inwards	tvd	c3d	amc		Animated	120	Feedback
+12	dance - lean forward, bring back leg forward, arching arms	tvd	c3d	amc		Animated	120	Feedback
+13	dance - fold in from side arabesque, curl inwards	tvd	c3d	amc		Animated	120	Feedback
+14	dance - lean forward, bring back leg forward, arching arms	tvd	c3d	amc		Animated	120	Feedback
+15	static dance pose - folded in, head lowered, leg bent	tvd	c3d	amc		Animated	120	Feedback
+16	dance - fold in from side arabesque, curl inwards	tvd	c3d	amc		Animated	120	Feedback
+17	dance - lean forward, bring back leg forward, arching arms	tvd	c3d	amc		Animated	120	Feedback
+18	balance on one leg, outstretched arms	tvd	c3d	amc		Animated	120	Feedback
+19	balance on one leg, outstretched arms	tvd	c3d	amc		Animated	120	Feedback
+20	balance on one leg, outstretched arms	tvd	c3d	amc		Animated	120	Feedback
+21	acrobatics - spin/twirl, hang on ropes	tvd	c3d	amc		Animated	120	Feedback
+22	dance - lean back on bent leg, balance, bend elbow by ear	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #54 (animal behaviors (pantomime - human subject)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	monkey (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	bear (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	penguin (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	pterosaur (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	pterosaur (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	pterosaur (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	prairie dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	roadrunner (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	insect/praying mantis (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	ghost (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	penguin (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	dragon (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	dragon (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	monkey (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	prairie dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	superhero	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	squirrel (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	squirrel (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	squirrel - robotic like motion (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	follow path, walk around obstacles	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	follow path, walk around obstacles	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	follow path, walk around obstacles	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	monkey (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+24	hummingbird (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+25	chicken (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+26	chicken (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+27	chicken (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #55 (animal behaviors (pantomime - human subject)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	dance, whirl	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	lambada dance	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	genie (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	walk	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	hummingbird (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	chicken (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	chicken (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	monkey (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	monkey (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	hummingbird (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	animal (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	dancing bear (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	insect/praying mantis (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	prairie dog (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	roadrunner (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	panda (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	ghost (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	penguin (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	dragon (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	hippo ballerina (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	pterosaur (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	superhero	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	devil	tvd	c3d	amc	mpg	Animated	120	Feedback
+24	various animals (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+25	dancing animal (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+26	monkey (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+27	dancing ant (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+28	monkey/bear (human subject)	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #56 (vignettes - locomotion, upper-body motions (focus: motion transitions)) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk around	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	vignettes - fists up, wipe window, yawn, stretch, angrily grab, smash against wall	tvd	c3d	amc		Animated	120	Feedback
+3	vignettes - fists up, wipe window, yawn, stretch, angrily grab, smash against wall, lift open window, throw punches, skip	tvd	c3d	amc		Animated	120	Feedback
+4	vignettes - fists up, wipe window, grab, lift open window, throw punches, yawn, stretch, walk, jump	tvd	c3d	amc		Animated	120	Feedback
+5	vignettes - walk, drink water, run/jog, jump, wipe window, lift open window, throw punches, yawn, stretch	tvd	c3d	amc		Animated	120	Feedback
+6	vignettes - throw punches, grab, skip, yawn, stretch, leap, lift open window, walk, jump/bound	tvd	c3d	amc		Animated	120	Feedback
+7	vignettes - yawn, stretch, walk, run/jog, angrily grab, jump, skip, halt	tvd	c3d	amc		Animated	120	Feedback
+8	vignettes - lift open window, smash against wall, hop, walk, run/jog, yawn, stretch	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #60 (salsa) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+2	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+3	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+4	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+5	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+6	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+7	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+8	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+9	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+10	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+11	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+12	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+13	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+14	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+15	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+
+Subject #61 (salsa) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+2	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+3	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+4	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+5	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+6	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+7	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+8	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+9	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+10	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+11	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+12	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+13	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+14	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+15	salsa dance	tvd	c3d	amc		Animated	60	Feedback
+
+Subject #62 (construction work, random motions) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	bolt loosening, wrench	tvd	c3d	amc	mpg	Animated	60	Feedback
+2	bolt tightening, wrench	tvd	c3d	amc	mpg	Animated	60	Feedback
+3	sawing, hand saw	tvd	c3d	amc	mpg	Animated	60	Feedback
+4	screwing	tvd	c3d	amc	mpg	Animated	60	Feedback
+5	screwing	tvd	c3d	amc	mpg	Animated	60	Feedback
+6	unscrewing	tvd	c3d	amc	mpg	Animated	60	Feedback
+7	hammering a nail	tvd	c3d	amc	mpg	Animated	60	Feedback
+8	hammering a nail	tvd	c3d	amc	mpg	Animated	60	Feedback
+9	pulling a nail	tvd	c3d	amc	mpg	Animated	60	Feedback
+10	hammering sequence	tvd	c3d	amc	mpg	Animated	60	Feedback
+11	cleaning up	tvd	c3d	amc	mpg	Animated	60	Feedback
+12	hard days drink	tvd	c3d	amc	mpg	Animated	60	Feedback
+13	moving a stool	tvd	c3d	amc	mpg	Animated	60	Feedback
+14	opening umbrella	tvd	c3d	amc	mpg	Animated	60	Feedback
+15	opening umbrella	tvd	c3d	amc	mpg	Animated	60	Feedback
+16	closing umbrella	tvd	c3d	amc	mpg	Animated	60	Feedback
+17	opening and closing umbrella	tvd	c3d	amc	mpg	Animated	60	Feedback
+18	closing a box	tvd	c3d	amc	mpg	Animated	60	Feedback
+19	opening a box	tvd	c3d	amc	mpg	Animated	60	Feedback
+20	closing, moving and opening a box	tvd	c3d	amc	mpg	Animated	60	Feedback
+21	coiling a rope	tvd	c3d	amc	mpg	Animated	60	Feedback
+22	dynamic calibration	tvd	c3d	amc	mpg	Animated	60	Feedback
+23	bolt tightening	tvd	c3d	amc	mpg	Animated	60	Feedback
+24	bolt tightening, with putting bolt in	tvd	c3d	amc	mpg	Animated	60	Feedback
+25	bolt loosening, wrench	tvd	c3d	amc	mpg	Animated	60	Feedback
+
+Subject #63 (golf) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #64 (golf) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+2	Swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+3	Swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+4	Swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+5	Swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+6	Swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+7	Swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+8	Swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+9	Swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+10	Swing	tvd	c3d	amc	mpg	Animated	120	Feedback
+11	Putt	tvd	c3d	amc	mpg	Animated	120	Feedback
+12	Putt	tvd	c3d	amc	mpg	Animated	120	Feedback
+13	Putt	tvd	c3d	amc	mpg	Animated	120	Feedback
+14	Putt	tvd	c3d	amc	mpg	Animated	120	Feedback
+15	Putt	tvd	c3d	amc	mpg	Animated	120	Feedback
+16	Placing Tee	tvd	c3d	amc	mpg	Animated	120	Feedback
+17	Placing Tee	tvd	c3d	amc	mpg	Animated	120	Feedback
+18	Placing Tee	tvd	c3d	amc	mpg	Animated	120	Feedback
+19	Placing Tee	tvd	c3d	amc	mpg	Animated	120	Feedback
+20	Placing Tee	tvd	c3d	amc	mpg	Animated	120	Feedback
+21	Placing Ball	tvd	c3d	amc	mpg	Animated	120	Feedback
+22	Placing Ball	tvd	c3d	amc	mpg	Animated	120	Feedback
+23	Placing Ball	tvd	c3d	amc	mpg	Animated	120	Feedback
+24	Placing Ball	tvd	c3d	amc	mpg	Animated	120	Feedback
+25	Placing Ball	tvd	c3d	amc	mpg	Animated	120	Feedback
+26	Picking up Ball	tvd	c3d	amc	mpg	Animated	120	Feedback
+27	Picking up Ball	tvd	c3d	amc	mpg	Animated	120	Feedback
+28	Picking up Ball	tvd	c3d	amc	mpg	Animated	120	Feedback
+29	Picking up Ball	tvd	c3d	amc	mpg	Animated	120	Feedback
+30	Picking up Ball	tvd	c3d	amc	mpg	Animated	120	Feedback
+
+Subject #69 (walking) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk forward			amc		Animated	120	Feedback
+2	walk forward			amc		Animated	120	Feedback
+3	walk forward			amc		Animated	120	Feedback
+4	walk forward			amc		Animated	120	Feedback
+5	walk forward			amc		Animated	120	Feedback
+6	walk and turn (repeated)			amc		Animated	120	Feedback
+7	walk and turn (repeated)			amc		Animated	120	Feedback
+8	walk and turn (repeated)			amc		Animated	120	Feedback
+9	walk and turn (repeated)			amc		Animated	120	Feedback
+10	walk and turn (repeated)			amc		Animated	120	Feedback
+11	walk and turn (repeated)			amc		Animated	120	Feedback
+12	walk and turn both directions (repeated)			amc		Animated	120	Feedback
+13	walk, turn in place (repeated)			amc		Animated	120	Feedback
+14	walk, turn in place (repeated)			amc		Animated	120	Feedback
+15	walk, turn in place (repeated)			amc		Animated	120	Feedback
+16	turn in place			amc		Animated	120	Feedback
+17	turn in place			amc		Animated	120	Feedback
+18	turn in place (opposite direction)			amc		Animated	120	Feedback
+19	turn in place (opposite direction)			amc		Animated	120	Feedback
+20	walk forward 90 degree right turn			amc		Animated	120	Feedback
+21	walk forward 90 degree right turn			amc		Animated	120	Feedback
+22	walk forward 90 degree right turn			amc		Animated	120	Feedback
+23	walk forward 90 degree right turn			amc		Animated	120	Feedback
+24	walk forward 90 degree left turn			amc		Animated	120	Feedback
+25	walk forward 90 degree left turn			amc		Animated	120	Feedback
+26	walk forward 90 degree left turn			amc		Animated	120	Feedback
+27	walk forward 90 degree left turn			amc		Animated	120	Feedback
+28	walk forward 90 degree smooth right turn			amc		Animated	120	Feedback
+29	walk forward 90 degree smooth right turn			amc		Animated	120	Feedback
+30	walk forward 90 degree smooth right turn			amc		Animated	120	Feedback
+31	walk forward 90 degree smooth left turn			amc		Animated	120	Feedback
+32	walk forward 90 degree smooth left turn			amc		Animated	120	Feedback
+33	walk forward 90 degree smooth left turn			amc		Animated	120	Feedback
+34	walk backwards and turn			amc		Animated	120	Feedback
+35	walk backwards and turn			amc		Animated	120	Feedback
+36	walk backwards and turn			amc		Animated	120	Feedback
+37	walk backwards and turn			amc		Animated	120	Feedback
+38	walk backwards and turn (repeated)			amc		Animated	120	Feedback
+39	walk backward, turn in place			amc		Animated	120	Feedback
+40	walk backward, turn in place			amc		Animated	120	Feedback
+41	walk backward, turn in place			amc		Animated	120	Feedback
+42	walk sideways and turn (repeated)			amc		Animated	120	Feedback
+43	walk sideways and turn (repeated)			amc		Animated	120	Feedback
+44	walk sideways and turn (repeated)			amc		Animated	120	Feedback
+45	walk sideways and turn (repeated)			amc		Animated	120	Feedback
+46	walk sideways and turn (repeated)			amc		Animated	120	Feedback
+47	walk sideways and turn (repeated)			amc		Animated	120	Feedback
+48	walk sideways and turn (opposite direction)			amc		Animated	120	Feedback
+49	walk sideways and turn (opposite direction)			amc		Animated	120	Feedback
+50	walk sideways and backwards			amc		Animated	120	Feedback
+51	walk backwards and turn			amc		Animated	120	Feedback
+52	walk backwards and turn			amc		Animated	120	Feedback
+53	walk backwards and turn			amc		Animated	120	Feedback
+54	walk backwards and turn			amc		Animated	120	Feedback
+55	walk backwards and turn			amc		Animated	120	Feedback
+56	walk sideways and turn (opposite direction)			amc		Animated	120	Feedback
+57	walk sideways and turn (opposite direction)			amc		Animated	120	Feedback
+58	walk sideways and turn (opposite direction)			amc		Animated	120	Feedback
+59	walk sideways and turn			amc		Animated	120	Feedback
+60	walk sideways and turn			amc		Animated	120	Feedback
+61	walk sideways and turn			amc		Animated	120	Feedback
+62	walk sideways and turn (opposite direction)			amc		Animated	120	Feedback
+63	walk sideways and turn (opposite direction)			amc		Animated	120	Feedback
+64	walk sideways and turn (opposite direction)			amc		Animated	120	Feedback
+65	walk sideways and turn			amc		Animated	120	Feedback
+66	walk sideways and turn			amc		Animated	120	Feedback
+67	walk sideways and turn			amc		Animated	120	Feedback
+68	walk forward and pick up object, set down object			amc		Animated	120	Feedback
+69	walk forward and pick up object, carry back object			amc		Animated	120	Feedback
+70	walk up to object, squat, pick up object, set down in another place.			amc		Animated	120	Feedback
+71	walk up to object, squat, pick up object, set down in another place			amc		Animated	120	Feedback
+72	walk up to object, pick up object, set down in another place			amc		Animated	120	Feedback
+73	walk up to object, lean over, pick up object, set down in another place			amc		Animated	120	Feedback
+74	walk up to object, lean over, pick up object, set down in another place			amc		Animated	120	Feedback
+75	walk up to object, squat, pick up object, set down in another place			amc		Animated	120	Feedback
+
+Subject #70 (suitcase) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	carry 5.5lb suitcase	tvd	c3d	amc		Animated	120	Feedback
+2	carry 5.5lb suitcase	tvd	c3d	amc		Animated	120	Feedback
+3	carry 19.5lb suitcase	tvd	c3d	amc		Animated	120	Feedback
+4	carry 19.5lb suitcase	tvd	c3d	amc		Animated	120	Feedback
+5	carry 19.5lb suitcase	tvd	c3d	amc		Animated	120	Feedback
+6	carry 19.5lb suitcase	tvd	c3d	amc		Animated	120	Feedback
+7	carry 19.5lb suitcase			amc		Animated	120	Feedback
+8	carry 19.5lb suitcase	tvd	c3d	amc		Animated	120	Feedback
+9	carry 19.5lb suitcase	tvd	c3d	amc		Animated	120	Feedback
+10	carry 12.5lb suitcase	tvd	c3d	amc		Animated	120	Feedback
+11	carry 12.5lb suitcase			amc		Animated	120	Feedback
+12	carry 12.5lb suitcase			amc		Animated	120	Feedback
+13	carry 12.5lb suitcase			amc		Animated	120	Feedback
+
+Subject #74 (kicks and walking on slopes) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	stiff walk	tvd	c3d	amc		Animated	60	Feedback
+2	stiff walk	tvd	c3d	amc		Animated	60	Feedback
+3	kick	tvd	c3d	amc		Animated	60	Feedback
+4	kick	tvd	c3d	amc		Animated	60	Feedback
+5	kick	tvd	c3d	amc		Animated	60	Feedback
+6	kick	tvd	c3d	amc		Animated	60	Feedback
+7	lifting up	tvd	c3d	amc		Animated	60	Feedback
+8	lifting up	tvd	c3d	amc		Animated	60	Feedback
+9		tvd	c3d	amc		Animated	60	Feedback
+10	peeping	tvd	c3d	amc		Animated	60	Feedback
+11	peeping	tvd	c3d	amc		Animated	60	Feedback
+12	thinker	tvd	c3d	amc		Animated	60	Feedback
+13	Range of motion	tvd	c3d	amc		Animated	60	Feedback
+14	slope 1	tvd	c3d	amc		Animated	60	Feedback
+15	slope1	tvd	c3d	amc		Animated	60	Feedback
+16	slope 2	tvd	c3d	amc		Animated	60	Feedback
+17	slope 2	tvd	c3d	amc		Animated	60	Feedback
+18	slope 3	tvd	c3d	amc		Animated	60	Feedback
+19	slope 3	tvd	c3d	amc		Animated	60	Feedback
+20	stiff walk	tvd	c3d	amc		Animated	60	Feedback
+
+Subject #75 (jumps; hopscotch; sits) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	run jump	tvd	c3d	amc	mpg	Animated	60	Feedback
+2	run jump	tvd	c3d	amc	mpg	Animated	60	Feedback
+3	run jump	tvd	c3d	amc	mpg	Animated	60	Feedback
+4	wide leg run	tvd	c3d	amc	mpg	Animated	60	Feedback
+5	cross leg run	tvd	c3d	amc	mpg	Animated	60	Feedback
+6	180 jump	tvd	c3d	amc	mpg	Animated	60	Feedback
+7	angle jumps	tvd	c3d	amc	mpg	Animated	60	Feedback
+8	360 jumps	tvd	c3d	amc	mpg	Animated	60	Feedback
+9	360 jump	tvd	c3d	amc	mpg	Animated	60	Feedback
+10	2 jump	tvd	c3d	amc	mpg	Animated	60	Feedback
+11	2 jump	tvd	c3d	amc	mpg	Animated	60	Feedback
+12	box jump	tvd	c3d	amc	mpg	Animated	60	Feedback
+13	hopscotch	tvd	c3d	amc	mpg	Animated	60	Feedback
+14	hopscotch	tvd	c3d	amc	mpg	Animated	60	Feedback
+15	long jumps	tvd	c3d	amc	mpg	Animated	60	Feedback
+16	jump kick	tvd	c3d	amc	mpg	Animated	60	Feedback
+17	medium sit	tvd	c3d	amc	mpg	Animated	60	Feedback
+18	high sit	tvd	c3d	amc	mpg	Animated	60	Feedback
+19	medium sit	tvd	c3d	amc	mpg	Animated	60	Feedback
+20	low sit	tvd	c3d	amc	mpg	Animated	60	Feedback
+
+Subject #76 (avoidance) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	walk backwards then attack with a punch	tvd	c3d	amc		Animated	120	Feedback
+2	walk backwards, feign a few attacks, then attack	tvd	c3d	amc		Animated	120	Feedback
+3	avoid attacker	tvd	c3d	amc		Animated	120	Feedback
+4	defensive guard pose	tvd	c3d	amc		Animated	120	Feedback
+5	swatting at pesky bug	tvd	c3d	amc		Animated	120	Feedback
+6	avoid stepping on something	tvd	c3d	amc		Animated	120	Feedback
+7		tvd	c3d	amc		Animated	120	Feedback
+8	careful stepping over things	tvd	c3d	amc		Animated	120	Feedback
+9	walking backwards	tvd	c3d	amc		Animated	120	Feedback
+10	turning	tvd	c3d	amc		Animated	120	Feedback
+11	quick large steps backwards	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #77 (careful actions) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	looking around	tvd	c3d	amc		Animated	60	Feedback
+2	standing	tvd	c3d	amc		Animated	60	Feedback
+3	ready stance	tvd	c3d	amc		Animated	60	Feedback
+4	Looking around	tvd	c3d	amc		Animated	60	Feedback
+5	look around with flashlight	tvd	c3d	amc		Animated	60	Feedback
+6	searching ground	tvd	c3d	amc		Animated	60	Feedback
+7	poking ground	tvd	c3d	amc		Animated	60	Feedback
+8	investigating thing on ground with two hands	tvd	c3d	amc		Animated	60	Feedback
+9	duck to avoid flying object	tvd	c3d	amc		Animated	60	Feedback
+10	careful run	tvd	c3d	amc		Animated	60	Feedback
+11	careful run	tvd	c3d	amc		Animated	60	Feedback
+12	careful run in circle	tvd	c3d	amc		Animated	60	Feedback
+13	careful run in figure eight	tvd	c3d	amc		Animated	60	Feedback
+14	careful creeping	tvd	c3d	amc		Animated	60	Feedback
+15	careful creeping	tvd	c3d	amc		Animated	60	Feedback
+16	laying down, getting up, careful ready pose	tvd	c3d	amc		Animated	60	Feedback
+17	laying down, getting up, careful ready pose	tvd	c3d	amc		Animated	60	Feedback
+18	laying down on back, getting up, careful ready pose	tvd	c3d	amc		Animated	60	Feedback
+19	limping, hurt right leg	tvd	c3d	amc		Animated	60	Feedback
+20	limping, hurt right leg	tvd	c3d	amc		Animated	60	Feedback
+21	stretching	tvd	c3d	amc		Animated	60	Feedback
+22	limping, hurt right leg	tvd	c3d	amc		Animated	60	Feedback
+23	limping, hurt right leg	tvd	c3d	amc		Animated	60	Feedback
+24	limping, hurt right leg	tvd	c3d	amc		Animated	60	Feedback
+25	careful walk and search	tvd	c3d	amc		Animated	60	Feedback
+26	careful walk and search	tvd	c3d	amc		Animated	60	Feedback
+27	careful walk and search	tvd	c3d	amc		Animated	60	Feedback
+28	careful walk	tvd	c3d	amc		Animated	60	Feedback
+29	creeping walk	tvd	c3d	amc		Animated	60	Feedback
+30	creeping walk	tvd	c3d	amc		Animated	60	Feedback
+31	silent walk	tvd	c3d	amc		Animated	60	Feedback
+32	creeping walk	tvd	c3d	amc		Animated	60	Feedback
+33	creeping with limp	tvd	c3d	amc		Animated	60	Feedback
+34	creep and pause, repeat	tvd	c3d	amc		Animated	60	Feedback
+
+Subject #78 (walking) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	LeftTightTurn CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+2	RightWideTurn CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+3	LeftWideTurn CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+4	SuperTightLeft CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+5	SuperTightRight CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+6	RunningStraight CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+7	RunningWideRight CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+8	RunningWideLeft CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+9	RunningTigherLeft CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+10	RunningTighterRight CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+11	calibration	tvd	c3d	amc		Animated	120	Feedback
+12	RunningNoBall CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+13	OffensiveMoveSpinLeft CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+14	OffensiveMoveSpinLeft CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+15	OffensiveMoveGoRight CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+16	OffensiveMoveGoLeft CleanedGRs	tvd	c3d	amc		Animated	120	Feedback
+17	OffensiveMoveSpinRight CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+18	WalkEvasiveLeft CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+19	WalkEvasiveRight CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+20	FeintLeftMoveRight CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+21	FeintRightMoveLeft CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+22	FakeShotBreakRight CleanedGRs	tvd	c3d	amc		Animated	120	Feedback
+23	FakeShotBreakLeft CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+24	DefensiveStraightNoStop CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+25	DefensiveStraightWithStop CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+26	DefensiveRightStopToStop CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+27	DefensiveLeftStopToStop CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+28	DefensiveMoveZigZag CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+29	DefensiveMoveSideToSide CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+30	DefensiveMoveSideToSide CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+31	Pivoting CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+32	SraightDriveFromStop Cleaned GRS	tvd	c3d	amc		Animated	120	Feedback
+33	RightDrive (left then right) Cleaned GRS	tvd	c3d	amc		Animated	120	Feedback
+34	LeftDrive (right then left) Cleaned GRS	tvd	c3d	amc		Animated	120	Feedback
+35	RightTightTurn CleanedGRS	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #79 (actor everyday activities) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	chopping wood	tvd	c3d	amc	mpg	Animated	60	Feedback
+2	swimming	tvd	c3d	amc	mpg	Animated	60	Feedback
+3	swimming	tvd	c3d	amc	mpg	Animated	60	Feedback
+4	digging	tvd	c3d	amc	mpg	Animated	60	Feedback
+5	sewing	tvd	c3d	amc	mpg	Animated	60	Feedback
+6	hand shake	tvd	c3d	amc	mpg	Animated	60	Feedback
+7	lost marker	tvd	c3d	amc	mpg	Animated	60	Feedback
+8	boxing	tvd	c3d	amc	mpg	Animated	60	Feedback
+9	slicing bread	tvd	c3d	amc	mpg	Animated	60	Feedback
+10	chopping onions	tvd	c3d	amc	mpg	Animated	60	Feedback
+11	Subject calibration	tvd	c3d	amc	mpg	Animated	60	Feedback
+12	eating dinner	tvd	c3d	amc	mpg	Animated	60	Feedback
+13	mixing batter	tvd	c3d	amc	mpg	Animated	60	Feedback
+14	making dough	tvd	c3d	amc	mpg	Animated	60	Feedback
+15	eating a sandwich	tvd	c3d	amc	mpg	Animated	60	Feedback
+16	buying something	tvd	c3d	amc	mpg	Animated	60	Feedback
+17	playing violin	tvd	c3d	amc	mpg	Animated	60	Feedback
+18	playing drums	tvd	c3d	amc	mpg	Animated	60	Feedback
+19	playing piano	tvd	c3d	amc	mpg	Animated	60	Feedback
+20	hanging a picture	tvd	c3d	amc	mpg	Animated	60	Feedback
+21	putting on a pull over	tvd	c3d	amc	mpg	Animated	60	Feedback
+22	range of motion	tvd	c3d	amc	mpg	Animated	60	Feedback
+23	putting on a jacket	tvd	c3d	amc	mpg	Animated	60	Feedback
+24	putting on button up sweater	tvd	c3d	amc	mpg	Animated	60	Feedback
+25	moving heavy box	tvd	c3d	amc	mpg	Animated	60	Feedback
+26	planting a tree	tvd	c3d	amc	mpg	Animated	60	Feedback
+27	planting a plant	tvd	c3d	amc	mpg	Animated	60	Feedback
+28	putting on a ball cap	tvd	c3d	amc	mpg	Animated	60	Feedback
+29	putting on a dress	tvd	c3d	amc	mpg	Animated	60	Feedback
+30	pushing a swing	tvd	c3d	amc	mpg	Animated	60	Feedback
+31	writing on a chalkboard	tvd	c3d	amc	mpg	Animated	60	Feedback
+32	writing on a chalkboard	tvd	c3d	amc	mpg	Animated	60	Feedback
+33	chug a beer	tvd	c3d	amc	mpg	Animated	60	Feedback
+34	fishing	tvd	c3d	amc	mpg	Animated	60	Feedback
+35	fishing	tvd	c3d	amc	mpg	Animated	60	Feedback
+36	answering the phone	tvd	c3d	amc	mpg	Animated	60	Feedback
+37	dialing phone	tvd	c3d	amc	mpg	Animated	60	Feedback
+38	drinking water	tvd	c3d	amc	mpg	Animated	60	Feedback
+39	sipping martinee	tvd	c3d	amc	mpg	Animated	60	Feedback
+40	drinking a soda	tvd	c3d	amc	mpg	Animated	60	Feedback
+41	sipping coffee	tvd	c3d	amc	mpg	Animated	60	Feedback
+42	eating soup	tvd	c3d	amc	mpg	Animated	60	Feedback
+43	painting	tvd	c3d	amc	mpg	Animated	60	Feedback
+44	washing a window	tvd	c3d	amc	mpg	Animated	60	Feedback
+45	bear	tvd	c3d	amc	mpg	Animated	60	Feedback
+46	bear	tvd	c3d	amc	mpg	Animated	60	Feedback
+47	chicken	tvd	c3d	amc	mpg	Animated	60	Feedback
+48	elephant	tvd	c3d	amc	mpg	Animated	60	Feedback
+49	monkey	tvd	c3d	amc	mpg	Animated	60	Feedback
+50	mouse	tvd	c3d	amc	mpg	Animated	60	Feedback
+51	chipmunk	tvd	c3d	amc	mpg	Animated	60	Feedback
+52	prairie dog	tvd	c3d	amc	mpg	Animated	60	Feedback
+53	dog	tvd	c3d	amc	mpg	Animated	60	Feedback
+54	snake	tvd	c3d	amc	mpg	Animated	60	Feedback
+55	sweeping	tvd	c3d	amc	mpg	Animated	60	Feedback
+56	T-rex	tvd	c3d	amc	mpg	Animated	60	Feedback
+57	fish	tvd	c3d	amc	mpg	Animated	60	Feedback
+58	bird	tvd	c3d	amc	mpg	Animated	60	Feedback
+59	cat	tvd	c3d	amc	mpg	Animated	60	Feedback
+60	chicken	tvd	c3d	amc	mpg	Animated	60	Feedback
+61	cow	tvd	c3d	amc	mpg	Animated	60	Feedback
+62	chicken	tvd	c3d	amc	mpg	Animated	60	Feedback
+63	tiger	tvd	c3d	amc	mpg	Animated	60	Feedback
+64	penguin	tvd	c3d	amc	mpg	Animated	60	Feedback
+65	horse	tvd	c3d	amc	mpg	Animated	60	Feedback
+66	movie and trial dont match	tvd	c3d	amc	mpg	Animated	60	Feedback
+67	no movie	tvd	c3d	amc		Animated	60	Feedback
+68	cold	tvd	c3d	amc	mpg	Animated	60	Feedback
+69	very happy	tvd	c3d	amc	mpg	Animated	60	Feedback
+70	laughing	tvd	c3d	amc	mpg	Animated	60	Feedback
+71	sad	tvd	c3d	amc	mpg	Animated	60	Feedback
+72	crying	tvd	c3d	amc	mpg	Animated	60	Feedback
+73	scared	tvd	c3d	amc	mpg	Animated	60	Feedback
+74	upset	tvd	c3d	amc	mpg	Animated	60	Feedback
+75	channel surfing	tvd	c3d	amc	mpg	Animated	60	Feedback
+76	driving	tvd	c3d	amc	mpg	Animated	60	Feedback
+77	vacuuming	tvd	c3d	amc	mpg	Animated	60	Feedback
+78	taking a movie	tvd	c3d	amc	mpg	Animated	60	Feedback
+79	putting on headphones	tvd	c3d	amc	mpg	Animated	60	Feedback
+80	using a palm pilot	tvd	c3d	amc	mpg	Animated	60	Feedback
+81	brushing teeth	tvd	c3d	amc	mpg	Animated	60	Feedback
+82	putting on deoderant	tvd	c3d	amc	mpg	Animated	60	Feedback
+83	shaving	tvd	c3d	amc	mpg	Animated	60	Feedback
+84	combing hair	tvd	c3d	amc	mpg	Animated	60	Feedback
+85	typing on a laptop	tvd	c3d	amc	mpg	Animated	60	Feedback
+86	shooting bow and arrow	tvd	c3d	amc	mpg	Animated	60	Feedback
+87	raking	tvd	c3d	amc	mpg	Animated	60	Feedback
+88	swatting at a fly	tvd	c3d	amc	mpg	Animated	60	Feedback
+89	holding a baby	tvd	c3d	amc	mpg	Animated	60	Feedback
+90	washing	tvd	c3d	amc	mpg	Animated	60	Feedback
+91	football	tvd	c3d	amc	mpg	Animated	60	Feedback
+92	frisbee	tvd	c3d	amc	mpg	Animated	60	Feedback
+93	weight lifting	tvd	c3d	amc	mpg	Animated	60	Feedback
+94	flexing	tvd	c3d	amc	mpg	Animated	60	Feedback
+95	rowing	tvd	c3d	amc	mpg	Animated	60	Feedback
+96	shooting a gun	tvd	c3d	amc	mpg	Animated	60	Feedback
+
+Subject #80 (assorted motions) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	shaking hands	tvd	c3d	amc	mpg	Animated	60	Feedback
+2	chopping onions	tvd	c3d	amc	mpg	Animated	60	Feedback
+3	shooting a gun	tvd	c3d	amc	mpg	Animated	60	Feedback
+4	sewing	tvd	c3d	amc	mpg	Animated	60	Feedback
+5	digging a hole	tvd	c3d	amc	mpg	Animated	60	Feedback
+6	paying for something	tvd	c3d	amc	mpg	Animated	60	Feedback
+7	hanging picture	tvd	c3d	amc	mpg	Animated	60	Feedback
+8	picking up something	tvd	c3d	amc	mpg	Animated	60	Feedback
+9	planting a flower	tvd	c3d	amc	mpg	Animated	60	Feedback
+10	boxing	tvd	c3d	amc	mpg	Animated	60	Feedback
+11	putting on a sweater	tvd	c3d	amc	mpg	Animated	60	Feedback
+12	fishing	tvd	c3d	amc	mpg	Animated	60	Feedback
+13	drumming	tvd	c3d	amc	mpg	Animated	60	Feedback
+14	teaching	tvd	c3d	amc	mpg	Animated	60	Feedback
+15	putting on a coat	tvd	c3d	amc	mpg	Animated	60	Feedback
+16	mixing batter	tvd	c3d	amc	mpg	Animated	60	Feedback
+17	hand mixing dough	tvd	c3d	amc	mpg	Animated	60	Feedback
+18	vacuuming	tvd	c3d	amc	mpg	Animated	60	Feedback
+19	pushing broom	tvd	c3d	amc	mpg	Animated	60	Feedback
+20	planting	tvd	c3d	amc	mpg	Animated	60	Feedback
+21	pushing swing	tvd	c3d	amc	mpg	Animated	60	Feedback
+22	putting on a hat	tvd	c3d	amc	mpg	Animated	60	Feedback
+23	putting on a skirt	tvd	c3d	amc	mpg	Animated	60	Feedback
+24	eating	tvd	c3d	amc	mpg	Animated	60	Feedback
+25	answering a phone	tvd	c3d	amc	mpg	Animated	60	Feedback
+26	dialing phone	tvd	c3d	amc	mpg	Animated	60	Feedback
+27	setting glass of water	tvd	c3d	amc	mpg	Animated	60	Feedback
+28	drinking and smoking	tvd	c3d	amc	mpg	Animated	60	Feedback
+29	chugging	tvd	c3d	amc	mpg	Animated	60	Feedback
+30	range of motion	tvd	c3d	amc	mpg	Animated	60	Feedback
+31	making coffee	tvd	c3d	amc	mpg	Animated	60	Feedback
+32	slicing	tvd	c3d	amc	mpg	Animated	60	Feedback
+33	eating soup	tvd	c3d	amc	mpg	Animated	60	Feedback
+34	rake leaves	tvd	c3d	amc	mpg	Animated	60	Feedback
+35	putting on headphones	tvd	c3d	amc	mpg	Animated	60	Feedback
+36	violin	tvd	c3d	amc	mpg	Animated	60	Feedback
+37	TV	tvd	c3d	amc	mpg	Animated	60	Feedback
+38	driving	tvd	c3d	amc	mpg	Animated	60	Feedback
+39		tvd	c3d	amc	mpg	Animated	60	Feedback
+40	drinking from bottle	tvd	c3d	amc	mpg	Animated	60	Feedback
+41	freezing	tvd	c3d	amc	mpg	Animated	60	Feedback
+42	freezing	tvd	c3d	amc	mpg	Animated	60	Feedback
+43	happy	tvd	c3d	amc	mpg	Animated	60	Feedback
+44	laughing	tvd	c3d	amc	mpg	Animated	60	Feedback
+45	crying	tvd	c3d	amc	mpg	Animated	60	Feedback
+46	crying	tvd	c3d	amc	mpg	Animated	60	Feedback
+47		tvd	c3d	amc	mpg	Animated	60	Feedback
+48	arguing	tvd	c3d	amc	mpg	Animated	60	Feedback
+49	gorilla	tvd	c3d	amc	mpg	Animated	60	Feedback
+50	cleaning window	tvd	c3d	amc	mpg	Animated	60	Feedback
+51	chicken	tvd	c3d	amc	mpg	Animated	60	Feedback
+52	dog	tvd	c3d	amc	mpg	Animated	60	Feedback
+53	elephant	tvd	c3d	amc	mpg	Animated	60	Feedback
+54	monkey	tvd	c3d	amc	mpg	Animated	60	Feedback
+55	mouse	tvd	c3d	amc	mpg	Animated	60	Feedback
+56	chip monk	tvd	c3d	amc	mpg	Animated	60	Feedback
+57	prairie dog	tvd	c3d	amc	mpg	Animated	60	Feedback
+58	snake	tvd	c3d	amc	mpg	Animated	60	Feedback
+59	panther	tvd	c3d	amc	mpg	Animated	60	Feedback
+60		tvd	c3d	amc	mpg	Animated	60	Feedback
+61	sweeping	tvd	c3d	amc	mpg	Animated	60	Feedback
+62	bird	tvd	c3d	amc	mpg	Animated	60	Feedback
+63	chicken	tvd	c3d	amc	mpg	Animated	60	Feedback
+64	cat	tvd	c3d	amc	mpg	Animated	60	Feedback
+65	fish	tvd	c3d	amc	mpg	Animated	60	Feedback
+66		tvd	c3d	amc	mpg	Animated	60	Feedback
+67		tvd	c3d	amc	mpg	Animated	60	Feedback
+68		tvd	c3d	amc	mpg	Animated	60	Feedback
+69	painting	tvd	c3d	amc	mpg	Animated	60	Feedback
+70	piano	tvd	c3d	amc	mpg	Animated	60	Feedback
+71	chopping wood	tvd	c3d	amc	mpg	Animated	60	Feedback
+72	swimming	tvd	c3d	amc	mpg	Animated	60	Feedback
+73	shaking hands	tvd	c3d	amc	mpg	Animated	60	Feedback
+
+Subject #81 (pushing a box; jumping off a ledge; walks) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	fix hair and walk forward	tvd		amc		Animated	120	Feedback
+2	walk forward	tvd		amc		Animated	120	Feedback
+3	walk	tvd		amc		Animated	120	Feedback
+4	walk at a brisk pace	tvd		amc		Animated	120	Feedback
+5	push heavy object	tvd		amc		Animated	120	Feedback
+6	push heavy box	tvd		amc		Animated	120	Feedback
+7	pull heavy object	tvd		amc		Animated	120	Feedback
+8	drag heavy object	tvd		amc		Animated	120	Feedback
+9	drag heavy object	tvd		amc		Animated	120	Feedback
+10	push object that is high in air	tvd		amc		Animated	120	Feedback
+11	push object that is high in air	tvd		amc		Animated	120	Feedback
+12	jump backwards off ledge	tvd		amc		Animated	120	Feedback
+13	jump backwards off ledge	tvd		amc		Animated	120	Feedback
+14	climb backwards off ledge	tvd		amc		Animated	120	Feedback
+15	climb backwards off ledge	tvd		amc		Animated	120	Feedback
+16		tvd		amc		Animated	120	Feedback
+17	walk forward	tvd		amc		Animated	120	Feedback
+18	adjust hair walk forward	tvd		amc		Animated	120	Feedback
+
+Subject #82 (jumping; pushing; emotional walks) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Static pose	tvd	c3d	amc		Animated	120	Feedback
+2	Jump off ledge	tvd	c3d	amc		Animated	120	Feedback
+3	Jump off ledge	tvd	c3d	amc		Animated	120	Feedback
+4	Jump off ledge	tvd	c3d	amc		Animated	120	Feedback
+5	sitting on ground relaxing	tvd	c3d	amc		Animated	120	Feedback
+6	Pushing on heavy object	tvd	c3d	amc		Animated	120	Feedback
+7	Pushing on heavy object	tvd	c3d	amc		Animated	120	Feedback
+8	stand still; casual walk forward	tvd	c3d	amc		Animated	120	Feedback
+9	confident walk forward	tvd	c3d	amc		Animated	120	Feedback
+10	sad walk forward	tvd	c3d	amc		Animated	120	Feedback
+11	normal walk forward	tvd	c3d	amc		Animated	120	Feedback
+12	happy or fast walk forward	tvd	c3d	amc		Animated	120	Feedback
+13	normal walk forward	tvd	c3d	amc		Animated	120	Feedback
+14	walk forward and slow down	tvd	c3d	amc		Animated	120	Feedback
+15	walk forward and turn sideways	tvd	c3d	amc		Animated	120	Feedback
+16	bang on high object	tvd	c3d	amc		Animated	120	Feedback
+17	bang on high object	tvd	c3d	amc		Animated	120	Feedback
+18	static pose	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #83 (steps) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	large sidestep to right	tvd	c3d	amc		Animated	120	Feedback
+2	sidestep to the right and up a ledge	tvd	c3d	amc		Animated	120	Feedback
+3	large step to a short ledge	tvd	c3d	amc		Animated	120	Feedback
+4	large sidestep to right	tvd	c3d	amc		Animated	120	Feedback
+5	very large sidestep to right	tvd	c3d	amc		Animated	120	Feedback
+6	very large sidestep to right and down	tvd	c3d	amc		Animated	120	Feedback
+7	short sidestep to right and down	tvd	c3d	amc		Animated	120	Feedback
+8	medium step forward and down	tvd	c3d	amc		Animated	120	Feedback
+9	short step forward and down	tvd	c3d	amc		Animated	120	Feedback
+10	medium step forward and down	tvd	c3d	amc		Animated	120	Feedback
+11	static pose	tvd	c3d	amc		Animated	120	Feedback
+12	medium sidestep to right and down	tvd	c3d	amc		Animated	120	Feedback
+13	large sidestep to right	tvd	c3d	amc		Animated	120	Feedback
+14	short sidestep to left and down	tvd	c3d	amc		Animated	120	Feedback
+15	short step forward	tvd	c3d	amc		Animated	120	Feedback
+16	medium sidestep to left and down	tvd	c3d	amc		Animated	120	Feedback
+17	medium step to left and down	tvd	c3d	amc		Animated	120	Feedback
+18	short step to left and forward	tvd	c3d	amc		Animated	120	Feedback
+19	medium sidestep to left	tvd	c3d	amc		Animated	120	Feedback
+20	medium step forward	tvd	c3d	amc		Animated	120	Feedback
+21	large step to left and forward	tvd	c3d	amc		Animated	120	Feedback
+22	stretching	tvd	c3d	amc		Animated	120	Feedback
+23	short sidestep to left and up	tvd	c3d	amc		Animated	120	Feedback
+24	medium step to left and up	tvd	c3d	amc		Animated	120	Feedback
+25	short step forward and up	tvd	c3d	amc		Animated	120	Feedback
+26	medium step to left, forward, and up	tvd	c3d	amc		Animated	120	Feedback
+27	walk forward stepping up stairs	tvd	c3d	amc		Animated	120	Feedback
+28	walk forward stepping up stairs	tvd	c3d	amc		Animated	120	Feedback
+29	walk forward stepping up stairs	tvd	c3d	amc		Animated	120	Feedback
+30	walk forward stepping up stairs	tvd	c3d	amc		Animated	120	Feedback
+31	walk forward stepping up stairs	tvd	c3d	amc		Animated	120	Feedback
+32	walk forward stepping up stairs	tvd	c3d	amc		Animated	120	Feedback
+33	sidestep to right then back to left	tvd	c3d	amc		Animated	120	Feedback
+34	walk forward and up stairs	tvd	c3d	amc		Animated	120	Feedback
+35	walk forward and stepping up stairs	tvd	c3d	amc		Animated	120	Feedback
+36	walk forward turn 90 degrees left walk forward	tvd	c3d	amc		Animated	120	Feedback
+37	walk forward turn 90 degrees right walk forward	tvd	c3d	amc		Animated	120	Feedback
+38	walk forward turn 90 degrees left walk forward	tvd	c3d	amc		Animated	120	Feedback
+39	walk forward turn 90 degrees right walk forward	tvd	c3d	amc		Animated	120	Feedback
+40	hop forward	tvd	c3d	amc		Animated	120	Feedback
+41	hop forward	tvd	c3d	amc		Animated	120	Feedback
+42	long jump forward	tvd	c3d	amc		Animated	120	Feedback
+43	long jump forward	tvd	c3d	amc		Animated	120	Feedback
+44	medium step forward	tvd	c3d	amc		Animated	120	Feedback
+45	hop forward	tvd	c3d	amc		Animated	120	Feedback
+46	medium hop forward	tvd	c3d	amc		Animated	120	Feedback
+47	long jump forward	tvd	c3d	amc		Animated	120	Feedback
+48	short hop forward	tvd	c3d	amc		Animated	120	Feedback
+49	medium hop forward	tvd	c3d	amc		Animated	120	Feedback
+50	long jump forward	tvd	c3d	amc		Animated	120	Feedback
+51	hop turn 90 degrees left in air	tvd	c3d	amc		Animated	120	Feedback
+52	hop turn 90 degrees left in air	tvd	c3d	amc		Animated	120	Feedback
+53	hop turn 90 degrees left in air	tvd	c3d	amc		Animated	120	Feedback
+54	hop turn 180 degrees left in air	tvd	c3d	amc		Animated	120	Feedback
+55	medium sidestep to right	tvd	c3d	amc		Animated	120	Feedback
+56	hop turn left 180 degrees in air	tvd	c3d	amc		Animated	120	Feedback
+57	hop turn left 180 degrees in air	tvd	c3d	amc		Animated	120	Feedback
+58	hop turn left 270 degrees in air	tvd	c3d	amc		Animated	120	Feedback
+59	hop turn left 270 degrees in air	tvd	c3d	amc		Animated	120	Feedback
+60	hop turn left 270 degrees in air	tvd	c3d	amc		Animated	120	Feedback
+61	hop turn 360 degrees left in air	tvd	c3d	amc		Animated	120	Feedback
+62	hop turn left 360 degrees in air	tvd	c3d	amc		Animated	120	Feedback
+63	large sidestep to right and forward	tvd	c3d	amc		Animated	120	Feedback
+64	hop and turn right 360 degrees in air	tvd	c3d	amc		Animated	120	Feedback
+65	hop and turn right 360 degrees in air	tvd	c3d	amc		Animated	120	Feedback
+66	short sidestep to right	tvd	c3d	amc		Animated	120	Feedback
+67	short sidestep to the right	tvd	c3d	amc		Animated	120	Feedback
+68	medium sidestep to right	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #85 (jumps; flips; breakdance) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	JumpTwist	tvd	c3d	amc		Animated	120	Feedback
+2	JumpTwist	tvd	c3d	amc		Animated	120	Feedback
+3	UpRightSequence	tvd	c3d	amc		Animated	120	Feedback
+4	FancyFootWork	tvd	c3d	amc		Animated	120	Feedback
+5	HandStandKicks	tvd	c3d	amc		Animated	120	Feedback
+6	KickFlip	tvd	c3d	amc		Animated	120	Feedback
+7	KickFlipStumble	tvd	c3d	amc		Animated	120	Feedback
+8	Helicopter	tvd	c3d	amc		Animated	120	Feedback
+9	motorcycle pose	tvd	c3d	amc		Animated	120	Feedback
+10	EndofBreakDance	tvd	c3d	amc		Animated	120	Feedback
+11	UpRightSequence	tvd	c3d	amc		Animated	120	Feedback
+12	LongSequenceGood	tvd	c3d	amc		Animated	120	Feedback
+13	BadStartSequnce	tvd	c3d	amc		Animated	120	Feedback
+14	BreakSequencewithFlips	tvd	c3d	amc		Animated	120	Feedback
+15	90TwistsFall	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #86 (sports and various activities) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	jumps kicks and punches		c3d	amc		Animated	120	Feedback
+2	walk, squats, run, stretch, jumps, punches, and drinking		c3d	amc		Animated	120	Feedback
+3	walking, running, jumping, kicking, and stretching		c3d	amc		Animated	120	Feedback
+4	walking, stretching, punching, chopping, and drinking		c3d	amc		Animated	120	Feedback
+5	walking, jumping, jumping jacks, jumping on one foot, punching, chopping,		c3d	amc		Animated	120	Feedback
+6	walking, running, kicking, punching, knee kicking, and stretching		c3d	amc		Animated	120	Feedback
+7	walking, swinging arms, stretching, jumping on one leg, and jumping		c3d	amc		Animated	120	Feedback
+8	walking, squats, stretching, kicking, and punching		c3d	amc		Animated	120	Feedback
+9	walking, sitting, looking, stand up		c3d	amc		Animated	120	Feedback
+10	walk around, sit, stand up, and running		c3d	amc		Animated	120	Feedback
+11	walking, stretching, walking and turning		c3d	amc		Animated	120	Feedback
+12	walking, dragging, sweeping, dustpan, wipe window, and wipe mirror		c3d	amc		Animated	120	Feedback
+13	walking around, walk up ladder, step down ladder		c3d	amc		Animated	120	Feedback
+14	bouncing basketball, shooting basketball, dribble basketball, two handed dribble		c3d	amc		Animated	120	Feedback
+15	walking, sitting, hand motions		c3d	amc		Animated	120	Feedback
+
+Subject #87 (acrobatics) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Jump with kick and spin	tvd	c3d	amc		Animated	60	Feedback
+2	T-Pose	tvd	c3d	amc		Animated	60	Feedback
+3	Backflip	tvd	c3d	amc		Animated	60	Feedback
+4	backflip	tvd	c3d	amc		Animated	60	Feedback
+5	cartwheels	tvd	c3d	amc		Animated	60	Feedback
+
+Subject #88 (acrobatics) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	backflip	tvd	c3d	amc	mpg	Animated	60	Feedback
+2	backflips, jump onto platform, handstands, vertical pushups	tvd	c3d	amc	mpg	Animated	60	Feedback
+3	motorcycle pose	tvd	c3d	amc	mpg	Animated	60	Feedback
+4	stretches, cartwheels, flips, spin kicks, spins, and fall	tvd	c3d	amc	mpg	Animated	60	Feedback
+5	cartwheel into backflip	tvd	c3d	amc		Animated	60	Feedback
+6	jump and spin kick	tvd	c3d	amc	mpg	Animated	60	Feedback
+7	cartwheel	tvd	c3d	amc	mpg	Animated	60	Feedback
+8	crouch and flip backward on hands	tvd	c3d	amc	mpg	Animated	60	Feedback
+9	stretch and cartwheel	tvd	c3d	amc	mpg	Animated	60	Feedback
+10	stretch and spin	tvd	c3d	amc	mpg	Animated	60	Feedback
+11	stretches and jumps	tvd	c3d	amc	mpg	Animated	60	Feedback
+
+Subject #89 (acrobatics) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	balance object on forehead	tvd	c3d	amc	mpg	Animated	60	Feedback
+2	motorcycle pose	tvd	c3d	amc	mpg	Animated	60	Feedback
+3	flip and stand on one hand	tvd	c3d	amc	mpg	Animated	60	Feedback
+4	spins, flips, stand on one hand	tvd	c3d	amc	mpg	Animated	60	Feedback
+5	spin upside down, handstand, flips	tvd	c3d	amc	mpg	Animated	60	Feedback
+6	balance beam	tvd	c3d	amc	mpg	Animated	60	Feedback
+
+Subject #90 (cartwheels; acrobatics; dances) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	bkwd summersult	tvd	c3d	amc		Animated	120	Feedback
+2	cartwheel	tvd	c3d	amc		Animated	120	Feedback
+3	cartwheel	tvd	c3d	amc		Animated	120	Feedback
+4	cartwheel	tvd	c3d	amc		Animated	120	Feedback
+5	jump kick	tvd	c3d	amc		Animated	120	Feedback
+6	jump kick	tvd	c3d	amc		Animated	120	Feedback
+7	jump kick	tvd	c3d	amc		Animated	120	Feedback
+8	side flip	tvd	c3d	amc		Animated	120	Feedback
+9	Flip forward onto hands and back again	tvd	c3d	amc		Animated	120	Feedback
+10		tvd	c3d	amc			120	Feedback
+11	hand spring	tvd	c3d	amc		Animated	120	Feedback
+12	bck flp twst fall	tvd	c3d	amc		Animated	120	Feedback
+13	bck flp twst fall	tvd	c3d	amc		Animated	120	Feedback
+14	front hand flip	tvd	c3d	amc		Animated	120	Feedback
+15	front hand flip	tvd	c3d	amc		Animated	120	Feedback
+16	fall on face	tvd	c3d	amc		Animated	120	Feedback
+17	BannanaPeelSlip	tvd	c3d	amc		Animated	120	Feedback
+18	RugPullFall	tvd	c3d	amc		Animated	120	Feedback
+19	monkey backflip	tvd	c3d	amc		Animated	120	Feedback
+20	monkey sequence	tvd	c3d	amc		Animated	120	Feedback
+21	monkey sequence	tvd	c3d	amc		Animated	120	Feedback
+22	straight walk	tvd	c3d	amc		Animated	120	Feedback
+23	straight walk	tvd	c3d	amc		Animated	120	Feedback
+24	ball mount	tvd	c3d	amc		Animated	120	Feedback
+25	fwd ball walk	tvd	c3d	amc		Animated	120	Feedback
+26	fwd ball walk	tvd	c3d	amc		Animated	120	Feedback
+27	bwk ball walk	tvd	c3d	amc		Animated	120	Feedback
+28	breakdance	tvd	c3d	amc		Animated	120	Feedback
+29	sequesnce	tvd	c3d	amc		Animated	120	Feedback
+30	russian dance	tvd	c3d	amc		Animated	120	Feedback
+31	russian dance	tvd	c3d	amc		Animated	120	Feedback
+32	moonwalk	tvd	c3d	amc		Animated	120	Feedback
+33	arm up wide leg roll	tvd	c3d	amc		Animated	120	Feedback
+34	wide leg roll	tvd	c3d	amc		Animated	120	Feedback
+35	wide leg roll	tvd	c3d	amc		Animated	120	Feedback
+36	wide leg roll	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #91 (walks and turns) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Walk digital figure eight	tvd	c3d	amc		Animated	120	Feedback
+2	WalkStraight	tvd	c3d	amc		Animated	120	Feedback
+3	Walk figure eight	tvd	c3d	amc		Animated	120	Feedback
+4	Walking	tvd	c3d	amc		Animated	120	Feedback
+5	Mummy Walk	tvd	c3d	amc		Animated	120	Feedback
+6	Motorcycle Pose	tvd	c3d	amc		Animated	120	Feedback
+7	mummy8	tvd	c3d	amc		Animated	120	Feedback
+8	mummyDigital8	tvd	c3d	amc		Animated	120	Feedback
+9	DrunkWalk	tvd	c3d	amc		Animated	120	Feedback
+10	SlowWalk	tvd	c3d	amc		Animated	120	Feedback
+11	LavishWalk	tvd	c3d	amc		Animated	120	Feedback
+12	TooCoolWalk	tvd	c3d	amc		Animated	120	Feedback
+13	SadWalk	tvd	c3d	amc		Animated	120	Feedback
+14	DepressedWalk	tvd	c3d	amc		Animated	120	Feedback
+15	ClumsyWalk	tvd	c3d	amc		Animated	120	Feedback
+16	Limp	tvd	c3d	amc		Animated	120	Feedback
+17	QuickWalk	tvd	c3d	amc		Animated	120	Feedback
+18	CarefulWalk LookingAround	tvd	c3d	amc		Animated	120	Feedback
+19	March	tvd	c3d	amc		Animated	120	Feedback
+20	ShyWalk	tvd	c3d	amc		Animated	120	Feedback
+21	acheyWalk	tvd	c3d	amc		Animated	120	Feedback
+22	CasualQuickWalk	tvd	c3d	amc		Animated	120	Feedback
+23	CoolWalk	tvd	c3d	amc		Animated	120	Feedback
+24	HurtLegWalk	tvd	c3d	amc		Animated	120	Feedback
+25	DragBadLegWalk	tvd	c3d	amc		Animated	120	Feedback
+26	HurtStomachWalk	tvd	c3d	amc		Animated	120	Feedback
+27	SlowWalk	tvd	c3d	amc		Animated	120	Feedback
+28	GhettoWalk	tvd	c3d	amc		Animated	120	Feedback
+29	NormalWalk	tvd	c3d	amc		Animated	120	Feedback
+30	SexyWalk	tvd	c3d	amc		Animated	120	Feedback
+31	NormalWalk	tvd	c3d	amc		Animated	120	Feedback
+32	ScaredWalk	tvd	c3d	amc		Animated	120	Feedback
+33	MachoWalk	tvd	c3d	amc		Animated	120	Feedback
+34	NormalWalk	tvd	c3d	amc		Animated	120	Feedback
+35	TrafficWalk	tvd	c3d	amc		Animated	120	Feedback
+36	WalkStraight	tvd	c3d	amc		Animated	120	Feedback
+37	Forward	tvd	c3d	amc		Animated	120	Feedback
+38	SmallForward	tvd	c3d	amc		Animated	120	Feedback
+39	JumpForward	tvd	c3d	amc		Animated	120	Feedback
+40	JumpForward	tvd	c3d	amc		Animated	120	Feedback
+41	JumpForward	tvd	c3d	amc		Animated	120	Feedback
+42	JumpForward	tvd	c3d	amc		Animated	120	Feedback
+43	JumpSmallForward	tvd	c3d	amc		Animated	120	Feedback
+44	JumpSmallForward	tvd	c3d	amc		Animated	120	Feedback
+45	JumpForward	tvd	c3d	amc		Animated	120	Feedback
+46	Jump Turn	tvd	c3d	amc		Animated	120	Feedback
+47	Jump Turn	tvd	c3d	amc		Animated	120	Feedback
+48	JumpTurn	tvd	c3d	amc		Animated	120	Feedback
+49	Jump Turn	tvd	c3d	amc		Animated	120	Feedback
+50	JumpTurn	tvd	c3d	amc		Animated	120	Feedback
+51	FurtherJumpTurn	tvd	c3d	amc		Animated	120	Feedback
+52	SmallJumpTurn	tvd	c3d	amc		Animated	120	Feedback
+53	180 degree jump	tvd	c3d	amc		Animated	120	Feedback
+54	180	tvd	c3d	amc		Animated	120	Feedback
+55	180	tvd	c3d	amc		Animated	120	Feedback
+56	90	tvd	c3d	amc		Animated	120	Feedback
+57	WalkForward	tvd	c3d	amc		Animated	120	Feedback
+58	270	tvd	c3d	amc		Animated	120	Feedback
+59	360 smallStumble	tvd	c3d	amc		Animated	120	Feedback
+60	360	tvd	c3d	amc		Animated	120	Feedback
+61	360	tvd	c3d	amc		Animated	120	Feedback
+62	walkFigure8	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #93 (Charleston Dance) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Motorcycle Pose	tvd	c3d	amc		Animated	120	Feedback
+2	rangeOfMotion	tvd	c3d	amc		Animated	120	Feedback
+3	charleston_01	tvd	c3d	amc		Animated	120	Feedback
+4	charleston_side_by_side_female	tvd	c3d	amc		Animated	120	Feedback
+5	charleston_side_by_side_male	tvd	c3d	amc		Animated	120	Feedback
+6	lindyHop2	tvd	c3d	amc		Animated	120	Feedback
+7	Casual Walk	tvd	c3d	amc		Animated	120	Feedback
+8	xtra fancY charleston	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #94 (indian dance) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1			c3d	amc		Animated	120	Feedback
+2			c3d	amc		Animated	120	Feedback
+3			c3d	amc		Animated	120	Feedback
+4			c3d	amc		Animated	120	Feedback
+5			c3d	amc		Animated	120	Feedback
+6			c3d	amc		Animated	120	Feedback
+7			c3d	amc		Animated	120	Feedback
+8			c3d	amc		Animated	120	Feedback
+9			c3d	amc		Animated	120	Feedback
+10			c3d	amc		Animated	120	Feedback
+11			c3d	amc		Animated	120	Feedback
+12			c3d	amc		Animated	120	Feedback
+13			c3d	amc		Animated	120	Feedback
+14			c3d	amc		Animated	120	Feedback
+15			c3d	amc		Animated	120	Feedback
+16			c3d	amc		Animated	120	Feedback
+
+Subject #102 (Basketball) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	RightWideTurn	tvd	c3d	amc			120	Feedback
+2	LeftWideTurn	tvd	c3d	amc			120	Feedback
+3	SuperTightLeft	tvd	c3d	amc			120	Feedback
+4	SuperTightRight	tvd	c3d	amc			120	Feedback
+5	RunningStraight	tvd	c3d	amc			120	Feedback
+6	RunningWideRight	tvd	c3d	amc			120	Feedback
+7	RunningWideLeft	tvd	c3d	amc			120	Feedback
+8	RunningTighterRight	tvd	c3d	amc			120	Feedback
+9	calibration	tvd	c3d	amc			120	Feedback
+10	RunningNoBall	tvd	c3d	amc			120	Feedback
+11	OffensiveMoveSpinLeft	tvd	c3d	amc			120	Feedback
+12	OffensiveMoveSpinLeft	tvd	c3d	amc			120	Feedback
+13	OffensiveMoveGoRight	tvd	c3d	amc			120	Feedback
+14	OffensiveMoveGoLeft	tvd	c3d	amc			120	Feedback
+15	OffensiveMoveSpinRight	tvd	c3d	amc			120	Feedback
+16	WalkEvasiveLeft	tvd	c3d	amc			120	Feedback
+17	WalkEvasiveRight	tvd	c3d	amc			120	Feedback
+18	FeintLeftMoveRight	tvd	c3d	amc			120	Feedback
+19	FeintRightMoveLeft	tvd	c3d	amc			120	Feedback
+20	FakeShotBreakRight	tvd	c3d	amc			120	Feedback
+21	FakeShotBreakLeft	tvd	c3d	amc			120	Feedback
+22	DefensiveStraightNoStop	tvd	c3d	amc			120	Feedback
+23	DefensiveStraightWithStop	tvd	c3d	amc			120	Feedback
+24	DefensiveRightStopToStop	tvd	c3d	amc			120	Feedback
+25	DefensiveLeftStopToStop	tvd	c3d	amc			120	Feedback
+26	DefensiveMoveZigZag	tvd	c3d	amc			120	Feedback
+27	DefensiveMoveSideToSide	tvd	c3d	amc			120	Feedback
+28	DefensiveMoveSideToSide	tvd	c3d	amc			120	Feedback
+29	Pivoting	tvd	c3d	amc			120	Feedback
+30	SraightDriveFromStop	tvd	c3d	amc			120	Feedback
+31	RightDrive (left then right)	tvd	c3d	amc			120	Feedback
+32	LeftDrive (right then left)	tvd	c3d	amc			120	Feedback
+33	RightTightTurn	tvd	c3d	amc			120	Feedback
+
+Subject #103 (Charelston Dancing) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1		tvd	c3d	amc		Animated	120	Feedback
+2	rangeOfMotion_01	tvd	c3d	amc		Animated	120	Feedback
+3	charleston_01	tvd	c3d	amc		Animated	120	Feedback
+4	charleston_side_by_side_female	tvd	c3d	amc		Animated	120	Feedback
+5	charleston_side_by_side_male	tvd	c3d	amc		Animated	120	Feedback
+6	lindyHop2	tvd	c3d	amc		Animated	120	Feedback
+7	Casual Walk	tvd	c3d	amc		Animated	120	Feedback
+8	xtra fancY charleston	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #104 (motion) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	JogThrough	tvd	c3d	amc		Animated	120	Feedback
+2	neutral Male walk, exact footfalls	tvd	c3d	amc		Animated	120	Feedback
+3	Frankenstein male walk, exact footfalls	tvd	c3d	amc		Animated	120	Feedback
+4	JogThrough	tvd	c3d	amc		Animated	120	Feedback
+5		tvd	c3d	amc		Animated	120	Feedback
+6	StartJog	tvd	c3d	amc		Animated	120	Feedback
+7		tvd	c3d	amc		Animated	120	Feedback
+8	StartJog	tvd	c3d	amc		Animated	120	Feedback
+9	JogStop	tvd	c3d	amc		Animated	120	Feedback
+10	JogStop	tvd	c3d	amc		Animated	120	Feedback
+11	HappyGoLuckWalk	tvd	c3d	amc		Animated	120	Feedback
+12	ExcitedWalk	tvd	c3d	amc		Animated	120	Feedback
+13	StumbleWalk	tvd	c3d	amc		Animated	120	Feedback
+14	HappyStartWalk	tvd	c3d	amc		Animated	120	Feedback
+15		tvd	c3d	amc		Animated	120	Feedback
+16	SpasticWalk	tvd	c3d	amc		Animated	120	Feedback
+17	SpasticStop	tvd	c3d	amc		Animated	120	Feedback
+18	SpasticStop	tvd	c3d	amc		Animated	120	Feedback
+19	CasualWalk	tvd	c3d	amc		Animated	120	Feedback
+20		tvd	c3d	amc		Animated	120	Feedback
+21		tvd	c3d	amc		Animated	120	Feedback
+22	RegularWalk8	tvd	c3d	amc		Animated	120	Feedback
+23		tvd	c3d	amc		Animated	120	Feedback
+24		tvd	c3d	amc		Animated	120	Feedback
+25		tvd	c3d	amc		Animated	120	Feedback
+26		tvd	c3d	amc		Animated	120	Feedback
+27	RegularWalkRightAngleTurns	tvd	c3d	amc		Animated	120	Feedback
+28	SternWalk	tvd	c3d	amc		Animated	120	Feedback
+29	SternWalk	tvd	c3d	amc		Animated	120	Feedback
+30	SternWalk8	tvd	c3d	amc		Animated	120	Feedback
+31		tvd	c3d	amc		Animated	120	Feedback
+32	SternWalkRightAngleTurns	tvd	c3d	amc		Animated	120	Feedback
+33		tvd	c3d	amc		Animated	120	Feedback
+34		tvd	c3d	amc		Animated	120	Feedback
+35	SlowWalk	tvd	c3d	amc		Animated	120	Feedback
+36	SlowWalk8	tvd	c3d	amc		Animated	120	Feedback
+37	RunThrough	tvd	c3d	amc		Animated	120	Feedback
+38		tvd	c3d	amc		Animated	120	Feedback
+39	SlowWalkRightAngleTurns	tvd	c3d	amc		Animated	120	Feedback
+40		tvd	c3d	amc		Animated	120	Feedback
+41	ZombieWalk	tvd	c3d	amc		Animated	120	Feedback
+42	ZombieWalk8	tvd	c3d	amc		Animated	120	Feedback
+43	ZombieWalkRightAngleTurns	tvd	c3d	amc		Animated	120	Feedback
+44	AttitudeWalk	tvd	c3d	amc		Animated	120	Feedback
+45	AttitudeWalk8	tvd	c3d	amc		Animated	120	Feedback
+46	AttitudeWalkRightAngleTurns	tvd	c3d	amc		Animated	120	Feedback
+47		tvd	c3d	amc		Animated	120	Feedback
+48	RunThrough	tvd	c3d	amc		Animated	120	Feedback
+49		tvd	c3d	amc		Animated	120	Feedback
+50		tvd	c3d	amc		Animated	120	Feedback
+51		tvd	c3d	amc		Animated	120	Feedback
+52		tvd	c3d	amc		Animated	120	Feedback
+53	StartRun	tvd	c3d	amc		Animated	120	Feedback
+54	StartRun	tvd	c3d	amc		Animated	120	Feedback
+55	StartRun	tvd	c3d	amc		Animated	120	Feedback
+56	RunStop	tvd	c3d	amc		Animated	120	Feedback
+57	RunStop	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #105 (motion) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	WalkDigital8	tvd	c3d	amc		Animated	120	Feedback
+2	WalkStraight	tvd	c3d	amc		Animated	120	Feedback
+3	Walk8	tvd	c3d	amc		Animated	120	Feedback
+4	Digital8	tvd	c3d	amc		Animated	120	Feedback
+5	mummyWalk	tvd	c3d	amc		Animated	120	Feedback
+6	MotorCyclePose	tvd	c3d	amc		Animated	120	Feedback
+7	mummy8	tvd	c3d	amc		Animated	120	Feedback
+8	mummyDigital8	tvd	c3d	amc		Animated	120	Feedback
+9	DrunkWalk	tvd	c3d	amc		Animated	120	Feedback
+10	SlowWalk	tvd	c3d	amc		Animated	120	Feedback
+11	LavishWalk	tvd	c3d	amc		Animated	120	Feedback
+12	TooCoolWalk	tvd	c3d	amc		Animated	120	Feedback
+13	SadWalk	tvd	c3d	amc		Animated	120	Feedback
+14	DepressedWalk	tvd	c3d	amc		Animated	120	Feedback
+15	ClumsyWalk	tvd	c3d	amc		Animated	120	Feedback
+16	Limp	tvd	c3d	amc		Animated	120	Feedback
+17	QuickWalk	tvd	c3d	amc		Animated	120	Feedback
+18	CarefulWalk LookingAround	tvd	c3d	amc		Animated	120	Feedback
+19	March	tvd	c3d	amc		Animated	120	Feedback
+20	ShyWalk	tvd	c3d	amc		Animated	120	Feedback
+21	acheyWalk	tvd	c3d	amc		Animated	120	Feedback
+22	CasualQuickWalk	tvd	c3d	amc		Animated	120	Feedback
+23	CoolWalk	tvd	c3d	amc		Animated	120	Feedback
+24	HurtLegWalk	tvd	c3d	amc		Animated	120	Feedback
+25	DragBadLegWalk	tvd	c3d	amc		Animated	120	Feedback
+26	HurtStomachWalk	tvd	c3d	amc		Animated	120	Feedback
+27	SlowWalk	tvd	c3d	amc		Animated	120	Feedback
+28	GhettoWalk	tvd	c3d	amc		Animated	120	Feedback
+29	NormalWalk	tvd	c3d	amc		Animated	120	Feedback
+30	SexyWalk	tvd	c3d	amc		Animated	120	Feedback
+31	NormalWalk	tvd	c3d	amc		Animated	120	Feedback
+32	ScaredWalk	tvd	c3d	amc		Animated	120	Feedback
+33	MachoWalk	tvd	c3d	amc		Animated	120	Feedback
+34	NormalWalk	tvd	c3d	amc		Animated	120	Feedback
+35	TrafficWalk	tvd	c3d	amc		Animated	120	Feedback
+36	WalkStraight	tvd	c3d	amc		Animated	120	Feedback
+37	Forward	tvd	c3d	amc		Animated	120	Feedback
+38	SmallForward	tvd	c3d	amc		Animated	120	Feedback
+39	JumpForward	tvd	c3d	amc		Animated	120	Feedback
+40	JumpForward	tvd	c3d	amc		Animated	120	Feedback
+41	JumpForward	tvd	c3d	amc		Animated	120	Feedback
+42	JumpForward	tvd	c3d	amc		Animated	120	Feedback
+43	JumpSmallForward	tvd	c3d	amc		Animated	120	Feedback
+44	JumpSmallForward	tvd	c3d	amc		Animated	120	Feedback
+45	JumpForward	tvd	c3d	amc		Animated	120	Feedback
+46	Jump Turn	tvd	c3d	amc		Animated	120	Feedback
+47	Jump Turn	tvd	c3d	amc		Animated	120	Feedback
+48	JumpTurn	tvd	c3d	amc		Animated	120	Feedback
+49	Jump Turn	tvd	c3d	amc		Animated	120	Feedback
+50	JumpTurn	tvd	c3d	amc		Animated	120	Feedback
+51	FurtherJumpTurn	tvd	c3d	amc		Animated	120	Feedback
+52	SmallJumpTurn	tvd	c3d	amc		Animated	120	Feedback
+53	180	tvd	c3d	amc		Animated	120	Feedback
+54	180	tvd	c3d	amc		Animated	120	Feedback
+55	180	tvd	c3d	amc		Animated	120	Feedback
+56	90	tvd	c3d	amc		Animated	120	Feedback
+57	WalkForward	tvd	c3d	amc		Animated	120	Feedback
+58	270	tvd	c3d	amc		Animated	120	Feedback
+59	360 smallStumble	tvd	c3d	amc		Animated	120	Feedback
+60	360	tvd	c3d	amc		Animated	120	Feedback
+61	360	tvd	c3d	amc		Animated	120	Feedback
+62	walkFigure8	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #106 (Female General Subject) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	clean	tvd	c3d	amc			120	Feedback
+2	clean	tvd	c3d	amc			120	Feedback
+3	clean	tvd	c3d	amc			120	Feedback
+4	clean	tvd	c3d	amc			120	Feedback
+5	clean	tvd	c3d	amc			120	Feedback
+6	clean	tvd	c3d	amc			120	Feedback
+7	clean	tvd	c3d	amc			120	Feedback
+8	clean	tvd	c3d	amc			120	Feedback
+9	clean	tvd	c3d	amc			120	Feedback
+10	clean	tvd	c3d	amc			120	Feedback
+11	clean	tvd	c3d	amc			120	Feedback
+12	clean	tvd	c3d	amc			120	Feedback
+13	clean	tvd	c3d	amc			120	Feedback
+14	clean	tvd	c3d	amc			120	Feedback
+15		tvd	c3d	amc			120	Feedback
+16	clean	tvd	c3d	amc			120	Feedback
+17	clean	tvd	c3d	amc			120	Feedback
+18	clean	tvd	c3d	amc			120	Feedback
+19	clean	tvd	c3d	amc			120	Feedback
+20	clean	tvd	c3d	amc			120	Feedback
+21	bad AMC	tvd	c3d	amc			120	Feedback
+22	clean	tvd	c3d	amc			120	Feedback
+23	clean	tvd	c3d	amc			120	Feedback
+24	clean	tvd	c3d	amc			120	Feedback
+25	clean	tvd	c3d	amc			120	Feedback
+26	clean	tvd	c3d	amc			120	Feedback
+27	clean	tvd	c3d	amc			120	Feedback
+28	clean	tvd	c3d	amc			120	Feedback
+29	clean	tvd	c3d	amc			120	Feedback
+30	clean	tvd	c3d	amc			120	Feedback
+31	clean	tvd	c3d	amc			120	Feedback
+32	clean	tvd	c3d	amc			120	Feedback
+33	clean	tvd	c3d	amc			120	Feedback
+34	clean	tvd	c3d	amc			120	Feedback
+
+Subject #107 (Walking with obstacles 1) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1		tvd	c3d	amc		Animated	120	Feedback
+2		tvd	c3d	amc		Animated	120	Feedback
+3		tvd	c3d	amc		Animated	120	Feedback
+4		tvd	c3d	amc		Animated	120	Feedback
+5		tvd	c3d	amc		Animated	120	Feedback
+6		tvd	c3d	amc		Animated	120	Feedback
+7		tvd	c3d	amc		Animated	120	Feedback
+8		tvd	c3d	amc		Animated	120	Feedback
+9		tvd	c3d	amc		Animated	120	Feedback
+10		tvd	c3d	amc		Animated	120	Feedback
+11		tvd	c3d	amc		Animated	120	Feedback
+12		tvd	c3d	amc		Animated	120	Feedback
+13		tvd	c3d	amc		Animated	120	Feedback
+14		tvd	c3d	amc		Animated	120	Feedback
+
+Subject #108 (Walking with obstacles 2) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1			c3d	amc		Animated	120	Feedback
+2			c3d	amc		Animated	120	Feedback
+3			c3d	amc		Animated	120	Feedback
+4			c3d	amc		Animated	120	Feedback
+5			c3d	amc		Animated	120	Feedback
+6			c3d	amc		Animated	120	Feedback
+7			c3d	amc		Animated	120	Feedback
+8			c3d	amc		Animated	120	Feedback
+9			c3d	amc		Animated	120	Feedback
+10			c3d	amc		Animated	120	Feedback
+11			c3d	amc		Animated	120	Feedback
+12			c3d	amc		Animated	120	Feedback
+13			c3d	amc		Animated	120	Feedback
+14			c3d	amc		Animated	120	Feedback
+15			c3d	amc		Animated	120	Feedback
+16			c3d	amc		Animated	120	Feedback
+17			c3d	amc		Animated	120	Feedback
+18			c3d	amc		Animated	120	Feedback
+19			c3d	amc		Animated	120	Feedback
+20			c3d	amc		Animated	120	Feedback
+21			c3d	amc		Animated	120	Feedback
+22			c3d	amc		Animated	120	Feedback
+23			c3d	amc		Animated	120	Feedback
+24			c3d	amc		Animated	120	Feedback
+25			c3d	amc		Animated	120	Feedback
+26			c3d	amc		Animated	120	Feedback
+27			c3d	amc		Animated	120	Feedback
+28			c3d	amc		Animated	120	Feedback
+
+Subject #111 (Pregnant Woman) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Walk backwards		c3d	amc		Animated	120	Feedback
+2	Bow		c3d	amc		Animated	120	Feedback
+3	Crawling		c3d	amc		Animated	120	Feedback
+4	Curtsey		c3d	amc		Animated	120	Feedback
+5	Dance		c3d	amc		Animated	120	Feedback
+6	Get up from floor		c3d	amc		Animated	120	Feedback
+7	Get up from floor		c3d	amc		Animated	120	Feedback
+8	Get up from floor		c3d	amc		Animated	120	Feedback
+9	Get up from chair		c3d	amc		Animated	120	Feedback
+10	get up from chair		c3d	amc		Animated	120	Feedback
+11	get up from chair		c3d	amc		Animated	120	Feedback
+12	Lay down		c3d	amc		Animated	120	Feedback
+13	March		c3d	amc		Animated	120	Feedback
+14	Mope		c3d	amc		Animated	120	Feedback
+15	Motorcycle		c3d	amc		Animated	120	Feedback
+16	Peekaboo		c3d	amc		Animated	120	Feedback
+17	Pick up		c3d	amc		Animated	120	Feedback
+18	Pick up		c3d	amc		Animated	120	Feedback
+19	Punch Kick		c3d	amc		Animated	120	Feedback
+20	Ring around the rosie		c3d	amc		Animated	120	Feedback
+21	Roll over		c3d	amc		Animated	120	Feedback
+22	Range of motion		c3d	amc		Animated	120	Feedback
+23	Run		c3d	amc		Animated	120	Feedback
+24	Run		c3d	amc		Animated	120	Feedback
+25	Shrug		c3d	amc		Animated	120	Feedback
+26	Walk sideways		c3d	amc		Animated	120	Feedback
+27	Walking up stairs		c3d	amc		Animated	120	Feedback
+28	Standing still		c3d	amc		Animated	120	Feedback
+29	Stepping over		c3d	amc		Animated	120	Feedback
+30	Stepping over		c3d	amc		Animated	120	Feedback
+31	Stepping up / stepping down		c3d	amc		Animated	120	Feedback
+32	Stretch and yawn		c3d	amc		Animated	120	Feedback
+33	Throwing		c3d	amc		Animated	120	Feedback
+34	Walk		c3d	amc		Animated	120	Feedback
+35	Walk		c3d	amc		Animated	120	Feedback
+36	Walk and carry		c3d	amc		Animated	120	Feedback
+37	Wave		c3d	amc		Animated	120	Feedback
+38	Yoga		c3d	amc		Animated	120	Feedback
+39	Yoga		c3d	amc		Animated	120	Feedback
+40	Yoga		c3d	amc		Animated	120	Feedback
+41	Yoga		c3d	amc		Animated	120	Feedback
+
+Subject #113 (Post pregnant woman) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Walk backwards		c3d	amc		Animated	120	Feedback
+2	Bow		c3d	amc		Animated	120	Feedback
+3	Curtsey		c3d	amc		Animated	120	Feedback
+4	Dance		c3d	amc		Animated	120	Feedback
+5	Walk digital 8		c3d	amc		Animated	120	Feedback
+6	Walk figure 8		c3d	amc		Animated	120	Feedback
+7	Run		c3d	amc		Animated	120	Feedback
+8	Lay down and get up		c3d	amc		Animated	120	Feedback
+9	March		c3d	amc		Animated	120	Feedback
+10	Walk, mope around		c3d	amc		Animated	120	Feedback
+11	Motorcycle		c3d	amc		Animated	120	Feedback
+12	Peekaboo		c3d	amc		Animated	120	Feedback
+13	Punch and kick		c3d	amc		Animated	120	Feedback
+14	Ring around the rosie		c3d	amc		Animated	120	Feedback
+15	Sit in chair and get up		c3d	amc		Animated	120	Feedback
+16	Shrug		c3d	amc		Animated	120	Feedback
+17	Walk sideway		c3d	amc		Animated	120	Feedback
+18	Walk sideways		c3d	amc		Animated	120	Feedback
+19	Walking up and down stairs		c3d	amc		Animated	120	Feedback
+20	Walk up and down stairs		c3d	amc		Animated	120	Feedback
+21	Standing Still		c3d	amc		Animated	120	Feedback
+22	Step over		c3d	amc		Animated	120	Feedback
+23	Stretch and yawn		c3d	amc		Animated	120	Feedback
+24	Throw		c3d	amc		Animated	120	Feedback
+25	Walk		c3d	amc		Animated	120	Feedback
+26	Walk and carry		c3d	amc		Animated	120	Feedback
+27	Wave		c3d	amc		Animated	120	Feedback
+28	Yoga		c3d	amc		Animated	120	Feedback
+29	Yoga		c3d	amc		Animated	120	Feedback
+
+Subject #114 (Pregnant Woman) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Motorcycle		c3d	amc		Animated	120	Feedback
+2	Getting up from laying down		c3d	amc		Animated	120	Feedback
+3	Range of motion		c3d	amc		Animated	120	Feedback
+4	Getting up from chair		c3d	amc		Animated	120	Feedback
+5	Sitting in chair		c3d	amc		Animated	120	Feedback
+6	Getting up from chair		c3d	amc		Animated	120	Feedback
+7	Walking up and down stairs		c3d	amc		Animated	120	Feedback
+8	Walking up and down stairs		c3d	amc		Animated	120	Feedback
+9	Walking up and down stairs		c3d	amc		Animated	120	Feedback
+10	Stretching		c3d	amc		Animated	120	Feedback
+11	Laying down and getting up		c3d	amc		Animated	120	Feedback
+12	Stretching		c3d	amc		Animated	120	Feedback
+13	Walk		c3d	amc		Animated	120	Feedback
+14	Walk		c3d	amc		Animated	120	Feedback
+15	Walk		c3d	amc		Animated	120	Feedback
+16	Sit down and stretch		c3d	amc		Animated	120	Feedback
+
+Subject #115 (Bending over) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Pick up box, bend from waist		c3d	amc		Animated	120	Feedback
+2	Pick box up, bend from waist		c3d	amc		Animated	120	Feedback
+3	Pick box up, bend from waist		c3d	amc		Animated	120	Feedback
+4	Pick box up, bend from waist		c3d	amc		Animated	120	Feedback
+5	Pick box up, bend from waist		c3d	amc		Animated	120	Feedback
+6	Picking box up, bending knees		c3d	amc		Animated	120	Feedback
+7	Picking box up, bending knees		c3d	amc		Animated	120	Feedback
+8	Picking box up, bending knees		c3d	amc		Animated	120	Feedback
+9	Picking box up, bending knees		c3d	amc		Animated	120	Feedback
+10	Pick box up, bend from waist		c3d	amc		Animated	120	Feedback
+
+Subject #118 (Jumping) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Jump		c3d	amc		Animated	120	Feedback
+2	Jump		c3d	amc		Animated	120	Feedback
+3	Jump		c3d	amc		Animated	120	Feedback
+4	Jump		c3d	amc		Animated	120	Feedback
+5	Jump		c3d	amc		Animated	120	Feedback
+6	Jump		c3d	amc		Animated	120	Feedback
+7	Jump		c3d	amc		Animated	120	Feedback
+8	Jump		c3d	amc		Animated	120	Feedback
+9	Jump		c3d	amc		Animated	120	Feedback
+10	Jump		c3d	amc		Animated	120	Feedback
+11	Jump		c3d	amc		Animated	120	Feedback
+12	Jump		c3d	amc		Animated	120	Feedback
+13	Jump		c3d	amc		Animated	120	Feedback
+14	Jump		c3d	amc		Animated	120	Feedback
+15	Jump		c3d	amc		Animated	120	Feedback
+16	Jump		c3d	amc		Animated	120	Feedback
+17	Jump		c3d	amc		Animated	120	Feedback
+18	Jump		c3d	amc		Animated	120	Feedback
+19	Jump		c3d	amc		Animated	120	Feedback
+20	Jump		c3d	amc		Animated	120	Feedback
+21	Jump		c3d	amc		Animated	120	Feedback
+22	Jump		c3d	amc		Animated	120	Feedback
+23	Jump		c3d	amc		Animated	120	Feedback
+24	Jump		c3d	amc		Animated	120	Feedback
+25	Jump		c3d	amc		Animated	120	Feedback
+26	Jump		c3d	amc		Animated	120	Feedback
+27	Jump		c3d	amc		Animated	120	Feedback
+28	Jump		c3d	amc		Animated	120	Feedback
+29	Jump		c3d	amc		Animated	120	Feedback
+30	Jump		c3d	amc		Animated	120	Feedback
+31	Motorcycle		c3d	amc		Animated	120	Feedback
+32	Range of motion		c3d	amc		Animated	120	Feedback
+
+Subject #120 (Various Style Walks) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Alien Turn		c3d	amc		Animated	120	Feedback
+2	Gorilla		c3d	amc		Animated	120	Feedback
+3	Mickey cast spell		c3d	amc		Animated	120	Feedback
+4	Mickey Conducting		c3d	amc		Animated	120	Feedback
+5	Mickey Dance		c3d	amc		Animated	120	Feedback
+6	Mickey Dance		c3d	amc		Animated	120	Feedback
+7	Mickey Dance		c3d	amc		Animated	120	Feedback
+8	Mickey sneaky walk		c3d	amc		Animated	120	Feedback
+9	Mickey sneaking walk		c3d	amc		Animated	120	Feedback
+10	Mickey sneaking walk		c3d	amc		Animated	120	Feedback
+11	Mickey sneaking walk		c3d	amc		Animated	120	Feedback
+12	Mickey sneaking walk		c3d	amc		Animated	120	Feedback
+13	Mickey sneaking walk		c3d	amc		Animated	120	Feedback
+14	Mickey sneaking walk		c3d	amc		Animated	120	Feedback
+15	Mickey Surprised		c3d	amc		Animated	120	Feedback
+16	Mickey Surprised		c3d	amc		Animated	120	Feedback
+17	Mickey Walk		c3d	amc		Animated	120	Feedback
+18	Mickey Walk		c3d	amc		Animated	120	Feedback
+19	Walk slow		c3d	amc		Animated	120	Feedback
+20	Walk		c3d	amc		Animated	120	Feedback
+21	Robot		c3d	amc		Animated	120	Feedback
+22	Zombie		c3d	amc		Animated	120	Feedback
+
+Subject #122 (Varying Height and Length Steps) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	clean		c3d	amc		Animated	120	Feedback
+2	clean		c3d	amc		Animated	120	Feedback
+3	clean		c3d	amc		Animated	120	Feedback
+4	clean		c3d	amc		Animated	120	Feedback
+5	clean		c3d	amc		Animated	120	Feedback
+6	clean		c3d	amc		Animated	120	Feedback
+7	clean		c3d	amc		Animated	120	Feedback
+8	clean		c3d	amc		Animated	120	Feedback
+9	clean		c3d	amc		Animated	120	Feedback
+10	clean		c3d	amc		Animated	120	Feedback
+11			c3d	amc		Animated	120	Feedback
+12	clean		c3d	amc		Animated	120	Feedback
+13	clean		c3d	amc		Animated	120	Feedback
+14	clean		c3d	amc		Animated	120	Feedback
+15	clean		c3d	amc		Animated	120	Feedback
+16	clean		c3d	amc		Animated	120	Feedback
+17	clean		c3d	amc		Animated	120	Feedback
+18	clean		c3d	amc		Animated	120	Feedback
+19	clean		c3d	amc		Animated	120	Feedback
+20	clean		c3d	amc		Animated	120	Feedback
+21	clean		c3d	amc		Animated	120	Feedback
+22	clean		c3d	amc		Animated	120	Feedback
+23	clean		c3d	amc		Animated	120	Feedback
+24	clean		c3d	amc		Animated	120	Feedback
+25	clean		c3d	amc		Animated	120	Feedback
+26	clean		c3d	amc		Animated	120	Feedback
+27	clean		c3d	amc		Animated	120	Feedback
+28	clean		c3d	amc		Animated	120	Feedback
+29	clean		c3d	amc		Animated	120	Feedback
+30	clean		c3d	amc		Animated	120	Feedback
+31	clean		c3d	amc		Animated	120	Feedback
+32	clean		c3d	amc		Animated	120	Feedback
+33	clean		c3d	amc		Animated	120	Feedback
+34	clean		c3d	amc		Animated	120	Feedback
+35	clean		c3d	amc		Animated	120	Feedback
+36	clean		c3d	amc		Animated	120	Feedback
+37	clean		c3d	amc		Animated	120	Feedback
+38	clean		c3d	amc		Animated	120	Feedback
+39	clean		c3d	amc		Animated	120	Feedback
+40	clean		c3d	amc		Animated	120	Feedback
+41	clean		c3d	amc		Animated	120	Feedback
+42	clean		c3d	amc		Animated	120	Feedback
+43	clean		c3d	amc		Animated	120	Feedback
+44	clean		c3d	amc		Animated	120	Feedback
+45	clean		c3d	amc		Animated	120	Feedback
+46	clean		c3d	amc		Animated	120	Feedback
+47	clean		c3d	amc		Animated	120	Feedback
+48	clean		c3d	amc		Animated	120	Feedback
+49	clean		c3d	amc		Animated	120	Feedback
+50	clean		c3d	amc		Animated	120	Feedback
+51	clean		c3d	amc		Animated	120	Feedback
+52	clean		c3d	amc		Animated	120	Feedback
+53	clean		c3d	amc		Animated	120	Feedback
+54	clean		c3d	amc		Animated	120	Feedback
+55	clean		c3d	amc		Animated	120	Feedback
+56	clean		c3d	amc		Animated	120	Feedback
+57	clean		c3d	amc		Animated	120	Feedback
+58	cleaned		c3d	amc		Animated	120	Feedback
+59	clean		c3d	amc		Animated	120	Feedback
+60	clean		c3d	amc		Animated	120	Feedback
+61	clean		c3d	amc		Animated	120	Feedback
+62	clean		c3d	amc		Animated	120	Feedback
+63	clean		c3d	amc		Animated	120	Feedback
+64	clean		c3d	amc		Animated	120	Feedback
+65	clean		c3d	amc		Animated	120	Feedback
+66	clean		c3d	amc		Animated	120	Feedback
+67	clean		c3d	amc		Animated	120	Feedback
+68	clean		c3d	amc		Animated	120	Feedback
+
+Subject #123 (Carry Suitcase with Varying Weights) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	15.5 lbs		c3d	amc		Animated	120	Feedback
+2	15.5 lbs		c3d	amc		Animated	120	Feedback
+3	19.5lb		c3d	amc		Animated	120	Feedback
+4	19.5 lbs		c3d	amc		Animated	120	Feedback
+5	19.5 lbs		c3d	amc		Animated	120	Feedback
+6	19.5 lbs		c3d	amc		Animated	120	Feedback
+7	12.5lb		c3d	amc		Animated	120	Feedback
+8	12.5 lbs		c3d	amc		Animated	120	Feedback
+9	12.5 lbs		c3d	amc		Animated	120	Feedback
+10	12.5lb		c3d	amc		Animated	120	Feedback
+11	15.5 lbs		c3d	amc		Animated	120	Feedback
+12	15.5 lbs		c3d	amc		Animated	120	Feedback
+13	15.5 lbs		c3d	amc		Animated	120	Feedback
+
+Subject #124 (Sports Related Motions) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Baseball Pitch		c3d	amc		Animated	120	Feedback
+2	Baseball Pitch		c3d	amc		Animated	120	Feedback
+3	Basketball Shoot		c3d	amc		Animated	120	Feedback
+4	Basketball Free Throw		c3d	amc		Animated	120	Feedback
+5	Basketball Jump Shot		c3d	amc		Animated	120	Feedback
+6	Basketball Lay Up		c3d	amc		Animated	120	Feedback
+7	Baseball Swing		c3d	amc		Animated	120	Feedback
+8	Baseball Bunt		c3d	amc		Animated	120	Feedback
+9	Frisbee		c3d	amc		Animated	120	Feedback
+10	Motorcycle		c3d	amc		Animated	120	Feedback
+11	2 Foot Jump		c3d	amc		Animated	120	Feedback
+12	Underhand Toss		c3d	amc		Animated	120	Feedback
+13	Underhand Fast Pitch		c3d	amc		Animated	120	Feedback
+
+Subject #125 (Swimming) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Breast Stroke		c3d	amc		Animated	120	Feedback
+2	Breast Stroke		c3d	amc		Animated	120	Feedback
+3	Break Stroke		c3d	amc		Animated	120	Feedback
+4	Breast Stroke		c3d	amc		Animated	120	Feedback
+5	Butterfly		c3d	amc		Animated	120	Feedback
+6	Free Style		c3d	amc		Animated	120	Feedback
+7	Motorcycle		c3d	amc		Animated	120	Feedback
+
+Subject #126 (Swimming 2) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Back Stroke		c3d	amc		Animated	120	Feedback
+2	Back Stroke		c3d	amc		Animated	120	Feedback
+3	Breast Stroke		c3d	amc		Animated	120	Feedback
+4	Breast Stroke		c3d	amc		Animated	120	Feedback
+5	Breast Stroke		c3d	amc		Animated	120	Feedback
+6	Fly Stroke		c3d	amc		Animated	120	Feedback
+7	Fly Stroke		c3d	amc		Animated	120	Feedback
+8	Fly Stroke		c3d	amc		Animated	120	Feedback
+9	Fly Stroke		c3d	amc		Animated	120	Feedback
+10	Free Style		c3d	amc		Animated	120	Feedback
+11	Free Style		c3d	amc		Animated	120	Feedback
+12	Free Style		c3d	amc		Animated	120	Feedback
+13	Motorcycle		c3d	amc		Animated	120	Feedback
+14	Range of Motion		c3d	amc		Animated	120	Feedback
+
+Subject #127 (Action Adventure Obstacles, running, jumping, ducking, rolling) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Motorcycle		c3d	amc		Animated	120	Feedback
+2	Range of Motion		c3d	amc		Animated	120	Feedback
+3	Run		c3d	amc		Animated	120	Feedback
+4	Walk to Run		c3d	amc		Animated	120	Feedback
+5	Run to Quick Stop		c3d	amc		Animated	120	Feedback
+6	Run		c3d	amc		Animated	120	Feedback
+7	Run		c3d	amc		Animated	120	Feedback
+8	Run		c3d	amc		Animated	120	Feedback
+9	Run Right		c3d	amc		Animated	120	Feedback
+10	Run Right		c3d	amc		Animated	120	Feedback
+11	Run Left		c3d	amc		Animated	120	Feedback
+12	Run Left		c3d	amc		Animated	120	Feedback
+13	Run Side Step Left		c3d	amc		Animated	120	Feedback
+14	Run Side Step Right		c3d	amc		Animated	120	Feedback
+15	Run Turn Left		c3d	amc		Animated	120	Feedback
+16	Run Turn Right		c3d	amc		Animated	120	Feedback
+17	Run Stop Run		c3d	amc		Animated	120	Feedback
+18	Run Stop Run		c3d	amc		Animated	120	Feedback
+19	Run Quick Stop Run		c3d	amc		Animated	120	Feedback
+20	Run Quick Stop Run		c3d	amc		Animated	120	Feedback
+21	Run Jump Stop Run		c3d	amc		Animated	120	Feedback
+22	Run Jump Stop Run		c3d	amc		Animated	120	Feedback
+23	Run Dive Over Roll Run		c3d	amc		Animated	120	Feedback
+24	Run Dive Over Roll Run		c3d	amc		Animated	120	Feedback
+25	Run Jump Over		c3d	amc		Animated	120	Feedback
+26	Run Jump Over		c3d	amc		Animated	120	Feedback
+27	Run Jump Over		c3d	amc		Animated	120	Feedback
+28	Run Jump Over		c3d	amc		Animated	120	Feedback
+29	Run Duck Underneath		c3d	amc		Animated	120	Feedback
+30	Run Duck Underneath		c3d	amc		Animated	120	Feedback
+31	Run Duck Underneath		c3d	amc		Animated	120	Feedback
+32	Run Duck Underneath		c3d	amc		Animated	120	Feedback
+33	Run Over		c3d	amc		Animated	120	Feedback
+34	Run Over		c3d	amc		Animated	120	Feedback
+35	Run Over		c3d	amc		Animated	120	Feedback
+36	Run Over		c3d	amc		Animated	120	Feedback
+37	Run Duck Underneath		c3d	amc		Animated	120	Feedback
+38	Run Duck Underneath		c3d	amc		Animated	120	Feedback
+
+Subject #128 (Action Adventure Motions running, ducking, rolling, stopping) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Motorcycle		c3d	amc		Animated	120	Feedback
+2	Run Left		c3d	amc		Animated	120	Feedback
+3	Run Right		c3d	amc		Animated	120	Feedback
+4	Run Duck Underneath		c3d	amc		Animated	120	Feedback
+5	Run Stop Run		c3d	amc		Animated	120	Feedback
+6	Run Stop Run		c3d	amc		Animated	120	Feedback
+7	Run Stop Run		c3d	amc		Animated	120	Feedback
+8	Run Stop Run		c3d	amc		Animated	120	Feedback
+9	Run Roll Underneath		c3d	amc		Animated	120	Feedback
+10	Run Dive Over Roll Run		c3d	amc		Animated	120	Feedback
+11	Run Dive Over Roll Run		c3d	amc		Animated	120	Feedback
+
+Subject #131 (Michael Jackson Styled Motions) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Start Walk Stop		c3d	amc		Animated	120	Feedback
+2	Start Walk Stop		c3d	amc		Animated	120	Feedback
+3	Start Hop Stop		c3d	amc		Animated	120	Feedback
+4	Start Hop Stop		c3d	amc		Animated	120	Feedback
+5	Start Duck Underneath Stop		c3d	amc		Animated	120	Feedback
+6	Start Duck Underneath Stop		c3d	amc		Animated	120	Feedback
+7	Jump Stop		c3d	amc		Animated	120	Feedback
+8	Jump Stop		c3d	amc		Animated	120	Feedback
+9	Start Walk Left		c3d	amc		Animated	120	Feedback
+10	Start Walk Left		c3d	amc		Animated	120	Feedback
+11	Start Walk Left		c3d	amc		Animated	120	Feedback
+12	Start Walk Right		c3d	amc		Animated	120	Feedback
+13	Start Walk Right		c3d	amc		Animated	120	Feedback
+14	Start Walk Right		c3d	amc		Animated	120	Feedback
+
+Subject #132 (Varying Weird Walks) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+	1	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	2	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	3	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	4	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	5	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	6	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	7	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	8	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	9	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	10	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	11	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	12	Walk With Arms Out, balancing		c3d	amc		Animated	120	Feedback
+	13	Walk Backwards		c3d	amc		Animated	120	Feedback
+	14	Walk Duck Footed		c3d	amc		Animated	120	Feedback
+	15	Walk With Knees Bent		c3d	amc		Animated	120	Feedback
+	16	Walk Crossover		c3d	amc		Animated	120	Feedback
+	17	Walk Fast		c3d	amc		Animated	120	Feedback
+	18	Walk Fast		c3d	amc		Animated	120	Feedback
+	19	Walk Fast		c3d	amc		Animated	120	Feedback
+	20	Walk Fast		c3d	amc		Animated	120	Feedback
+	21	Walk Fast		c3d	amc		Animated	120	Feedback
+	22	Walk Fast		c3d	amc		Animated	120	Feedback
+	23	Hop on left foot		c3d	amc		Animated	120	Feedback
+	24	Hop on left foot		c3d	amc		Animated	120	Feedback
+	25	Hop on left foot		c3d	amc		Animated	120	Feedback
+	26	Hop on left foot		c3d	amc		Animated	120	Feedback
+	27	Hop on left foot		c3d	amc		Animated	120	Feedback
+	28	Hop on left foot		c3d	amc		Animated	120	Feedback
+	29	Bouncy Walk		c3d	amc		Animated	120	Feedback
+	30	Bouncy Walk		c3d	amc		Animated	120	Feedback
+	31	Bouncy Walk		c3d	amc		Animated	120	Feedback
+	32	Bouncy Walk		c3d	amc		Animated	120	Feedback
+	33	Bouncy Walk		c3d	amc		Animated	120	Feedback
+	34	Bouncy Walk		c3d	amc		Animated	120	Feedback
+	35	Walk Leaning To The Right		c3d	amc		Animated	120	Feedback
+	36	Walk Leaning To The Right		c3d	amc		Animated	120	Feedback
+	37	Marching		c3d	amc		Animated	120	Feedback
+	38	Motorcycle		c3d	amc		Animated	120	Feedback
+	39	Pigeon Toed Walking		c3d	amc		Animated	120	Feedback
+	40	Walk With Stiff Arms		c3d	amc		Animated	120	Feedback
+	41	Walk With Stiff Arms		c3d	amc		Animated	120	Feedback
+	42	Walk Swinging Shoulders		c3d	amc		Animated	120	Feedback
+	43	Walk Swinging Shoulders		c3d	amc		Animated	120	Feedback
+	44	Walk Swinging Shoulders		c3d	amc		Animated	120	Feedback
+	45	Walk Slow		c3d	amc		Animated	120	Feedback
+	46	Walk Slow		c3d	amc		Animated	120	Feedback
+	47	Walk Slow		c3d	amc		Animated	120	Feedback
+	48	Walk Slow		c3d	amc		Animated	120	Feedback
+	49	Walk Slow		c3d	amc		Animated	120	Feedback
+	50	Walk Slow		c3d	amc		Animated	120	Feedback
+	51	Tpose		c3d	amc		Animated	120	Feedback
+	52	Range of Motion		c3d	amc		Animated	120	Feedback
+	53	Walk With Legs Apart		c3d	amc		Animated	120	Feedback
+	54	Walk With Wild Arms		c3d	amc		Animated	120	Feedback
+	55	Walk With Wild Legs		c3d	amc		Animated	120	Feedback
+	56	Walk With Wild Legs		c3d	amc		Animated	120	Feedback
+
+Subject #133 (Baby Styled Walk) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Walk Crawl		c3d	amc		Animated	120	Feedback
+2	Walk Crawl		c3d	amc		Animated	120	Feedback
+3	Walk Jump		c3d	amc		Animated	120	Feedback
+4	Walk Jump		c3d	amc		Animated	120	Feedback
+5	Walk Jump		c3d	amc		Animated	120	Feedback
+6	Walk Jump		c3d	amc		Animated	120	Feedback
+7	Walk Jump		c3d	amc		Animated	120	Feedback
+8	Stretch Walk		c3d	amc		Animated	120	Feedback
+9	Stretch Walk		c3d	amc		Animated	120	Feedback
+10	Stretch Walk		c3d	amc		Animated	120	Feedback
+11	Walk Stop Walk		c3d	amc		Animated	120	Feedback
+12	Walk Stop Walk		c3d	amc		Animated	120	Feedback
+13	Walk Stop Walk		c3d	amc		Animated	120	Feedback
+14	Walk Left		c3d	amc		Animated	120	Feedback
+15	Walk Left		c3d	amc		Animated	120	Feedback
+16	Walk Left		c3d	amc		Animated	120	Feedback
+17	Walk Right		c3d	amc		Animated	120	Feedback
+18	Walk Right		c3d	amc		Animated	120	Feedback
+19	Walk Right		c3d	amc		Animated	120	Feedback
+20	Walk Right		c3d	amc		Animated	120	Feedback
+21	Walk		c3d	amc		Animated	120	Feedback
+22	Walk		c3d	amc		Animated	120	Feedback
+23	Walk		c3d	amc		Animated	120	Feedback
+24	Walk ZigZag		c3d	amc		Animated	120	Feedback
+25	Motorcycle		c3d	amc		Animated	120	Feedback
+26	Range of Motion		c3d	amc		Animated	120	Feedback
+
+Subject #134 (Skateboard Motions) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Duck Under		c3d	amc		Animated	120	Feedback
+2	Go Forward		c3d	amc		Animated	120	Feedback
+3	Lean Turn Right		c3d	amc		Animated	120	Feedback
+4	Motorcycle		c3d	amc		Animated	120	Feedback
+5	Pump Jump		c3d	amc		Animated	120	Feedback
+6	Push Turn Left		c3d	amc		Animated	120	Feedback
+7	Push Turn Left		c3d	amc		Animated	120	Feedback
+8	Push Turn Right		c3d	amc		Animated	120	Feedback
+9	Push Turn Right		c3d	amc		Animated	120	Feedback
+10	Start		c3d	amc		Animated	120	Feedback
+11	Start		c3d	amc		Animated	120	Feedback
+12	Stop and Go		c3d	amc		Animated	120	Feedback
+13	Stop and Go		c3d	amc		Animated	120	Feedback
+14	Stop ang Go		c3d	amc		Animated	120	Feedback
+15	Lean Turn Left		c3d	amc		Animated	120	Feedback
+
+Subject #135 (Martial Arts Walks) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Bassai		c3d	amc		Animated	120	Feedback
+2	Empi		c3d	amc		Animated	120	Feedback
+3	Empi		c3d	amc		Animated	120	Feedback
+4	Front Kick		c3d	amc		Animated	120	Feedback
+5	Gedanbarai		c3d	amc		Animated	120	Feedback
+6	Heiansyodan		c3d	amc		Animated	120	Feedback
+7	Mawashigeri		c3d	amc		Animated	120	Feedback
+8	Motorcycle		c3d	amc		Animated	120	Feedback
+9	Oiduki		c3d	amc		Animated	120	Feedback
+10	Syutouuke		c3d	amc		Animated	120	Feedback
+11	Yokogeri		c3d	amc		Animated	120	Feedback
+
+Subject #136 (Weird Walks) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Walk Bent Forward		c3d	amc		Animated	120	Feedback
+2	Walk Bent Forward		c3d	amc		Animated	120	Feedback
+3	Walk Backwards Bent Forward		c3d	amc		Animated	120	Feedback
+4	Walk Backwards Bent Forward		c3d	amc		Animated	120	Feedback
+5	Walk on Toes Bent Forward		c3d	amc		Animated	120	Feedback
+6	Walk on Toes Bent Forward		c3d	amc		Animated	120	Feedback
+7	Walk Backward on Toes Bent Forward		c3d	amc		Animated	120	Feedback
+8	Walk Backward on Toes Bent Forward		c3d	amc		Animated	120	Feedback
+9	Walk Crouched		c3d	amc		Animated	120	Feedback
+10	Walk Crouched		c3d	amc		Animated	120	Feedback
+11	Walk Backwards Crouched		c3d	amc		Animated	120	Feedback
+12	Walk Backwards Crouched		c3d	amc		Animated	120	Feedback
+13	Walk on Toes Crouched		c3d	amc		Animated	120	Feedback
+14	Walk on Toes Crouched		c3d	amc		Animated	120	Feedback
+15	Walk Backwards on Toes Crouched		c3d	amc		Animated	120	Feedback
+16	Walk Backwards on Toes Crouched		c3d	amc		Animated	120	Feedback
+17	Flamingo, lift legs high		c3d	amc		Animated	120	Feedback
+18	Flamingo, lift legs high		c3d	amc		Animated	120	Feedback
+19	Motorcycle			amc		Animated	60	Feedback
+20	Normal Walk		c3d	amc		Animated	120	Feedback
+21	Normal Walk		c3d	amc		Animated	120	Feedback
+22	Normal Walk		c3d	amc		Animated	120	Feedback
+23	Normal Walk		c3d	amc		Animated	120	Feedback
+24	Normal Walk		c3d	amc		Animated	120	Feedback
+25	Normal Walk Backwards		c3d	amc		Animated	120	Feedback
+26	Normal Walk Backwards		c3d	amc		Animated	120	Feedback
+27	Walk on Toes		c3d	amc		Animated	120	Feedback
+28	Walk on Toes		c3d	amc		Animated	120	Feedback
+29	Walk Backwards on Toes		c3d	amc		Animated	120	Feedback
+30	Walk Backwards on Toes		c3d	amc		Animated	120	Feedback
+31	Quail, quick little steps		c3d	amc		Animated	120	Feedback
+32	Quail, quick little steps		c3d	amc		Animated	120	Feedback
+33	Range of Motion		c3d	amc		Animated	120	Feedback
+
+Subject #137 (Stylized Motions) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Cat Coffee Mug		c3d	amc		Animated	120	Feedback
+2	Cat Pick Up		c3d	amc		Animated	120	Feedback
+3	Cat Wait		c3d	amc		Animated	120	Feedback
+4	Cat Walk		c3d	amc		Animated	120	Feedback
+5	Chicken Coffee Mug		c3d	amc		Animated	120	Feedback
+6	Chicken Pick Up		c3d	amc		Animated	120	Feedback
+7	Chicken Wait		c3d	amc		Animated	120	Feedback
+8	Chicken Walk		c3d	amc		Animated	120	Feedback
+9	Dinosaur Coffee Mug		c3d	amc		Animated	120	Feedback
+10	Dinosaur Pick Up		c3d	amc		Animated	120	Feedback
+11	Dinosaur Wait		c3d	amc		Animated	120	Feedback
+12	Dinosaur Walk		c3d	amc		Animated	120	Feedback
+13	Drunk Coffee Mug		c3d	amc		Animated	120	Feedback
+14	Drunk Pick Up		c3d	amc		Animated	120	Feedback
+15	Drunk Wait		c3d	amc		Animated	120	Feedback
+16	Drunk Walk		c3d	amc		Animated	120	Feedback
+17	Gangly Teen Coffee Mug		c3d	amc		Animated	120	Feedback
+18	Gangly Teen Pick Up		c3d	amc		Animated	120	Feedback
+19	Gangly Teen Wait		c3d	amc		Animated	120	Feedback
+20	Gangly Teen Walk		c3d	amc		Animated	120	Feedback
+21	Graceful Lady Coffee Mug		c3d	amc		Animated	120	Feedback
+22	Graceful Lady Pick Up		c3d	amc		Animated	120	Feedback
+23	Graceful Lady Wait		c3d	amc		Animated	120	Feedback
+24	Graceful Lady Walk		c3d	amc		Animated	120	Feedback
+25	Motorcycle		c3d	amc		Animated	120	Feedback
+26	Normal Coffee Mug		c3d	amc		Animated	120	Feedback
+27	Normal Pick Up		c3d	amc		Animated	120	Feedback
+28	Normal Wait		c3d	amc		Animated	120	Feedback
+29	Normal Walk		c3d	amc		Animated	120	Feedback
+30	Old Man Coffee Mug		c3d	amc		Animated	120	Feedback
+31	Old Man Pick Up		c3d	amc		Animated	120	Feedback
+32	Old Man Wait		c3d	amc		Animated	120	Feedback
+33	Old Man Walk		c3d	amc		Animated	120	Feedback
+34	Range of Motion		c3d	amc		Animated	120	Feedback
+35	Sexy Lady Coffee Mug		c3d	amc		Animated	120	Feedback
+36	Sexy Lady Pick Up		c3d	amc		Animated	120	Feedback
+37	Sexy Lady Wait		c3d	amc		Animated	120	Feedback
+38	Sexy Lady Walk		c3d	amc		Animated	120	Feedback
+39	Strong Man Coffee Mug		c3d	amc		Animated	120	Feedback
+40	Strong Man Pick Up		c3d	amc		Animated	120	Feedback
+41	Strong Man Wait		c3d	amc		Animated	120	Feedback
+42	Strong Man Walk		c3d	amc		Animated	120	Feedback
+
+Subject #138 (Marching, Walking and Talking) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Marching		c3d	amc		Animated	120	Feedback
+2	Marching		c3d	amc		Animated	120	Feedback
+3	Marching		c3d	amc		Animated	120	Feedback
+4	Marching		c3d	amc		Animated	120	Feedback
+5	Marching		c3d	amc		Animated	120	Feedback
+6	Marching		c3d	amc		Animated	120	Feedback
+7	Marching		c3d	amc		Animated	120	Feedback
+8	Marching		c3d	amc		Animated	120	Feedback
+9	Marching		c3d	amc		Animated	120	Feedback
+10	Marching		c3d	amc		Animated	120	Feedback
+11	Story		c3d	amc		Animated	120	Feedback
+12	Story		c3d	amc		Animated	120	Feedback
+13	Story		c3d	amc		Animated	120	Feedback
+14	Story		c3d	amc		Animated	120	Feedback
+15	Story		c3d	amc		Animated	120	Feedback
+16	Story		c3d	amc		Animated	120	Feedback
+17	Story		c3d	amc		Animated	120	Feedback
+18	Story		c3d	amc		Animated	120	Feedback
+19	Story		c3d	amc		Animated	120	Feedback
+20	Story		c3d	amc		Animated	120	Feedback
+21	Story		c3d	amc		Animated	120	Feedback
+22	Story		c3d	amc		Animated	120	Feedback
+23	Story		c3d	amc		Animated	120	Feedback
+24	Story		c3d	amc		Animated	120	Feedback
+25	Story		c3d	amc		Animated	120	Feedback
+26	Story		c3d	amc		Animated	120	Feedback
+27	Story		c3d	amc		Animated	120	Feedback
+28	Story		c3d	amc		Animated	120	Feedback
+29	Story		c3d	amc		Animated	120	Feedback
+30	Story		c3d	amc		Animated	120	Feedback
+31	Story		c3d	amc		Animated	120	Feedback
+32	Story		c3d	amc		Animated	120	Feedback
+33	Story		c3d	amc		Animated	120	Feedback
+34	Story		c3d	amc		Animated	120	Feedback
+35	Story		c3d	amc		Animated	120	Feedback
+36	Story		c3d	amc		Animated	120	Feedback
+37	Story		c3d	amc		Animated	120	Feedback
+38	Story		c3d	amc		Animated	120	Feedback
+39	Story		c3d	amc		Animated	120	Feedback
+40	Story		c3d	amc		Animated	120	Feedback
+41	Story		c3d	amc		Animated	120	Feedback
+42	Story		c3d	amc		Animated	120	Feedback
+43	Story		c3d	amc		Animated	120	Feedback
+44	Story		c3d	amc		Animated	120	Feedback
+45	Story		c3d	amc		Animated	120	Feedback
+46	Story		c3d	amc		Animated	120	Feedback
+47	Story		c3d	amc		Animated	120	Feedback
+48	Story		c3d	amc		Animated	120	Feedback
+49	Story		c3d	amc		Animated	120	Feedback
+50	Story		c3d	amc		Animated	120	Feedback
+51	Story		c3d	amc		Animated	120	Feedback
+52	Story		c3d	amc		Animated	120	Feedback
+53	Story		c3d	amc		Animated	120	Feedback
+54	Story		c3d	amc		Animated	120	Feedback
+55	Story		c3d	amc		Animated	120	Feedback
+
+Subject #139 (Action Walks, sneaking, wounded, looking around) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Looking Around	tvd	c3d	amc		Animated	120	Feedback
+2	Shifting Weight	tvd	c3d	amc		Animated	120	Feedback
+3	Looking Around	tvd	c3d	amc		Animated	120	Feedback
+4	Looking Around	tvd	c3d	amc		Animated	120	Feedback
+5	Pulling a Gun	tvd	c3d	amc		Animated	120	Feedback
+6	Poking Around On The Ground	tvd	c3d	amc		Animated	120	Feedback
+7	Poking Around On The Ground	tvd	c3d	amc		Animated	120	Feedback
+8	Poking Around On The Ground	tvd	c3d	amc		Animated	120	Feedback
+9	Ducking	tvd	c3d	amc		Animated	120	Feedback
+10	Run	tvd	c3d	amc		Animated	120	Feedback
+11	Run To Sneak	tvd	c3d	amc		Animated	120	Feedback
+12	Run in Circles	tvd	c3d	amc		Animated	120	Feedback
+13	Run in Circles	tvd	c3d	amc		Animated	120	Feedback
+14	Sneak Sideways	tvd	c3d	amc		Animated	120	Feedback
+15	Sneak Sideways	tvd	c3d	amc		Animated	120	Feedback
+16	Get Up From Ground	tvd	c3d	amc		Animated	120	Feedback
+17	Get Up From Ground	tvd	c3d	amc		Animated	120	Feedback
+18	Get Up From Ground Laying on Back	tvd	c3d	amc		Animated	120	Feedback
+19	Walk Wounded Leg	tvd	c3d	amc		Animated	120	Feedback
+20	Walk Wounded Leg	tvd	c3d	amc		Animated	120	Feedback
+21	Range Of Motion	tvd	c3d	amc		Animated	120	Feedback
+22	Walk Wounded Leg	tvd	c3d	amc		Animated	120	Feedback
+23	Walk Wounded Leg	tvd	c3d	amc		Animated	120	Feedback
+24	Walk Wounded Leg	tvd	c3d	amc		Animated	120	Feedback
+25	Giving Directions	tvd	c3d	amc		Animated	120	Feedback
+26	Looking Around	tvd	c3d	amc		Animated	120	Feedback
+27	Looking Around	tvd	c3d	amc		Animated	120	Feedback
+28	Walking	tvd	c3d	amc		Animated	120	Feedback
+29	Sneaking	tvd	c3d	amc		Animated	120	Feedback
+30	Walking	tvd	c3d	amc		Animated	120	Feedback
+31	Sneaking	tvd	c3d	amc		Animated	120	Feedback
+32	Sneaking	tvd	c3d	amc		Animated	120	Feedback
+33	Sneaking	tvd	c3d	amc		Animated	120	Feedback
+34	Sneaking	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #140 (Getting Up From Ground) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Get Up Face Down	tvd	c3d	amc		Animated	120	Feedback
+2	Get Up Face Down	tvd	c3d	amc		Animated	120	Feedback
+3	Get Up Laying on Side	tvd	c3d	amc		Animated	120	Feedback
+4	Get Up Laying on Side	tvd	c3d	amc		Animated	120	Feedback
+5	Motorcycle	tvd	c3d	amc		Animated	120	Feedback
+6	Idle	tvd	c3d	amc		Animated	120	Feedback
+7	Idle	tvd	c3d	amc		Animated	120	Feedback
+8	Get Up From Ground Laying on Back	tvd	c3d	amc		Animated	120	Feedback
+9	Get Up From Ground Laying on Back	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #141 (General Subject Capture) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Run	tvd	c3d	amc		Animated	120	Feedback
+2	Run	tvd	c3d	amc		Animated	120	Feedback
+3	Run	tvd	c3d	amc		Animated	120	Feedback
+4	Jump Distances	tvd	c3d	amc		Animated	120	Feedback
+5	Jump Sideways	tvd	c3d	amc		Animated	120	Feedback
+6	Jump Twist	tvd	c3d	amc		Animated	120	Feedback
+7	Walk Up and Over	tvd	c3d	amc		Animated	120	Feedback
+8	Steop On Walk Down	tvd	c3d	amc		Animated	120	Feedback
+9	Step Over	tvd	c3d	amc		Animated	120	Feedback
+10	Toss and Catch	tvd	c3d	amc		Animated	120	Feedback
+11	Throw and Catch	tvd	c3d	amc		Animated	120	Feedback
+12	Dance, Twist	tvd	c3d	amc		Animated	120	Feedback
+13	Stretch and Yawn	tvd	c3d	amc		Animated	120	Feedback
+14	Punch and Kick	tvd	c3d	amc		Animated	120	Feedback
+15	Range of Motion	tvd	c3d	amc		Animated	120	Feedback
+16	Wave Hello	tvd	c3d	amc		Animated	120	Feedback
+17	Sit on Stool	tvd	c3d	amc		Animated	120	Feedback
+18	Peek a Boo	tvd	c3d	amc		Animated	120	Feedback
+19	Walk	tvd	c3d	amc		Animated	120	Feedback
+20	Waiting	tvd	c3d	amc		Animated	120	Feedback
+21	Shrug	tvd	c3d	amc		Animated	120	Feedback
+22	High Five	tvd	c3d	amc		Animated	120	Feedback
+23	Shake Hands	tvd	c3d	amc		Animated	120	Feedback
+24	Around the world High Five Low	tvd	c3d	amc		Animated	120	Feedback
+25	Walk	tvd	c3d	amc		Animated	120	Feedback
+26	Curtsey	tvd	c3d	amc		Animated	120	Feedback
+27	Mope	tvd	c3d	amc		Animated	120	Feedback
+28	Slap Hands, Throw it Back	tvd	c3d	amc		Animated	120	Feedback
+29	Random Walk	tvd	c3d	amc		Animated	120	Feedback
+30	Random Walk	tvd	c3d	amc		Animated	120	Feedback
+31	Walk Backwards	tvd	c3d	amc		Animated	120	Feedback
+32	Walk Sideways, Cross Legs	tvd	c3d	amc		Animated	120	Feedback
+33	Walk Sideways, Foot to Foot	tvd	c3d	amc		Animated	120	Feedback
+34	Run	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #142 (Stylized Walks) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Childish		c3d	amc		Animated	120	Feedback
+2	Clumsy		c3d	amc		Animated	120	Feedback
+3	Clumsy		c3d	amc		Animated	120	Feedback
+4	Cool		c3d	amc		Animated	120	Feedback
+5	Depressed		c3d	amc		Animated	120	Feedback
+6	Elated		c3d	amc		Animated	120	Feedback
+7	Elderlyman		c3d	amc		Animated	120	Feedback
+8	Happy		c3d	amc		Animated	120	Feedback
+9	Joy		c3d	amc		Animated	120	Feedback
+10	Lavish		c3d	amc		Animated	120	Feedback
+11	Marching		c3d	amc		Animated	120	Feedback
+12	Painfulleftknee		c3d	amc		Animated	120	Feedback
+13	Relaxed		c3d	amc		Animated	120	Feedback
+14	Rushed		c3d	amc		Animated	120	Feedback
+15	Sad		c3d	amc		Animated	120	Feedback
+16	Scared		c3d	amc		Animated	120	Feedback
+17	Scared		c3d	amc		Animated	120	Feedback
+18	Sexy		c3d	amc		Animated	120	Feedback
+19	Shy		c3d	amc		Animated	120	Feedback
+20	Singing in the rain jump		c3d	amc		Animated	120	Feedback
+21	Singing in the rain jump		c3d	amc		Animated	120	Feedback
+22	Sneaky		c3d	amc		Animated	120	Feedback
+
+Subject #143 (General Subject Capture) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Run	tvd	c3d	amc		Animated	120	Feedback
+2	Run to Stop	tvd	c3d	amc		Animated	120	Feedback
+3	Start to Run	tvd	c3d	amc		Animated	120	Feedback
+4	Run Figure 8	tvd	c3d	amc		Animated	120	Feedback
+5	Jumping Distances	tvd	c3d	amc		Animated	120	Feedback
+6	Jumping Heights	tvd	c3d	amc		Animated	120	Feedback
+7	Jumping Sideways	tvd	c3d	amc		Animated	120	Feedback
+8	Jumping Twists	tvd	c3d	amc		Animated	120	Feedback
+9	Jumping Twists	tvd	c3d	amc		Animated	120	Feedback
+10	Walk And Pick up Tool Box	tvd	c3d	amc		Animated	120	Feedback
+11	Walk And Pick up Box	tvd	c3d	amc		Animated	120	Feedback
+12	Walk And Pick up Toolbox	tvd	c3d	amc		Animated	120	Feedback
+13	Walk and Pick up Laundry Basket	tvd	c3d	amc		Animated	120	Feedback
+14	Walk And Step Over	tvd	c3d	amc		Animated	120	Feedback
+15	Walk And Step Over	tvd	c3d	amc		Animated	120	Feedback
+16	Walk And Step Over	tvd	c3d	amc		Animated	120	Feedback
+17	Walk Up Stairs And Over	tvd	c3d	amc		Animated	120	Feedback
+18	Sit Down And Get Up	tvd	c3d	amc		Animated	120	Feedback
+19	Sit On Stool And Get Up	tvd	c3d	amc		Animated	120	Feedback
+20	Catch And Throw	tvd	c3d	amc		Animated	120	Feedback
+21	Range Of Motion	tvd	c3d	amc		Animated	120	Feedback
+22	Catch And Throw Football	tvd	c3d	amc		Animated	120	Feedback
+23	Punching	tvd	c3d	amc		Animated	120	Feedback
+24	Kicking	tvd	c3d	amc		Animated	120	Feedback
+25	Waving	tvd	c3d	amc		Animated	120	Feedback
+26	Washing Window	tvd	c3d	amc		Animated	120	Feedback
+27	Washing Window	tvd	c3d	amc		Animated	120	Feedback
+28	Sweeping, Push Broom	tvd	c3d	amc		Animated	120	Feedback
+29	Pacing	tvd	c3d	amc		Animated	120	Feedback
+30	Stretch And Yawn	tvd	c3d	amc		Animated	120	Feedback
+31	Hopscotch	tvd	c3d	amc		Animated	120	Feedback
+32	Walk	tvd	c3d	amc		Animated	120	Feedback
+33	Peek A Boo	tvd	c3d	amc		Animated	120	Feedback
+34	Chicken Dance	tvd	c3d	amc		Animated	120	Feedback
+35	Macarena Dance	tvd	c3d	amc		Animated	120	Feedback
+36	Airplane	tvd	c3d	amc		Animated	120	Feedback
+37	Climb Up And Down Ladder	tvd	c3d	amc		Animated	120	Feedback
+38	Walk Digital 8	tvd	c3d	amc		Animated	120	Feedback
+39	Walk Backwards	tvd	c3d	amc		Animated	120	Feedback
+40	Walk Sideways	tvd	c3d	amc		Animated	120	Feedback
+41	Sneak	tvd	c3d	amc		Animated	120	Feedback
+42	Run	tvd	c3d	amc		Animated	120	Feedback
+
+Subject #144 (punching female) file index
+- - asf	framerate	Feedback
+Image	Trial #	Motion Description	
+1	Cartwheels		c3d	amc			120	Feedback
+2	Cartwheels001		c3d	amc			120	Feedback
+3	Figure8s		c3d	amc			120	Feedback
+4	Figure8s001		c3d	amc			120	Feedback
+5	Front_Kicking		c3d	amc			120	Feedback
+6	Front_Kicking001		c3d	amc			120	Feedback
+7	Left_Blocks		c3d	amc			120	Feedback
+8	Left_Blocks001		c3d	amc			120	Feedback
+9	Left_Front_Kicking		c3d	amc			120	Feedback
+10	Left_Front_Kicking001		c3d	amc			120	Feedback
+11	Left_Lunges		c3d	amc			120	Feedback
+12	Left_Lunges001		c3d	amc			120	Feedback
+13	Left_Punch_Sequence001		c3d	amc			120	Feedback
+14	Left_Punch_Sequence002		c3d	amc			120	Feedback
+15	Left_Spin_reach001		c3d	amc			120	Feedback
+16	Left_Spin_reach002		c3d	amc			120	Feedback
+17	Lunges		c3d	amc			120	Feedback
+18	Lunges001		c3d	amc			120	Feedback
+19	motorcycle pose		c3d	amc			120	Feedback
+20	Punch_Sequence		c3d	amc			120	Feedback
+21	Punch_Sequence001		c3d	amc			120	Feedback
+22	Reach_Left001		c3d	amc			120	Feedback
+23	Reach_Left002		c3d	amc			120	Feedback
+24	Reach_Right		c3d	amc			120	Feedback
+25	Reach_Right001		c3d	amc			120	Feedback
+26	Right_Blocks		c3d	amc			120	Feedback
+27	Right_Blocks001		c3d	amc			120	Feedback
+28	Right_Spin_reach		c3d	amc			120	Feedback
+29	Right_Spin_reach001		c3d	amc			120	Feedback
+30	Sun Salutation		c3d	amc			120	Feedback
+31	Sun Salutation001		c3d	amc			120	Feedback
+32	Sun Salutation002		c3d	amc			120	Feedback
+33	Walking		c3d	amc			120	Feedback
+34	Walking001		c3d	amc			120	Feedback

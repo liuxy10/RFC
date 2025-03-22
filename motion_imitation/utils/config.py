@@ -14,6 +14,7 @@ class Config:
         else:
             cfg_path = 'motion_imitation/cfg/**/%s.yml' % cfg_id
             files = glob.glob(cfg_path, recursive=True)
+            # print(files)
             assert(len(files) == 1)
             cfg = yaml.safe_load(open(files[0], 'r'))
         # create dirs
@@ -40,7 +41,7 @@ class Config:
             recreate_dirs(self.log_dir, self.tb_dir)
 
         # expert
-        self.motion_id = cfg['motion_id']
+        self.motion_id = cfg['motion_id'] # what if it is a list of motion data?
         self.expert_traj_file = f'data/cmu_mocap/motion/{self.motion_id}.p'
 
         # training config
