@@ -21,7 +21,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
 
     def __init__(self, cfg):
         if cfg.H >0 and cfg.M > 0:
-            assert cfg.mujoco_model_file == 'mocap_v2.xml' or cfg.mujoco_model_file == 'mocap_v3.xml', f"The standard model file should be mocap_v2, instead it is {cfg.mujoco_model_file}"
+            assert cfg.mujoco_model_file in ['mocap_v2.xml', 'mocap_v3.xml', 'mocap_v2_prothesis.xml'] , f"The standard model file should be mocap_v2, instead it is {cfg.mujoco_model_file}"
             if not path.exists(cfg.mujoco_model_file):
                 # try the default assets path
                 fullpath = path.join(Path(__file__).parent.parent.parent, 'khrylib/assets/mujoco_models', path.basename(cfg.mujoco_model_file))

@@ -26,7 +26,7 @@ class HumanoidEnvProthesis (HumanoidEnv):
         # OSL specific init
         self.osl_param_set = 4
         self.setup_osl_controller()
-                
+        self.overwrite = False        
         
     def load_expert(self):
         expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
@@ -116,11 +116,10 @@ class HumanoidEnvProthesis (HumanoidEnv):
                     # self.data.qfrc_applied[:] = 0.
                 else:
                     self.rfc_explicit(vf)
-            overwrite = True
-            if overwrite:
+            self.overwrite = self.cur_t >= 80
+            if self.overwrite:
                 self._overwrite_osl_actions(osl_torques)
-            print("test: disable the knee and ankle")
-            self._overwrite_osl_actions( {"knee":0,"ankle":0})
+
             # self.data.actuator_force[:] = 0.0
             self.sim.step()
 
@@ -163,8 +162,8 @@ class HumanoidEnvProthesis (HumanoidEnv):
   
     def _overwrite_osl_actions(self, osl_torques):
         
-        self.data.actuator_force[self.knee_qposaddr - 6] = osl_torques["knee"] 
-        self.data.actuator_force[self.knee_qposaddr+1 - 6] = osl_torques["ankle"]
+        self.data.ctrl[self.knee_qposaddr - 6] = osl_torques["knee"] 
+        self.data.ctrl[self.knee_qposaddr+1 - 6] = osl_torques["ankle"]
         
 
         # self.data.qfrc_actuator[self.knee_qposaddr] = osl_torques["knee"] 
@@ -189,8 +188,9 @@ class HumanoidEnvProthesis (HumanoidEnv):
         osl_sens_data['ankle_angle'] = self.sim.data.qpos[self.knee_qposaddr +1].copy()
         osl_sens_data['ankle_vel'] = self.sim.data.qvel[self.knee_qveladdr +1].copy()
         # print(self.sim.data.get_sensor('lload'))
-        grf, _, grf_mag = self.get_ground_reaction_force() # a choice here, whether use the magnitude or the z component
-        osl_sens_data['load'] =  grf[2] #np.maximum(- self.get_sensor('lforce', 3).copy() [2], 0.0)  # magnitude
+        # grf, _, grf_mag = self.get_ground_reaction_force() # a choice here, whether use the magnitude or the z component
+        _ , _, _, _, _, fm_l = self.get_grf_rl()
+        osl_sens_data['load'] =  fm_l #np.maximum(- self.get_sensor('lforce', 3).copy() [2], 0.0)  # magnitude
         # osl_sens_data['touch'] = np.sign(self.get_sensor('ltouch', 1).copy() [0] )# magnitude
    
         return osl_sens_data

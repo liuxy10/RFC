@@ -21,14 +21,14 @@ import glfw
 parser = argparse.ArgumentParser()
 parser.add_argument('--cfg', default='0202')
 parser.add_argument('--vis_model_file', default='mocap_v2_vis')
-parser.add_argument('--iter', type=int, default=800)
+parser.add_argument('--iter', type=int, default=410)
 parser.add_argument('--focus', action='store_true', default=True)
 parser.add_argument('--hide_expert', action='store_true', default=False)
 parser.add_argument('--preview', action='store_true', default=False)
 parser.add_argument('--record', action='store_true', default=False)
 parser.add_argument('--record_expert', action='store_true', default=False)
 parser.add_argument('--azimuth', type=float, default=45)
-parser.add_argument('--video_dir', default='out/videos/prothesis')
+parser.add_argument('--video_dir', default='out/videos/prothesis_hw')
 args = parser.parse_args()
 
 cfg = Config('0202', False, create_dirs=False)
@@ -59,7 +59,7 @@ action_dim_f = env_p.action_space.shape[0]
 """load learner policy"""
 policy_net = PolicyGaussian(MLP(state_dim, cfg.policy_hsize, cfg.policy_htype), action_dim, log_std=cfg.log_std, fix_std=cfg.fix_std)
 value_net = Value(MLP(state_dim, cfg.value_hsize, cfg.value_htype))
-cp_path = '%s/iter_%04d.p' % (cfg.model_dir, 800)
+cp_path = '%s/iter_%04d.p' % (cfg.model_dir, args.iter)
 logger.info('loading model from checkpoint: %s' % cp_path)
 model_cp = pickle.load(open(cp_path, "rb"))
 policy_net.load_state_dict(model_cp['policy_dict'])
@@ -110,13 +110,17 @@ class MyVisulizerPK(Visualizer):
             qpos = np.concatenate([qpos[:env.knee_qposaddr+1], np.zeros(2), qpos[env.knee_qposaddr+1:]])
             poses['pred'].append(qpos)
             
-            save_by_frame = False #True
+            save_by_frame = True
             if save_by_frame:
-                fig, ax = env_p.visualize_by_frame(show = True, label = "Prothesis (red is prothesis)") 
-                frame_dir = f'{args.video_dir}/frame_skeleton/'
+                lab = f"Prothesis (red) at {osl_infos['phase'][-1]}, enabled = {env_p.overwrite}" if len(osl_infos['phase']) > 0 else "Prothesis (red)" 
+                fig, ax = env_p.visualize_by_frame(show = False, label = lab ) 
                 vfs = env.data.qfrc_applied[:3].copy()
                 com_root = env.data.subtree_com[0,:].copy() 
-                visualize_3d_forces(fig, ax, vfs, com_root, sc = 500)
+                visualize_3d_forces(fig, ax, vfs, com_root, sc = 20)
+                # print osl_infos on the figure
+                
+                fig.canvas.draw()
+                frame_dir = f'{args.video_dir}/frame_skeleton/'
                 data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
                 save_image_hwc(data,  f'{frame_dir}/%04d.png' % t) 
                 plt.close(fig)
@@ -127,6 +131,7 @@ class MyVisulizerPK(Visualizer):
             # logging osl info
             osl_info = env_p.osl_info
             osl_infos['phase'].append(osl_info['phase'])
+            # print(osl_infos['phase'])
             for key in osl_infos['osl_sense_data']:
                 osl_infos['osl_sense_data'][key].append(osl_info['osl_sense_data'][key])
             # logging virtual force and grf info
@@ -171,7 +176,7 @@ class MyVisulizerPK(Visualizer):
             fig, axs = plt.subplots(3, 1, figsize=(10, 10))
             fig, axs = visualize_grfs(fig, axs, grfs)
             plt.show()
-        contact_video = False
+        contact_video = True
         if contact_video:
             out_name = f'{args.cfg}_{"expert" if args.record_expert else args.iter}_skeleton.mp4'
             frames_to_video(f'{args.video_dir}/frame_skeleton', args.video_dir, 5, out_name)   
@@ -220,5 +225,5 @@ class MyVisulizerPK(Visualizer):
             
 vis = MyVisulizerPK(f'mocap_v2_vis.xml')
 
-vis.record_video(preview = False)
+# vis.record_video(preview = False)
 torch.cuda.empty_cache()
