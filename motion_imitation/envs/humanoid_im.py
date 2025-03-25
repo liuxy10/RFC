@@ -1,7 +1,6 @@
 import os
 import sys
 sys.path.append(os.getcwd())
-
 from khrylib.rl.envs.common import mujoco_env
 from gym import spaces
 from khrylib.utils import *
@@ -12,16 +11,15 @@ from mujoco_py import functions as mjf
 import pickle
 import time
 from scipy.linalg import cho_solve, cho_factor
-
-from osl.control.myoosl_control import MyoOSLController
+from motion_imitation.envs.oslAgent import OSLAgent
 sys.path.append("/home/xliu227/Github/human-model-generator/code/")
 from write_xml import *
 
 class HumanoidEnv(mujoco_env.MujocoEnv):
 
     def __init__(self, cfg):
+        assert cfg.mujoco_model_file in ['mocap_v2.xml', 'mocap_v3.xml', 'mocap_v2_prothesis.xml'] , f"The standard model file should be mocap_v2, instead it is {cfg.mujoco_model_file}"
         if cfg.H >0 and cfg.M > 0:
-            assert cfg.mujoco_model_file in ['mocap_v2.xml', 'mocap_v3.xml', 'mocap_v2_prothesis.xml'] , f"The standard model file should be mocap_v2, instead it is {cfg.mujoco_model_file}"
             if not path.exists(cfg.mujoco_model_file):
                 # try the default assets path
                 fullpath = path.join(Path(__file__).parent.parent.parent, 'khrylib/assets/mujoco_models', path.basename(cfg.mujoco_model_file))
@@ -35,9 +33,21 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             print("Scaled model is saved at ", output_xml)
             print(f"scaled height: {calculate_humanoid_height(output_xml)}")
             cfg.mujoco_model_file = output_xml
+            
             scale_inertia = cfg.M /(30.9534) * (cfg.H / 1.4954 )**2 # scale inertia proportional to mass and the square of the height 
             cfg = scale_torque_related_params(cfg, scale_inertia)
-            # exit(0)
+            
+
+        if cfg.osl:
+            
+            self.freeze_joints = ['lfoot_y', 'lfoot_z']
+            self.osl_ctrl_joints = ['ltibia_x', 'lfoot_x']
+            self.osl = OSLAgent(cfg, self.osl_ctrl_joints, self.freeze_joints)
+            output_xml = cfg.mujoco_model_file.replace('.xml', '_osl.xml')
+            change_stiffness(cfg.mujoco_model_file, output_xml, self.freeze_joints, 1e3) 
+            cfg.mujoco_model_file = output_xml
+            print("OSL model is saved at ", output_xml)
+            
         mujoco_env.MujocoEnv.__init__(self, cfg.mujoco_model_file, frame_skip = 15) # 15 is the frame skip 
         self.cfg = cfg
         self.set_cam_first = set()
@@ -47,10 +57,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.body_qposaddr = get_body_qposaddr(self.model)
         self.body_qposaddr_list_start_index = [idxs[0] for idxs in list(self.body_qposaddr.values())]
         self.knee_qposaddr = self.body_qposaddr_list_start_index[2]
-        try:
-            self.knee_qveladdr = self.sim.model.get_joint_qvel_addr("ltibia_x")
-        except:
-            self.knee_qveladdr = self.sim.model.get_joint_qvel_addr("knee")
+        self.knee_qveladdr = self.sim.model.get_joint_qvel_addr("ltibia_x")
         self.jkp, self.jkd = cfg.jkp, cfg.jkd  # inital value of joint stiffness, damping, reference position, scale
         self.lower_index = [0, 14] # lower body index from yml config file
         self.bquat = self.get_body_quat()
@@ -63,7 +70,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         print(self.body_tree)
         self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
         self.max_vf = 30.0 # N
-        self.grf_normalized = get_ideal_grf(total_idx = 100, rhs_index = [3,33,63], offset_period = 15, stance_period = 18) 
+        self.grf_normalized = get_ideal_grf(total_idx = 1000, offset_period = 15, stance_period = 18) 
         self.mass = self.model.body_subtreemass[0]
     
     def load_expert(self):
@@ -243,7 +250,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 torque = ctrl * cfg.a_scale
             torque = np.clip(torque, -cfg.torque_lim, cfg.torque_lim)
             self.data.ctrl[:] = torque
-
+            
             """ Residual Force Control (RFC) """
             if cfg.residual_force:
                 vf = ctrl[-self.vf_dim:].copy() # vfs are at the last of action
@@ -251,15 +258,17 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                     self.rfc_implicit(vf)
                 else:
                     self.rfc_explicit(vf)
-            # print("ctrl torques vs vf", torque.tolist(), vf.tolist())
-            # contact = self.get_contact()
-            # print("contact = ", contact)
+            osl_torques = self.update_osl_control()
+            # print("OSL info", self.osl.osl_info, osl_torques)
+            self.overwrite = False
+            if self.overwrite:
+                self._overwrite_osl_actions(osl_torques)
             self.sim.step()
 
         if self.viewer is not None:
             self.viewer.sim_time = time.time() - t0
     
-    def step(self, a):
+    def step(self, a, nonstop = False):
         cfg = self.cfg
         # record prev state
         self.prev_qpos = self.data.qpos.copy()
@@ -276,10 +285,12 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         if cfg.env_term_body == 'head':
             fail = self.expert is not None and head_pos[2] < self.expert['head_height_lb'] - 0.1
         else:
-            fail = self.expert is not None and self.data.qpos[2] < self.expert['height_lb'] - 0.5
+            fail = self.expert is not None and self.data.qpos[2] < self.expert['height_lb'] - 0.2
         cyclic = self.expert['meta']['cyclic']
         end =  (cyclic and self.cur_t >= cfg.env_episode_len) or (not cyclic and self.cur_t + self.start_ind >= self.expert['len'] + cfg.env_expert_trail_steps)
         done = fail or end
+        if nonstop:
+            done = fail
         obs = self.get_obs()
         return obs, reward, done, {'fail': fail, 'end': end}
 
@@ -421,6 +432,8 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
     def get_applied_torque_generalized(self):
         return self.data.qfrc_applied[6:]
     
+    
+    
     def compute_global_force(self):
         # Get full constraint Jacobian (efc_J)
         J = self.data.efc_J.copy()  # Shape: (n_contacts, nv)
@@ -459,6 +472,41 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         if show:
             plt.show()
         return fig, ax
+    
+     
+    """ OSL specific functions
+    """
+    def update_osl_control(self):
+        return self.osl.update_osl_control(self.get_osl_sens())
+    
+    def _overwrite_osl_actions(self, osl_torques):
+        
+        if isinstance(osl_torques, dict):
+            self.data.ctrl[self.model.actuator_name2id('ltibia_x')] = osl_torques["knee"]
+            self.data.ctrl[self.model.actuator_name2id('lfoot_x')] = - osl_torques["ankle"]
+            for name in self.freeze_joints:
+                self.data.ctrl[self.model.actuator_name2id(name)] = 0.0
+        else:
+            raise TypeError("osl_torques must be a dictionary")
+        
+    
+    def get_osl_sens(self):
+
+        osl_sens_data = {}
+        
+        osl_sens_data['knee_angle'] = self.sim.data.qpos[self.knee_qposaddr].copy()
+        osl_sens_data['knee_vel'] = self.sim.data.qvel[self.knee_qveladdr].copy()
+        osl_sens_data['ankle_angle'] = self.sim.data.qpos[self.knee_qposaddr +1].copy()
+        osl_sens_data['ankle_vel'] = self.sim.data.qvel[self.knee_qveladdr +1].copy()
+        # print(self.sim.data.get_sensor('lload'))
+        # grf, _, grf_mag = self.get_ground_reaction_force() # a choice here, whether use the magnitude or the z component
+        _ , _, _, _, _, fm_l = self.get_grf_rl()
+        osl_sens_data['load'] =  fm_l #np.maximum(- self.get_sensor('lforce', 3).copy() [2], 0.0)  # magnitude
+        # osl_sens_data['touch'] = np.sign(self.get_sensor('ltouch', 1).copy() [0] )# magnitude
+   
+        return osl_sens_data
+
+
         
    
 if __name__ == "__main__":

@@ -77,6 +77,7 @@ class MyoOSLController:
         Internal function to obtain torques from 
         """
         out_joint_list = ['knee', 'ankle']
+        
         return dict(zip( out_joint_list, [self._get_joint_torque(jnt) for jnt in out_joint_list] ))
 
     def change_osl_mode(self, mode=0):

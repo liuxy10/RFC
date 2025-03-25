@@ -4,6 +4,21 @@ from pathlib import Path
 
 from os import path
 
+def change_stiffness(input_path,output_path, joints, stiffness):
+    if not path.exists(input_path):
+        # try the default assets path
+        input_path = path.join(Path(__file__).parent.parent, 'assets/mujoco_models', path.basename(input_path))
+        if not path.exists(input_path):
+            raise IOError("File %s does not exist" % input_path)
+    tree = ET.parse(input_path)
+    root = tree.getroot()
+    for joint in joints:
+        joint_elm = root.find(".//joint[@name='%s']" % joint)
+        if joint_elm is not None:
+            joint_elm.set('stiffness', str(stiffness))
+    tree.write(output_path)
+
+
 def build_body_tree(fullpath):
     if not path.exists(fullpath):
             # try the default assets path

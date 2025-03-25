@@ -23,6 +23,7 @@ class Config:
         try:
             self.H = cfg['H']
             self.M = cfg['M']
+            self.osl = cfg.get('osl', False)
             if self.H > 0 and self.M > 0:
                 base_dir = 'results_hw' # changed this for human-like mass dist
         except KeyError:

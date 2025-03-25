@@ -29,10 +29,11 @@ def generate_interpolated_grf(t):
     return cs_vert(t), cs_ap(t)
 
 # hard coded for 0202
-def get_ideal_grf(total_idx = 76, rhs_index = [0,30,60], offset_period = 15, stance_period = 18):
+def get_ideal_grf(total_idx, rhs_index = None, offset_period = 15, stance_period = 18):
     grf = np.zeros((total_idx, 2))
     grf_ap = np.zeros((total_idx, 2))
-
+    if rhs_index is None:
+        rhs_index = np.arange(0, 30, total_idx)
     # for 1 row (right), 0 row (left)
     for i in rhs_index: 
         if i + stance_period > total_idx:
@@ -144,7 +145,7 @@ def visualize_phases(fig, axs, osl_infos):
     plt.tight_layout()
     return fig, axs
 
-def visualize_poses(poses, joint_names): 
+def visualize_poses(poses, joint_names, phases = None): 
     
     num_poses = poses['gt'].shape[1]
     num_cols = 4
@@ -156,7 +157,7 @@ def visualize_poses(poses, joint_names):
         axs[i].plot(force, 'r',label=name + ' pred')
     for i, (force, name) in enumerate(zip(poses['gt'].T, joint_names)):
         axs[i].plot(force, 'b', label=name + ' gt')
-        mse = np.mean((force - poses['pred'][:,i]) ** 2)
+        mse = np.mean((force - poses['pred'][:force.shape[0],i]) ** 2)
     # for i, (force, name) in enumerate(zip(poses['target'].T, joint_names)):
     #     axs[i].plot(force, 'r:', label=name + ' target')
         
@@ -164,8 +165,11 @@ def visualize_poses(poses, joint_names):
         axs[i].set_ylabel('qpos (rad)')
         axs[i].legend()
         axs[i].grid()
-    for j in range(i + 1, len(axs)):
-        fig.delaxes(axs[j])
+        
+    if phases is not None:
+        add_phase_color(phases, axs)    
+    # for j in range(i + 1, len(axs)):
+    #     fig.delaxes(axs[j])
         
     plt.tight_layout()
     plt.show()
@@ -183,7 +187,7 @@ def visualize_impedance(fig, axs, jkps):
     return fig, axs
 
 
-def visualize_force( actuator_forces, actuator_names):
+def visualize_force( actuator_forces, actuator_names, forces_ref = None, force_names = None, phases = None):
     num_actuators = len(actuator_names)
     num_cols = 4
     num_rows = num_actuators // num_cols + (num_actuators % num_cols > 0)
@@ -197,12 +201,37 @@ def visualize_force( actuator_forces, actuator_names):
         axs[i].set_ylabel('torque (Nm/kg)')
         axs[i].legend()
         axs[i].grid()
-    for j in range(i + 1, len(axs)):
-        fig.delaxes(axs[j])
         
+    if forces_ref is not None and force_names is not None:   
+        forces_ref = np.array(forces_ref)
+        force_names = np.array(force_names) 
+        for (force, name) in zip(forces_ref.T, force_names): 
+            i = actuator_names.index(name)
+            axs[i].plot(force, 'r:', label=name+"_osl")
+            axs[i].legend()
+             # Add background spans for modes
+    if phases is not None:
+        add_phase_color(phases, axs)
+    
     plt.tight_layout()
     plt.show()
     return fig, axs
+
+def add_phase_color( phases, axs):
+    
+    # Define colors for each mode
+    mode_colors = {
+        "e_swing": "lightblue",
+        "l_swing": "lightgreen",
+        "e_stance": "lightyellow",
+        "l_stance": "lightcoral"
+    }
+    for j in range(len(phases) - 1):  # Ensure pairs of start and end indices
+        for ax in axs:
+            mode = phases[j]  # Assume phases[j] corresponds to a mode name
+            color = mode_colors.get(mode, "gray")  # Default to gray if mode is undefined
+            ax.axvspan(j, j + 1, facecolor=color, alpha=0.3)
+
 
 
 def visualize_torques(fig, axs, vfs):

@@ -18,7 +18,7 @@ from motion_imitation.reward_function import reward_func
 from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--cfg', default='0202_wo_phase')
+parser.add_argument('--cfg', default='0202')
 parser.add_argument('--render', action='store_true', default=False)
 parser.add_argument('--test', action='store_true', default=False)
 parser.add_argument('--num_threads', type=int, default=1)
