@@ -71,6 +71,8 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
         self.max_vf = 30.0 # N
         self.grf_normalized = get_ideal_grf(total_idx = 1000, offset_period = 15, stance_period = 18) 
+        self.t_last_switch_phase = -1
+        self.last_phase_stance = True # hand code for 0202
         self.mass = self.model.body_subtreemass[0]
     
     def load_expert(self):
@@ -276,6 +278,11 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.prev_bquat = self.bquat.copy()
         # do simulation
         self.do_simulation(a, self.frame_skip) 
+        # get phase
+        
+        # phase left is defined as 
+        self.update_phase()
+        
         self.cur_t += 1
         self.bquat = self.get_body_quat() 
         self.update_expert()
@@ -358,7 +365,19 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
 ##############################################################################################################
 ### xinyi's code
 ##############################################################################################################
-
+    def inverse_dynamics(self, qpos_trajectory = None, qvel_trajectory = None, qacc_trajectory = None):
+        if qpos_trajectory is None:
+            qpos_trajectory = self.data.qpos[None, :]
+            qvel_trajectory = self.data.qvel[None, :]
+            qacc_trajectory = self.data.qacc[None, :]
+        else:
+            assert qpos_trajectory.shape[1] == self.nq, "qpos_trajectory should have the same number of joints as the model"
+            assert qvel_trajectory.shape[1] == self.nv, "qvel_trajectory should have the same number of joints as the model"
+            assert qacc_trajectory.shape[1] == self.nv, "qacc_trajectory should have the same number of joints as the model"
+        torque_estimates = generate_inverse_dynamics_torques(self, qpos_trajectory, qvel_trajectory, qacc_trajectory)
+        return np.array(torque_estimates)
+        
+    
     def forward_kinematics(self, qpos):
         assert type(qpos) == np.ndarray, "Joint angles must be a numpy array"
         assert qpos.shape[0] == self.nq, "Joint angles must have the same length as the number of degrees of freedom"
@@ -378,6 +397,45 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 pass
 
         return body_positions
+    
+    def update_phase_old(self, hip_angle_min = -0.7, hip_angle_max = 0.43, stance_period = 0.6, contact_foot_height = 0.07):
+        # hip angle + contact info to decide phase
+        left_stance = self.get_body_com('lfoot')[2] < contact_foot_height
+        left_hip_angle = self.data.qpos[9].copy() # 7 + 3 
+        self.phase_left = np.clip((left_hip_angle - hip_angle_min) / (hip_angle_max - hip_angle_min), 0, 1) * left_stance * stance_period
+        self.phase_left += (np.clip((hip_angle_max - left_hip_angle ) / (hip_angle_max - hip_angle_min), 0, 1)* (1-stance_period) + stance_period) * (1 - left_stance) 
+        
+        self.phase = self.phase_left
+        # self.phase_right = (self.phase + 0.5) % 1
+        right_stance = self.get_body_com('rfoot')[2] < contact_foot_height
+        right_hip_angle = self.data.qpos[16].copy() # 7 + 3 + 7
+        self.phase_right = np.clip((right_hip_angle - hip_angle_min) / (hip_angle_max - hip_angle_min), 0, 1) * right_stance * stance_period
+        self.phase_right += (np.clip((hip_angle_max - right_hip_angle ) / (hip_angle_max - hip_angle_min), 0, 1)* (1-stance_period) + stance_period) * (1 - right_stance) 
+        
+        
+        # print("phase", self.phase, "left hip angle", left_hip_angle)
+        # self.leg_phase = torch.cat([self.phase_left.unsqueeze(1), self.phase_right.unsqueeze(1)], dim=-1)
+    
+    def update_phase(self, gait_period = 30, stance_period = 0.55, contact_foot_height = 0.07):
+        # time + contact info to decide phase, inherent assumption: the gait period is 30 RL time steps, which is 1 second
+        self.phase_left = np.clip((self.cur_t - self.t_last_switch_phase) / gait_period, 0, 1)
+        self.phase_left += stance_period * ( 1- self.last_phase_stance)
+        self.phase = self.phase_left
+        self.phase_right = (self.phase + 0.5) % 1
+        
+        cur_phase_stance = self.get_body_com('lfoot')[2] < contact_foot_height
+        if cur_phase_stance != self.last_phase_stance:
+            self.t_last_switch_phase = self.cur_t
+            self.last_phase_stance = cur_phase_stance
+        
+    
+       
+    def get_grf_via_phase(self):
+        grf_l, grf_l_ap = generate_interpolated_grf(self.phase_left, stance_period = 0.6) # AP
+        grf_r, grf_r_ap = generate_interpolated_grf(self.phase_right, stance_period = 0.6) # vert
+        grf_r_all, grf_l_all = np.array([self.phase_right, grf_r_ap, grf_r]), np.array([self.phase_left, grf_l_ap, grf_l])
+        return grf_r_all, grf_l_all
+    
     
     def get_body_com(self, body_name):
         body_id = self.sim.model.body_name2id(body_name)
@@ -507,7 +565,16 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         return osl_sens_data
 
 
-        
+def generate_inverse_dynamics_torques(env, qpos_trajectory, qvel_trajectory, qacc_trajectory):
+    torque_estimates = []
+    for qpos, qvel, qacc in zip(qpos_trajectory, qvel_trajectory, qacc_trajectory):
+        env.data_dm.qpos[:] = qpos
+        env.data_dm.qvel[:] = qvel
+        env.data_dm.qacc[:] = qacc
+        mujoco.mj_inverse(env.model_dm, env.data_dm)
+        torque = env.data_dm.qfrc_inverse.copy()
+        torque_estimates.append(torque)
+    return np.array(torque_estimates)      
    
 if __name__ == "__main__":
     from motion_imitation.utils.config import Config

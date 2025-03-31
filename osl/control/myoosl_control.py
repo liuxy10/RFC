@@ -173,11 +173,11 @@ class MyoOSLController:
         self.HARDWARE = {}
         self.HARDWARE['knee'] = {}
         self.HARDWARE['knee']['gear_ratio'] = 49.4
-        self.HARDWARE['knee']['peak_torque'] = 142.272
+        self.HARDWARE['knee']['peak_torque'] = 500
         self.HARDWARE['knee']['control_range'] = 2.88
         self.HARDWARE['ankle'] = {}
         self.HARDWARE['ankle']['gear_ratio'] = 58.4
-        self.HARDWARE['ankle']['peak_torque'] = 168.192
+        self.HARDWARE['ankle']['peak_torque'] = 500
         self.HARDWARE['ankle']['control_range'] = 2.88
         
         temp_dict = {}
@@ -191,7 +191,7 @@ class MyoOSLController:
         temp_dict['e_stance']['gain']['ankle_damping'] = 0
         temp_dict['e_stance']['gain']['ankle_target_angle'] = np.deg2rad(-2)
         temp_dict['e_stance']['threshold']['load'] = (0.25 * self.BODY_WEIGHT, 'above')
-        temp_dict['e_stance']['threshold']['ankle_angle'] = (np.deg2rad(6), 'above')
+        # temp_dict['e_stance']['threshold']['ankle_angle'] = (np.deg2rad(6), 'above')
 
         temp_dict['l_stance'] = {}
         temp_dict['l_stance']['gain'] = {}
@@ -233,7 +233,8 @@ class MyoOSLController:
         for idx in np.arange(self.n_sets):
             self.OSL_PARAM_LIST[idx] = {}
             self.OSL_PARAM_LIST[idx] = copy.deepcopy(temp_dict)
-
+    
+    
     @property
     def getOSLparam(self):
         return copy.deepcopy(self.OSL_PARAM_LIST)

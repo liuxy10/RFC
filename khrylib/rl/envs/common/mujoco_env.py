@@ -5,7 +5,7 @@ from os import path
 from pathlib import Path
 import mujoco_py
 from khrylib.rl.envs.common.mjviewer import MjViewer
-
+import mujoco
 DEFAULT_SIZE = 500
 
 
@@ -21,8 +21,10 @@ class MujocoEnv:
                 raise IOError("File %s does not exist" % fullpath)
         self.frame_skip = frame_skip
         self.model = mujoco_py.load_model_from_path(fullpath)
+        self.model_dm = mujoco.MjModel.from_xml_path(fullpath)
         self.sim = mujoco_py.MjSim(self.model) 
         self.data = self.sim.data # changing self.data will change self.sim.data
+        self.data_dm = mujoco.MjData(self.model_dm)
         self.viewer = None
         self._viewers = {}
         self.obs_dim = None

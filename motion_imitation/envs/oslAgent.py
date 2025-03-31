@@ -12,10 +12,15 @@ class OSLAgent:
         self.overwrite = False 
         self.ctrl_joints = ctrl_joints # joints that are controlled by OSL
         self.freeze_joints = freeze_joints # joints/dofs that are frozen by OSL  
-        
-    def setup_osl_controller(self,mass,init_state = 'l_swing'):
+        self.phase_color = {
+            "e_swing": "lightblue",
+            "l_swing": "lightgreen",
+            "e_stance": "lightyellow",
+            "l_stance": "lightcoral"
+        }
+    def setup_osl_controller(self, mass,init_state = 'l_swing'):
         # Initialize the OSL controller
-        self.OSL_CTRL = MyoOSLController(mass, init_state=init_state, n_sets=self.osl_param_set)
+        self.OSL_CTRL = MyoOSLController(mass *1.5, init_state=init_state, n_sets=self.osl_param_set)
         self.OSL_CTRL.start()
 
         # Define OSL-controlled joints

@@ -16,9 +16,21 @@ import re
 from scipy.interpolate import CubicSpline
 import matplotlib.pyplot as plt
 
-def generate_interpolated_grf(t):
+def generate_interpolated_grf(t, stance_period=0.55):
     # Define key timing points and force values for vertical and AP forces
-    time_points = [0, 15, 50, 85, 100]  # Percentage of stance phase
+    time_points = [0, 0.15, 0.50, 0.85, 1]  # Percentage of stance phase
+    force_vert_points = [0, 1.0, 0.8, 1.0, 0]  # Normalized to body weight
+    force_ap_points = [0, -0.2, 0, 0.2, 0]  # Example AP force values
+
+    # Create cubic spline interpolation for vertical and AP forces
+    cs_vert = CubicSpline(time_points, force_vert_points, bc_type='natural')
+    cs_ap = CubicSpline(time_points, force_ap_points, bc_type='natural')
+    
+    return cs_vert(t/stance_period) if t<=stance_period else 0, cs_ap(t/stance_period) if t<=stance_period else 0
+
+def generate_interpolated_grf_old(t):
+    # Define key timing points and force values for vertical and AP forces
+    time_points = [0, 0.15, 0.50, 0.85, 1]  # Percentage of stance phase
     force_vert_points = [0, 1.0, 0.8, 1.0, 0]  # Normalized to body weight
     force_ap_points = [0, -0.2, 0, 0.2, 0]  # Example AP force values
 
@@ -37,17 +49,19 @@ def get_ideal_grf(total_idx, rhs_index = None, offset_period = 15, stance_period
     # for 1 row (right), 0 row (left)
     for i in rhs_index: 
         if i + stance_period > total_idx:
-            grf[i:, 1], grf_ap[i:, 1] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i))[:total_idx-i]
+            grf[i:, 1], grf_ap[i:, 1] = generate_interpolated_grf_old(np.linspace(0, 1, total_idx-i))[:total_idx-i]
             continue
     
         if i + stance_period + offset_period > total_idx:
-            grf[i:, 0], grf_ap[i:, 1] = generate_interpolated_grf(np.linspace(0, 100, total_idx-i - offset_period))[:total_idx-i-offset_period]
+            grf[i:, 0], grf_ap[i:, 0] = generate_interpolated_grf_old(np.linspace(0, 1, total_idx-i - offset_period))[:total_idx-i-offset_period]
             continue
         
-        grf [i:i+stance_period,1], grf_ap[i:i+stance_period,1] = generate_interpolated_grf(np.linspace(0, 100, stance_period))  # High-resolution time point
-        grf [i+offset_period:i+stance_period+offset_period, 0], grf_ap[i+offset_period:i+stance_period+offset_period, 0] = generate_interpolated_grf(np.linspace(0, 100, stance_period))
+        grf [i:i+stance_period,1], grf_ap[i:i+stance_period,1] = generate_interpolated_grf_old(np.linspace(0, 1, stance_period))  # High-resolution time point
+        grf [i+offset_period:i+stance_period+offset_period, 0], grf_ap[i+offset_period:i+stance_period+offset_period, 0] = generate_interpolated_grf_old(np.linspace(0, 1, stance_period))
         
     return np.hstack([grf, -grf_ap])
+
+
 
 def change_config_path_via_args(cfg, cfg_num, postdix = ''):
     cfg.cfg_dir = '%s/motion_im%s/%s' % (cfg.base_dir, postdix, cfg_num)
@@ -87,41 +101,6 @@ def visualize_grfs(fig, axs, grfs, lab = '', color = 'r'):
     plt.tight_layout()
     return fig, axs
 
-def visualize_qpos(qpos, body_qposaddr_list_start_index, body_qposaddr):
-    fig, axs = plt.subplots(nrows=qpos.shape[1]//4+1, ncols=4, figsize=(10, 12))
-    for i in range(qpos.shape[1]//4+1):
-        for j in range(4):
-            idx = i*4 + j
-            if idx >= qpos.shape[1]:
-                break
-            gt = qpos[:, idx]
-            axs[i, j].plot(gt, 'r', label='gt')
-            axs[i, j].set_ylim([-np.pi, np.pi])
-            if idx in [idxs[0] for idxs in list(body_qposaddr.values())]:
-                body_name = [name for name, addr in body_qposaddr.items() if addr[0] == idx][0]
-                axs[i, j].set_title(f"idx = {idx}, {body_name}", fontsize=12)
-            if i == 0 and j == 0:
-                axs[i, j].legend()
-    plt.tight_layout()
-    plt.show()
-    
-def visualize_qvel(qvel, body_qveladdr_list_start_index, body_qveladdr):
-    fig, axs = plt.subplots(nrows=qvel.shape[1]//4+1, ncols=4, figsize=(10, 12))
-    for i in range(qvel.shape[1]//4+1):
-        for j in range(4):
-            idx = i*4 + j
-            if idx >= qvel.shape[1]:
-                break
-            gt = qvel[:, idx]
-            axs[i, j].plot(gt, 'r', label='gt')
-            axs[i, j].set_ylim([-np.pi, np.pi])
-            if idx in [idxs[0] for idxs in list(body_qveladdr.values())]:
-                body_name = [name for name, addr in body_qveladdr.items() if addr[0] == idx][0]
-                axs[i, j].set_title(f"idx = {idx}, {body_name}", fontsize=12)
-            if i == 0 and j == 0:
-                axs[i, j].legend()
-    plt.tight_layout()
-    plt.show()
     
 def visualize_phases(fig, axs, osl_infos):
     phases = ['e_stance', 'l_stance', 'e_swing', 'l_swing']
@@ -145,27 +124,40 @@ def visualize_phases(fig, axs, osl_infos):
     plt.tight_layout()
     return fig, axs
 
-def visualize_poses(poses, joint_names, phases = None): 
+def visualize_kinematics(var, joint_names, phases = None, osl_params_dict = None, var_name = 'qpos'): 
     
-    num_poses = poses['gt'].shape[1]
+    num_var = var['gt'].shape[1]
     num_cols = 4
-    num_rows = num_poses // num_cols + (num_poses % num_cols > 0)
+    num_rows = num_var // num_cols + (num_var % num_cols > 0)
     
     fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(15, num_rows * 3))
     axs = axs.flatten()
-    for i, (force, name) in enumerate(zip(poses['pred'].T, joint_names)):
-        axs[i].plot(force, 'r',label=name + ' pred')
-    for i, (force, name) in enumerate(zip(poses['gt'].T, joint_names)):
-        axs[i].plot(force, 'b', label=name + ' gt')
-        mse = np.mean((force - poses['pred'][:force.shape[0],i]) ** 2)
-    # for i, (force, name) in enumerate(zip(poses['target'].T, joint_names)):
+    if 'pred' in var.keys():
+        for i, (v, name) in enumerate(zip(var['pred'].T, joint_names)):
+            axs[i].plot(v, 'r',label=name + ' pred')
+    # for i, (force, name) in enumerate(zip(var['target'].T, joint_names)):
     #     axs[i].plot(force, 'r:', label=name + ' target')
-        
-        axs[i].set_title(name + f', MSE: {mse:.4f}')
-        axs[i].set_ylabel('qpos (rad)')
-        axs[i].legend()
-        axs[i].grid()
-        
+    
+    if 'gt' in var.keys():
+        for i, (v, name) in enumerate(zip(var['gt'].T, joint_names)):
+            axs[i].plot(v, 'b', label=name + ' gt')
+            if 'pred' in var.keys():
+                mse = np.mean((v - var['pred'][:v.shape[0],i]) ** 2)
+                axs[i].set_title(name + f', MSE: {mse:.4f}')
+            unit = 'rad' if var_name == 'qpos' else 'rad/s'
+            unit = 'rad/s^2' if var_name == 'qacc' else unit
+            axs[i].set_ylabel(f'{var_name} ({unit})')
+            axs[i].legend()
+            axs[i].grid()
+    
+    if osl_params_dict is not None and phases is not None:
+        joint_to_osl_names = {'ltibia_x': 'knee', 'lfoot_x': 'ankle'}
+        for name in joint_to_osl_names.keys():
+            idx = joint_names.index(name)
+            # target_angles = np.zeros(var.shape[0])
+            target_angles = np.array([float(osl_params_dict[phases[i]]['gain'][f'{joint_to_osl_names[name]}_target_angle']) for i in range(var['gt'].shape[0])])
+            axs[idx].plot(target_angles, 'g:', label='osl target angle')
+            
     if phases is not None:
         add_phase_color(phases, axs)    
     # for j in range(i + 1, len(axs)):
@@ -188,10 +180,18 @@ def visualize_impedance(fig, axs, jkps):
 
 
 def visualize_force( actuator_forces, actuator_names, forces_ref = None, force_names = None, phases = None):
+    
     num_actuators = len(actuator_names)
     num_cols = 4
     num_rows = num_actuators // num_cols + (num_actuators % num_cols > 0)
     
+    if phases is not None or forces_ref is not None:
+        id = np.array([2, 3, 6])
+        actuator_forces = actuator_forces[:, id]
+        actuator_names = [actuator_names[i] for i in id]
+        num_cols = 1
+        num_rows = len(id)
+        
     fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(15, num_rows * 3))
     axs = axs.flatten()
     
@@ -202,14 +202,16 @@ def visualize_force( actuator_forces, actuator_names, forces_ref = None, force_n
         axs[i].legend()
         axs[i].grid()
         
-    if forces_ref is not None and force_names is not None:   
+    if forces_ref is not None and force_names is not None: # force reference is osl provided torque
         forces_ref = np.array(forces_ref)
         force_names = np.array(force_names) 
+        
         for (force, name) in zip(forces_ref.T, force_names): 
             i = actuator_names.index(name)
             axs[i].plot(force, 'r:', label=name+"_osl")
             axs[i].legend()
-             # Add background spans for modes
+
+
     if phases is not None:
         add_phase_color(phases, axs)
     
@@ -217,10 +219,11 @@ def visualize_force( actuator_forces, actuator_names, forces_ref = None, force_n
     plt.show()
     return fig, axs
 
-def add_phase_color( phases, axs):
+def add_phase_color(phases, axs, phase_color = None):
     
     # Define colors for each mode
-    mode_colors = {
+    if phase_color is None:
+        phase_color = {
         "e_swing": "lightblue",
         "l_swing": "lightgreen",
         "e_stance": "lightyellow",
@@ -229,7 +232,7 @@ def add_phase_color( phases, axs):
     for j in range(len(phases) - 1):  # Ensure pairs of start and end indices
         for ax in axs:
             mode = phases[j]  # Assume phases[j] corresponds to a mode name
-            color = mode_colors.get(mode, "gray")  # Default to gray if mode is undefined
+            color = phase_color.get(mode, "gray")  # Default to gray if mode is undefined
             ax.axvspan(j, j + 1, facecolor=color, alpha=0.3)
 
 

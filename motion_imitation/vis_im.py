@@ -79,7 +79,7 @@ class MyVisulizer(Visualizer):
 
     def data_generator(self):
         while True:
-            poses = {'pred': [], 'gt': [], 'target': []}
+            poses, vels, accs = {'pred': [], 'gt': [], 'target': []}, {'gt': []}, {'gt': []}
             torques, torques_osl, phases, grfs, jkps= [], [],[], {'l':[], 'r':[]}, []
             state = env.reset()
             if running_state is not None:
@@ -103,7 +103,12 @@ class MyVisulizer(Visualizer):
                     poses['gt'].append(epos[7:].copy()) 
                 poses['pred'].append(env.data.qpos[7:].copy())
                 poses['target'].append(env.get_target_pose(action))
-                print('com vel abs',  np.linalg.norm(env.data.qvel[:3]) ) #"dt low level ctrl", env.model.opt.timestep, "high level ctrl frames", env.frame_skip)
+                vels['gt'].append(env.data.qvel[6:].copy())
+                accs['gt'].append(env.data.qacc[6:].copy())
+                # print("ctrl", env.data.ctrl[3], "| ", 
+                #       "torque", env.inverse_dynamics()[0,9], "| ",
+                #       "diff = ", env.inverse_dynamics()[0,9] - env.data.ctrl[3])
+                # print('com vel abs',  np.linalg.norm(env.data.qvel[:,3])) #"dt low level ctrl", env.model.opt.timestep, "high level ctrl frames", env.frame_skip)
                 # print('com displacement',  np.linalg.norm(env.data.qvel[:3]) * env.model.opt.timestep * env.frame_skip)
 
                 save_by_frame = True #False
@@ -126,38 +131,40 @@ class MyVisulizer(Visualizer):
                 next_state, reward, done,info = env.step(action, nonstop=True)
                 torques.append(env.data.ctrl.copy()/env.mass) # env.data.qfrc_actuator.copy()[6:]) #np.hstack([env.data.qfrc_applied[:6].copy(), env.data.qfrc_actuator[6:].copy()])) 
                 if env.cfg.osl: 
-                    torques_osl.append([env.osl.osl_info['osl_ctrl']['knee'] /env.mass,
-                                        -env.osl.osl_info['osl_ctrl']['ankle'] /env.mass])
+                    torques_osl.append([env.osl.osl_info['osl_ctrl']['knee'] /env.mass, # negative sign to match the sign of the torque
+                                        -env.osl.osl_info['osl_ctrl']['ankle'] /env.mass]) # negative sign to match the sign of the torque
                     phases.append(env.osl.osl_info['phase'])
                 # print(env.data.actuator_force.copy())
                 # f, cop, f_m = env.get_ground_reaction_force()
                 
                 if running_state is not None:
                     next_state = running_state(next_state, update=False)
-                if done or t > 180:
+                if done or t > 110:
                     print(f"fail: {info['fail']}")
                     break
                 state = next_state
                 
-                grf_r, _, _, grf_l, _, _ = env.get_grf_rl()
+                # grf_r, _, _, grf_l, _, _ = env.get_grf_rl()
+                grf_r, grf_l = env.get_grf_via_phase()
                 grfs['l'].append(grf_l)
                 grfs['r'].append(grf_r)
+                # grfs['l'].append(env.phase_left.copy())
+                # grfs['r'].append(env.phase_right.copy())
                 jkps.append(env.jkp[env.lower_index[0]: env.lower_index[1]].copy())
                 
                 print(t, 
-                    "grf_desired",env.grf_normalized[t], "|", 
-                    "grf_current", np.array([grf_r[2],grf_l[2], grf_r[1],grf_l[1]]) /9.81 / env.mass,"|"
-                    "rew", custom_reward(env, state, action, info)[1][-1], "|",  # reward in real time
-                    env.expert['height_lb'] - env.data.qpos[2], # height difference 
-                    )
+                    "grf_desired",env.grf_normalized[t], "|")
+                #     "grf_current", np.array([grf_r[2],grf_l[2], grf_r[1],grf_l[1]]) /9.81 / env.mass,"|"
+                #     "rew", custom_reward(env, state, action, info)[1][-1], "|",  # reward in real time
+                #     )
                 
                 t += 1
 
-            poses['gt'],  poses['pred'], poses['target'] = np.vstack(poses['gt']), np.vstack(poses['pred']), np.vstack(poses['target'])
+            poses['gt'],  poses['pred'], poses['target'], vels['gt'], accs['gt'] = np.vstack(poses['gt']), np.vstack(poses['pred']), np.vstack(poses['target']), np.vstack(vels['gt']), np.vstack(accs['gt'])
             torques, torques_osl = np.vstack(torques), np.vstack(torques_osl)
             np.save("grf_r.npy", np.array(grfs['r']))
             np.save("grf_l.npy", np.array(grfs['l']))
-            self.visualize_traj(poses, torques, torques_osl, phases, grfs, jkps)
+            self.visualize_traj(poses, vels, accs, torques, torques_osl, phases, grfs, jkps)
                     
             contact_video = True
             if contact_video:
@@ -166,46 +173,71 @@ class MyVisulizer(Visualizer):
         
             yield poses
 
-    def visualize_traj(self, poses, torques, torques_osl, phases, grfs, jkps):
-        plot_pose, plot_impedance, plot_torque, plot_grfs = True, False, True, False
+    def visualize_traj(self, poses, vels, accs, torques, torques_osl, phases, grfs, jkps):
+        plot_pose, plot_vel, plot_acc, plot_impedance, plot_torque, plot_grfs = 0,0,0,0,0, True
+
+        output_dir = f'{args.video_dir}/plots'
+        os.makedirs(output_dir, exist_ok=True)
 
         if plot_pose:
-            fig, axs = visualize_poses( poses, env.model.actuator_names, phases = phases if env.cfg.osl else None) 
-            plt.show()
+            fig, axs = visualize_kinematics(poses, env.model.actuator_names, phases=phases if env.cfg.osl else None,
+                                            osl_params_dict=env.osl.OSL_CTRL.OSL_PARAM_LIST[env.osl.OSL_CTRL.OSL_PARAM_SELECT] if env.cfg.osl else None)
+            fig.savefig(f'{output_dir}/pose_plot.png')
+            plt.close(fig)
+
+        if plot_vel:
+            fig, axs = visualize_kinematics(vels, env.model.actuator_names, phases=phases if env.cfg.osl else None,
+                                            osl_params_dict=env.osl.OSL_CTRL.OSL_PARAM_LIST[env.osl.OSL_CTRL.OSL_PARAM_SELECT] if env.cfg.osl else None, var_name='qvel')
+            fig.savefig(f'{output_dir}/velocity_plot.png')
+            plt.close(fig)
+
+        if plot_acc:
+            fig, axs = visualize_kinematics(accs, env.model.actuator_names, phases=phases if env.cfg.osl else None,
+                                            osl_params_dict=env.osl.OSL_CTRL.OSL_PARAM_LIST[env.osl.OSL_CTRL.OSL_PARAM_SELECT] if env.cfg.osl else None, var_name='qacc')
+            fig.savefig(f'{output_dir}/acceleration_plot.png')
+            plt.close(fig)
+
         if plot_impedance:
             jkps = np.vstack(jkps)
             fig, axs = plt.subplots(nrows=1, ncols=1, figsize=(6, 6))
             fig, axs = visualize_impedance(fig, axs, jkps)
-            plt.show()
+            fig.savefig(f'{output_dir}/impedance_plot.png')
+            plt.close(fig)
+
         if plot_torque:
-            
             print("virtual force dim = ", torques.shape)
             if env.cfg.osl:
-                visualize_force(torques, env.model.actuator_names, torques_osl, ['ltibia_x', 'lfoot_x'], phases)
-            else:    
-                visualize_force(torques, env.model.actuator_names)
+                fig, axs = visualize_force(torques, env.model.actuator_names, torques_osl, ['ltibia_x', 'lfoot_x'], phases)
+            else:
+                fig, axs = visualize_force(torques, env.model.actuator_names)
+            fig.savefig(f'{output_dir}/torque_plot.png')
+            plt.close(fig)
+
         self.num_fr = poses['pred'].shape[0]
-            
-            # summarize grf stats
-        grfs['l'] = np.vstack(grfs['l'])/env.mass/9.81 # normalize by mass
-        grfs['r'] = np.vstack(grfs['r'])/env.mass/9.81 # normalize by mass
-        mse_v = np.sqrt((np.mean((grfs['l'][:,2] - env.grf_normalized[:grfs['l'].shape[0],1])**2) + np.mean((grfs['r'][:,2] - env.grf_normalized[:grfs['l'].shape[0],0])**2))/2)
-        mse_ap = np.sqrt((np.mean((grfs['l'][:,1] - env.grf_normalized[:grfs['l'].shape[0],3])**2) + np.mean((grfs['r'][:,1] - env.grf_normalized[:grfs['l'].shape[0],2])**2))/2)
-            # print states
-        print("mse_v", mse_v, "mse_ap", mse_ap)
-            
+
+        # summarize grf stats
+        # grfs['l'] = np.vstack(grfs['l']) / env.mass / 9.81  # normalize by mass
+        # grfs['r'] = np.vstack(grfs['r']) / env.mass / 9.81  # normalize by mass
+        # mse_v = np.sqrt((np.mean((grfs['l'][:, 2] - env.grf_normalized[:grfs['l'].shape[0], 1]) ** 2) +
+        #                  np.mean((grfs['r'][:, 2] - env.grf_normalized[:grfs['l'].shape[0], 0]) ** 2)) / 2)
+        # mse_ap = np.sqrt((np.mean((grfs['l'][:, 1] - env.grf_normalized[:grfs['l'].shape[0], 3]) ** 2) +
+        #                   np.mean((grfs['r'][:, 1] - env.grf_normalized[:grfs['l'].shape[0], 2]) ** 2)) / 2)
+        # print("mse_v", mse_v, "mse_ap", mse_ap)
+
         if plot_grfs:
-                fig, axs = plt.subplots(3, 1, figsize=(10, 10))
-                axs[2].plot(env.grf_normalized[:grfs['l'].shape[0],0],'r:', label = 'right ideal') # vert right
-                axs[2].plot(env.grf_normalized[:grfs['l'].shape[0],1],'b:',label = 'left ideal') # vert left
-                axs[1].plot(env.grf_normalized[:grfs['l'].shape[0],2],'r:', label = 'right ideal') # ap right
-                axs[1].plot(env.grf_normalized[:grfs['l'].shape[0],3],'b:',label = 'left ideal') # ap left
+            fig, axs = plt.subplots(3, 1, figsize=(10, 10))
+            axs[2].plot(env.grf_normalized[:torques.shape[0], 0], 'r:', label='right ideal')  # vert right
+            axs[2].plot(env.grf_normalized[:torques.shape[0], 1], 'b:', label='left ideal')  # vert left
+            axs[1].plot(-env.grf_normalized[:torques.shape[0], 2], 'r:', label='right ideal')  # ap right
+            axs[1].plot(-env.grf_normalized[:torques.shape[0], 3], 'b:', label='left ideal')  # ap left
 
-                    # print(np.vstack(grfs['l']).shape, grfs['l'][0].shape)
-                fig, axs = visualize_grfs(fig, axs, grfs['l'],lab='left', color = 'b')
-                fig, axs = visualize_grfs(fig, axs, grfs['r'],'right', color = 'r')
-                plt.show()
+            fig, axs = visualize_grfs(fig, axs, grfs['l'], lab='left', color='b')
+            fig, axs = visualize_grfs(fig, axs, grfs['r'], 'right', color='r')
 
+            add_phase_color(phases, axs)
+            fig.savefig(f'{output_dir}/grf_plot.png')
+            plt.close(fig)
+            
     def update_pose(self):
         self.env_vis.data.qpos[:env.model.nq] = self.data['pred'][self.fr]
         self.env_vis.data.qpos[env.model.nq:] = self.data['gt'][self.fr] 
