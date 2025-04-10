@@ -6,14 +6,18 @@ import subprocess
 from os import path
 from PIL import Image
 from khrylib.utils.math import *
-import cv2
+try: 
+    import cv2
+    from scipy.interpolate import CubicSpline
+except ImportError:
+    pass
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import glob
 import re
 
 
-from scipy.interpolate import CubicSpline
+
 import matplotlib.pyplot as plt
 
 def generate_interpolated_grf(t, stance_period=0.55):
@@ -103,8 +107,6 @@ def visualize_grfs(fig, axs, grfs, lab = '', color = 'r'):
 
     
 def visualize_phases(fig, axs, osl_infos):
-    phases = ['e_stance', 'l_stance', 'e_swing', 'l_swing']
-    phase_colors = {'e_stance': 'r', 'l_stance': 'g', 'e_swing': 'b', 'l_swing': 'y'}
     phase_data = osl_infos['phase']
     
     phase_values = {'e_stance': 1, 'l_stance': 2, 'e_swing': 3, 'l_swing': 4}
@@ -130,7 +132,7 @@ def visualize_kinematics(var, joint_names, phases = None, osl_params_dict = None
     num_cols = 4
     num_rows = num_var // num_cols + (num_var % num_cols > 0)
     
-    fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(15, num_rows * 3))
+    fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, figsize=(25, num_rows * 3))
     axs = axs.flatten()
     if 'pred' in var.keys():
         for i, (v, name) in enumerate(zip(var['pred'].T, joint_names)):
@@ -164,7 +166,7 @@ def visualize_kinematics(var, joint_names, phases = None, osl_params_dict = None
     #     fig.delaxes(axs[j])
         
     plt.tight_layout()
-    plt.show()
+    # plt.show()
     return fig, axs
 
 
@@ -216,7 +218,7 @@ def visualize_force( actuator_forces, actuator_names, forces_ref = None, force_n
         add_phase_color(phases, axs)
     
     plt.tight_layout()
-    plt.show()
+    # plt.show()
     return fig, axs
 
 def add_phase_color(phases, axs, phase_color = None):
@@ -235,18 +237,6 @@ def add_phase_color(phases, axs, phase_color = None):
             color = phase_color.get(mode, "gray")  # Default to gray if mode is undefined
             ax.axvspan(j, j + 1, facecolor=color, alpha=0.3)
 
-
-
-def visualize_torques(fig, axs, vfs):
-    for i in range(vfs[0].shape[0]):
-        if i < 6: 
-            axs[0].plot(vfs[:,i], label= f'rf {i}')
-            
-        else: 
-            axs[1].plot(vfs[:,i])
-    axs[0].legend()
-    plt.tight_layout()
-    return fig, axs
 
 def visualize_3d_forces(fig, ax, forces, positions, sc = 500):
     if type(forces) is list:

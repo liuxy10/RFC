@@ -136,3 +136,7 @@ class Config:
         self.adp_noise_rate = self.adp_noise_rate_cp[ind] * (1-t) + self.adp_noise_rate_cp[nind] * t
         self.adp_log_std = self.adp_log_std_cp[ind] * (1-t) + self.adp_log_std_cp[nind] * t
         self.adp_policy_lr = self.adp_policy_lr_cp[ind] * (1-t) + self.adp_policy_lr_cp[nind] * t
+        
+        # xinyi use annealing algorithm to gradually increase the weight of the residual force
+        self.w_grf = 0 if i_iter < 250 else np.clip((i_iter - 250)/100, .0, 1.0)
+        

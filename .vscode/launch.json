@@ -35,10 +35,10 @@
             "name": "Launch vis_im.py",
             "python":"${command:python.interpreterPath}", 
             "program": "${workspaceFolder}/motion_imitation/vis_im.py",
-            "args": [
-                "--cfg",
-                "${input:configFile}"
-            ],
+            // "args": [
+            //     "--cfg",
+            //     "${input:configFile}"
+            // ],
             "console": "integratedTerminal"
         }
     ],

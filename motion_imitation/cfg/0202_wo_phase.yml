@@ -2,7 +2,7 @@
 motion_id: '02_02'
 H: 1.75 # the code is designed that if H is negative, the default value will be used
 M: 75.0
-osl: True
+osl: False
 # training parameters
 gamma: 0.95
 tau: 0.95

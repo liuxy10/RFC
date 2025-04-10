@@ -260,11 +260,12 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                     self.rfc_implicit(vf)
                 else:
                     self.rfc_explicit(vf)
-            osl_torques = self.update_osl_control()
-            # print("OSL info", self.osl.osl_info, osl_torques)
-            self.overwrite = False
-            if self.overwrite:
-                self._overwrite_osl_actions(osl_torques)
+            if self.cfg.osl:
+                osl_torques = self.update_osl_control()
+                # print("OSL info", self.osl.osl_info, osl_torques)
+                self.overwrite = True
+                if self.overwrite:
+                    self._overwrite_osl_actions(osl_torques)
             self.sim.step()
 
         if self.viewer is not None:
@@ -375,7 +376,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             assert qvel_trajectory.shape[1] == self.nv, "qvel_trajectory should have the same number of joints as the model"
             assert qacc_trajectory.shape[1] == self.nv, "qacc_trajectory should have the same number of joints as the model"
         torque_estimates = generate_inverse_dynamics_torques(self, qpos_trajectory, qvel_trajectory, qacc_trajectory)
-        return np.array(torque_estimates)
+        return np.array(torque_estimates)[0,6:]
         
     
     def forward_kinematics(self, qpos):
@@ -428,7 +429,6 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             self.t_last_switch_phase = self.cur_t
             self.last_phase_stance = cur_phase_stance
         
-    
        
     def get_grf_via_phase(self):
         grf_l, grf_l_ap = generate_interpolated_grf(self.phase_left, stance_period = 0.6) # AP

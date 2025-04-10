@@ -207,11 +207,14 @@ def local_rfc_implicit_reward(env, state, action, info):
     # grf reward
     if w_grf > 0.0:
         grf_r, _,_, grf_l, _,_ = env.get_grf_rl()
-        grf_z_dist_r = env.grf_normalized[t,0] - grf_r[2]/env.mass / 9.81
-        grf_z_dist_l = env.grf_normalized[t,1] - grf_l[2]/env.mass / 9.81
-        grf_ap_dist_r = env.grf_normalized[t,2] - grf_r[1]/env.mass / 9.81
-        grf_ap_dist_l = env.grf_normalized[t,3] - grf_l[1]/env.mass / 9.81
-        grf_reward = math.exp(-k_grf * ( grf_z_dist_r**2 + grf_z_dist_l**2 + grf_ap_dist_r**2 + grf_ap_dist_l**2))
+        # grf_z_dist_r = env.grf_normalized[t,0] - grf_r[2]/env.mass / 9.81
+        # grf_z_dist_l = env.grf_normalized[t,1] - grf_l[2]/env.mass / 9.81
+        # grf_ap_dist_r = env.grf_normalized[t,2] - grf_r[1]/env.mass / 9.81
+        # grf_ap_dist_l = env.grf_normalized[t,3] - grf_l[1]/env.mass / 9.81
+        # grf_reward = math.exp(-k_grf * ( grf_z_dist_r**2 + grf_z_dist_l**2 + grf_ap_dist_r**2 + grf_ap_dist_l**2))
+        grf_r_ref, grf_l_ref = env.get_grf_via_phase()
+        grf_reward = math.exp(-k_grf * (np.linalg.norm(grf_r - grf_r_ref) ** 2 + np.linalg.norm(grf_l - grf_l_ref) ** 2))
+    
     else:
         grf_reward = 0.0
     # residual force reward
@@ -223,7 +226,9 @@ def local_rfc_implicit_reward(env, state, action, info):
     # overall reward
     reward = w_p * pose_reward + w_v * vel_reward + w_e * ee_reward + w_rp * root_pose_reward + w_rv * root_vel_reward + w_vf * vf_reward + w_grf * grf_reward
     reward /= w_p + w_v + w_e + w_rp + w_rv + w_vf + w_grf
-    return reward, np.array([pose_reward, vel_reward, ee_reward, root_pose_reward, root_vel_reward, vf_reward, grf_reward])
+    # cut off early time reward
+    is_mature = (env.cur_t >=10)
+    return  is_mature * reward,  is_mature * np.array([pose_reward, vel_reward, ee_reward, root_pose_reward, root_vel_reward, vf_reward, grf_reward])
 
 
 def local_rfc_explicit_reward(env, state, action, info):

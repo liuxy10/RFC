@@ -20,11 +20,12 @@ class OSLAgent:
         }
     def setup_osl_controller(self, mass,init_state = 'l_swing'):
         # Initialize the OSL controller
-        self.OSL_CTRL = MyoOSLController(mass *1.5, init_state=init_state, n_sets=self.osl_param_set)
+        self.OSL_CTRL = MyoOSLController(mass *1.0, init_state=init_state, n_sets=self.osl_param_set)
         self.OSL_CTRL.start()
 
         # Define OSL-controlled joints
         self.osl_joints = ['knee', 'ankle']
+        
         
 
     def update_osl_control(self, osl_sens_data):

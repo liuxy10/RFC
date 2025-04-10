@@ -22,7 +22,7 @@ from motion_imitation.reward_function import reward_func
 parser = argparse.ArgumentParser()
 parser.add_argument('--cfg', default='0202_wo_phase')
 parser.add_argument('--vis_model_file', default='mocap_v2_vis')
-parser.add_argument('--iter', type=int, default=375)
+parser.add_argument('--iter', type=int, default=250)
 parser.add_argument('--focus', action='store_true', default=True)
 parser.add_argument('--hide_expert', action='store_true', default=False)
 parser.add_argument('--preview', action='store_true', default=False)
@@ -66,6 +66,13 @@ custom_reward = reward_func[cfg.reward_id]
 class MyVisulizer(Visualizer):
 
     def __init__(self, vis_file):
+        self.save_by_frame = True #False
+        if self.save_by_frame:
+            os.makedirs(f'{args.video_dir}/frame_skeleton', exist_ok=True)
+            # clear the folder
+            for f in os.listdir(f'{args.video_dir}/frame_skeleton'):
+                os.remove(os.path.join(f'{args.video_dir}/frame_skeleton', f))
+        
         super().__init__(vis_file)
         ngeom = len(env.model.geom_rgba) - 1
         self.env_vis.model.geom_rgba[ngeom + 21: ngeom * 2 + 21] = np.array([0.7, 0.0, 0.0, 1])
@@ -75,12 +82,11 @@ class MyVisulizer(Visualizer):
         self.env_vis.viewer.cam.distance = 5.0
         self.T = 12
         
-        
 
     def data_generator(self):
         while True:
             poses, vels, accs = {'pred': [], 'gt': [], 'target': []}, {'gt': []}, {'gt': []}
-            torques, torques_osl, phases, grfs, jkps= [], [],[], {'l':[], 'r':[]}, []
+            torques, torques_osl, torques_id, phases, grfs, jkps= [],[], [],[], {'l':[], 'r':[]}, []
             state = env.reset()
             if running_state is not None:
                 state = running_state(state, update=False)
@@ -106,14 +112,14 @@ class MyVisulizer(Visualizer):
                 vels['gt'].append(env.data.qvel[6:].copy())
                 accs['gt'].append(env.data.qacc[6:].copy())
                 # print("ctrl", env.data.ctrl[3], "| ", 
-                #       "torque", env.inverse_dynamics()[0,9], "| ",
-                #       "diff = ", env.inverse_dynamics()[0,9] - env.data.ctrl[3])
+                #       "torque", env.inverse_dynamics()[9], "| ",
+                #       "diff = ", env.inverse_dynamics()[9] - env.data.ctrl[3])
                 # print('com vel abs',  np.linalg.norm(env.data.qvel[:,3])) #"dt low level ctrl", env.model.opt.timestep, "high level ctrl frames", env.frame_skip)
                 # print('com displacement',  np.linalg.norm(env.data.qvel[:3]) * env.model.opt.timestep * env.frame_skip)
 
-                save_by_frame = True #False
-                if save_by_frame:
-                    fig, ax = env.visualize_by_frame(show = False)
+                
+                if self.save_by_frame:
+                    fig, ax = env.visualize_by_frame(label = f"{args.cfg} t = {env.cur_t}", show = False)
                     vfs = env.data.qfrc_applied[:3].copy()
                     com_root = env.data.subtree_com[0,:].copy() 
                     visualize_3d_forces(fig, ax, vfs, com_root, sc = 20)
@@ -130,6 +136,9 @@ class MyVisulizer(Visualizer):
                 
                 next_state, reward, done,info = env.step(action, nonstop=True)
                 torques.append(env.data.ctrl.copy()/env.mass) # env.data.qfrc_actuator.copy()[6:]) #np.hstack([env.data.qfrc_applied[:6].copy(), env.data.qfrc_actuator[6:].copy()])) 
+                compared_inverse_dynamics = False
+                if compared_inverse_dynamics:
+                    torques_id.append(env.inverse_dynamics().copy()/env.mass)
                 if env.cfg.osl: 
                     torques_osl.append([env.osl.osl_info['osl_ctrl']['knee'] /env.mass, # negative sign to match the sign of the torque
                                         -env.osl.osl_info['osl_ctrl']['ankle'] /env.mass]) # negative sign to match the sign of the torque
@@ -144,12 +153,13 @@ class MyVisulizer(Visualizer):
                     break
                 state = next_state
                 
-                # grf_r, _, _, grf_l, _, _ = env.get_grf_rl()
-                grf_r, grf_l = env.get_grf_via_phase()
-                grfs['l'].append(grf_l)
-                grfs['r'].append(grf_r)
-                # grfs['l'].append(env.phase_left.copy())
-                # grfs['r'].append(env.phase_right.copy())
+                grf_r, _, _, grf_l, _, _ = env.get_grf_rl()
+                grfs['l'].append(grf_l.copy())
+                grfs['r'].append(grf_r.copy())
+                
+                # grf_r, grf_l = env.get_grf_via_phase()
+                # grfs['l'].append(grf_l)
+                # grfs['r'].append(grf_r)
                 jkps.append(env.jkp[env.lower_index[0]: env.lower_index[1]].copy())
                 
                 print(t, 
@@ -161,9 +171,13 @@ class MyVisulizer(Visualizer):
                 t += 1
 
             poses['gt'],  poses['pred'], poses['target'], vels['gt'], accs['gt'] = np.vstack(poses['gt']), np.vstack(poses['pred']), np.vstack(poses['target']), np.vstack(vels['gt']), np.vstack(accs['gt'])
-            torques, torques_osl = np.vstack(torques), np.vstack(torques_osl)
-            np.save("grf_r.npy", np.array(grfs['r']))
-            np.save("grf_l.npy", np.array(grfs['l']))
+            torques, torques_id = np.vstack(torques), np.vstack(torques_id)
+            if env.cfg.osl:
+                torques_osl = np.vstack(torques_osl)
+            np.save(f"{args.video_dir}/grf_r.npy", np.array(grfs['r']))
+            np.save(f"{args.video_dir}/grf_l.npy", np.array(grfs['l']))
+            np.save(f"{args.video_dir}/torques.npy", np.array(torques))
+            np.save(f"{args.video_dir}/torques_ID.npy", np.array(torques_id))
             self.visualize_traj(poses, vels, accs, torques, torques_osl, phases, grfs, jkps)
                     
             contact_video = True
@@ -174,7 +188,7 @@ class MyVisulizer(Visualizer):
             yield poses
 
     def visualize_traj(self, poses, vels, accs, torques, torques_osl, phases, grfs, jkps):
-        plot_pose, plot_vel, plot_acc, plot_impedance, plot_torque, plot_grfs = 0,0,0,0,0, True
+        plot_pose, plot_vel, plot_acc, plot_impedance, plot_torque, plot_grfs = 1,1,1,1,1, True
 
         output_dir = f'{args.video_dir}/plots'
         os.makedirs(output_dir, exist_ok=True)
