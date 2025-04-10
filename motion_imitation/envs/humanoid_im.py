@@ -5,15 +5,15 @@ from khrylib.rl.envs.common import mujoco_env
 from gym import spaces
 from khrylib.utils import *
 from khrylib.utils.transformation import quaternion_from_euler
-from motion_imitation.utils.tools import get_expert
+from motion_imitation.utils.tools import *
 import mujoco_py as mujoco
 from mujoco_py import functions as mjf
 import pickle
 import time
 from scipy.linalg import cho_solve, cho_factor
 from motion_imitation.envs.oslAgent import OSLAgent
-sys.path.append("/home/xliu227/Github/human-model-generator/code/")
-from write_xml import *
+# sys.path.append("/home/xliu227/Github/human-model-generator/code/")
+# from write_xml import *
 
 class HumanoidEnv(mujoco_env.MujocoEnv):
 
@@ -29,7 +29,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             output_height_xml = fullpath.replace('.xml', '_height_scaled.xml')
             output_xml = fullpath.replace('.xml', '_all_scacled.xml')
             scale_humanoid_model(input_xml, output_height_xml, cfg.H)
-            assign_mass_inertia(cfg.M, linkMass, output_height_xml, output_xml)
+            assign_mass_inertia(cfg.M,  output_height_xml, output_xml)
             print("Scaled model is saved at ", output_xml)
             print(f"scaled height: {calculate_humanoid_height(output_xml)}")
             cfg.mujoco_model_file = output_xml
