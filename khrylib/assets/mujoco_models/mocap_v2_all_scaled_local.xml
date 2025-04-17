@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mujoco model="humanoid">
+  <include file="./common/materials.xml" /><compiler angle="radian" inertiafromgeom="false" coordinate="local" />
+  <option timestep="0.00222222" />
+  <size nuser_body="3" />
+  <visual>
+    <quality shadowsize="2048" />
+    <headlight ambient="0.4 0.4 0.4" diffuse="0.8 0.8 0.8" specular="0.3 0.3 0.3" />
+  </visual>
+  <statistic extent="3" center="0 0 1" />
+  <default class="main">
+    <joint limited="true" armature="0.01" />
+    <geom contype="7" conaffinity="7" condim="1" margin="0.001" material="self" rgba="0.98 0.54 0.56 1" />
+  </default>
+  <worldbody>
+    <geom name="floor" size="117.026 117.026 0.234051" type="plane" condim="3" friction="1 0.1 0.1" material="grid_new" rgba="0.8 0.9 0.8 1" />
+    <light pos="0 0 1.3" dir="0 0 -1" directional="true" cutoff="100" exponent="1" diffuse="1 1 1" specular="0.1 0.1 0.1" />
+    <body name="root" pos="0 0 0">
+      <joint name="root" limited="false" type="free" armature="0" />
+      <geom size="0.128728" pos="0 0 -0.0280861" mass="8.8725" />
+      <body name="lhipjoint" pos="0 0 0" user="0.0963 -0.0494 -0.0918">
+        <body name="lfemur" pos="0.112696 -0.0578106 -0.107429" user="0.2274 -0.0494 -0.4521">
+          <joint name="lfemur_z" pos="0 0 0" axis="0 -1 0" range="-1.0472 1.22173" />
+          <joint name="lfemur_y" pos="0 0 0" axis="-0.342 0 0.9397" range="-1.22173 1.22173" />
+          <joint name="lfemur_x" pos="0 0 0" axis="0.9397 0 0.342" range="-2.79253 0.349066" />
+          <geom size="0.0608533 0.200948" pos="0.0767102 0 -0.210822" quat="0.984797 0 -0.173711 0" type="capsule" mass="10.8525" />
+          <body name="ltibia" pos="0.15342 0 -0.421643" user="0.3657 -0.0494 -0.8321">
+            <joint name="ltibia_x" pos="0 0 0" axis="0.9397 0 0.342" range="0 2.96706" />
+            <geom size="0.0432995 0.213201" pos="0.0809817 0 -0.222349" quat="0.984813 0 -0.173618 0" type="capsule" contype="1" conaffinity="1" mass="3.4275" />
+            <body name="lfoot" pos="0.161846 0 -0.444697" user="0.3731 -0.1606 -0.8523">
+              <joint name="lfoot_z" pos="0 0 0" axis="-0.342 0 0.9397" range="-1.22173 0.349066" />
+              <joint name="lfoot_y" pos="0 0 0" axis="0 -1 0" range="-0.785398 0.785398" />
+              <joint name="lfoot_x" pos="0 0 0" axis="0.9397 0 0.342" range="-0.785398 1.5708" />
+              <geom size="0.0702153 0.125217 0.0280861" pos="0.00667046 -0.0580447 -0.0141601" quat="0.984816 0 -0.173603 0" type="box" contype="1" conaffinity="1" mass="0.9975" />
+            <inertial pos="0.00667046 -0.0580447 -0.0141601" mass="1.0875000000000001" diaginertia="0.0038471850287048652 0.002992101132089406 0.0038471850287048652" quat="1.0 0.0 0.0 0.0" /></body>
+          <inertial pos="0.07609694686090557 0.0 -0.20892569249982718" mass="3.4875" diaginertia="0.015169555704289238 0.007228972644049175 0.015169555704289236" quat="0.667652788402273 0.7070435205128345 -0.23289429820987387 0.009458334991782799" /></body>
+        <inertial pos="0.07210379366665595 0.0 -0.1981710204421008" mass="7.5" diaginertia="0.03295561185578902 0.03295561185578901 0.015798057441336052" quat="-0.6064836596120565 -0.13686096530452388 0.10697928912747494 0.7758879290833576" /></body>
+      </body>
+      <body name="rhipjoint" pos="0 0 0" user="-0.0963 -0.0494 -0.0918">
+        <body name="rfemur" pos="-0.112696 -0.0578106 -0.107429" user="-0.2274 -0.0494 -0.4521">
+          <joint name="rfemur_z" pos="0 0 0" axis="0 -1 0" range="-1.22173 1.0472" />
+          <joint name="rfemur_y" pos="0 0 0" axis="0.342 0 0.9397" range="-1.22173 1.22173" />
+          <joint name="rfemur_x" pos="0 0 0" axis="0.9397 0 -0.342" range="-2.79253 0.349066" />
+          <geom size="0.0608533 0.200948" pos="-0.0767102 0 -0.210822" quat="0.984797 0 0.173711 0" type="capsule" mass="10.8525" />
+          <body name="rtibia" pos="-0.15342 0 -0.421643" user="-0.3657 -0.0494 -0.8321">
+            <joint name="rtibia_x" pos="0 0 0" axis="0.9397 0 -0.342" range="0 2.96706" />
+            <geom size="0.0432995 0.213201" pos="-0.0809817 0 -0.222349" quat="0.984813 0 0.173618 0" type="capsule" contype="2" conaffinity="2" mass="3.4275" />
+            <body name="rfoot" pos="-0.161846 0 -0.444697" user="-0.3731 -0.1606 -0.8523">
+              <joint name="rfoot_z" pos="0 0 0" axis="0.342 0 0.9397" range="-0.349066 1.22173" />
+              <joint name="rfoot_y" pos="0 0 0" axis="0 -1 0" range="-0.785398 0.785398" />
+              <joint name="rfoot_x" pos="0 0 0" axis="0.9397 0 -0.342" range="-0.785398 1.5708" />
+              <geom size="0.0702153 0.125217 0.0280861" pos="-0.00667046 -0.0580447 -0.0141601" quat="0.984816 0 0.173603 0" type="box" contype="2" conaffinity="2" mass="0.9975" />
+            <inertial pos="-0.00667046 -0.0580447 -0.0141601" mass="1.0875000000000001" diaginertia="0.0038471850287048652 0.002992101132089406 0.0038471850287048652" quat="0.0 1.0 0.0 0.0" /></body>
+          <inertial pos="-0.07609694686090557 0.0 -0.20892569249982718" mass="3.4875" diaginertia="0.015169555704289238 0.007228972644049175 0.015169555704289236" quat="-0.667652788402273 0.7070435205128345 -0.23289429820987387 -0.009458334991782799" /></body>
+        <inertial pos="-0.07210379366665595 0.0 -0.1981710204421008" mass="7.5" diaginertia="0.03295561185578902 0.03295561185578901 0.015798057441336052" quat="-0.10697928912747494 0.7758879290833576 0.6064836596120565 -0.13686096530452388" /></body>
+      </body>
+      <body name="lowerback" pos="0 0 0" user="0.0006 0.0081 0.1132">
+        <body name="upperback" pos="0.000702153 0.00947907 0.132473" user="0.0011 0.0071 0.2268">
+          <joint name="upperback_z" pos="0 0 0" axis="0 -1 0" range="-0.523599 0.523599" />
+          <joint name="upperback_y" pos="0 0 0" axis="0 0 1" range="-0.523599 0.523599" />
+          <joint name="upperback_x" pos="0 0 0" axis="1 0 0" range="-0.349066 0.785398" />
+          <geom size="0.0819179" pos="0 0 0.0117026" mass="3.9225" />
+          <body name="thorax" pos="0.000585128 -0.00117026 0.132941" user="0.001 0.0024 0.3407">
+            <geom size="0.117026" pos="0 0 0.0631938" mass="11.6175" />
+            <body name="lowerneck" pos="-0.000117026 -0.0055002 0.133292" user="-0.0023 -0.0083 0.4312">
+              <joint name="lowerneck_z" pos="0 0 0" axis="0 -1 0" range="-0.523599 0.523599" />
+              <joint name="lowerneck_y" pos="0 0 0" axis="0 0 1" range="-0.523599 0.523599" />
+              <joint name="lowerneck_x" pos="0 0 0" axis="1 0 0" range="-0.349066 0.785398" />
+              <geom size="0.0936204" pos="-0.00386184 -0.0125217 0.241658" mass="5.1075" />
+              <body name="upperneck" pos="-0.00386184 -0.0125217 0.105908" user="-0.0013 -0.0038 0.5212">
+                <body name="head" pos="0.00117026 0.00526615 0.105323" user="-0.0006 -0.0008 0.6176">
+                  <camera pos="0.00152133 0.00444697 -0.609937" quat="0 0 0.707107 0.707107" />
+                </body>
+              </body>
+              <body name="lclavicle" pos="-0.00386184 -0.0125217 0.105908" user="0.179 -0.0149 0.4121">
+                <joint name="lclavicle_z" pos="0.00386184 0.0125217 -0.105908" axis="0 -1 0" range="0 0.349066" />
+                <joint name="lclavicle_y" pos="0.00386184 0.0125217 -0.105908" axis="0 0 1" range="-0.349066 0.174533" />
+                <geom size="0.0397887 0.0921383" pos="0.106084 -0.00386184 -0.0111759" quat="0.743231 -0.0239246 -0.668607 0" type="capsule" mass="3.9225" />
+                <body name="lhumerus" pos="0.212167 -0.00772369 -0.0223519" user="0.4599 -0.0149 0.4121">
+                  <joint name="lhumerus_z" pos="0 0 0" axis="0 0.866019 -0.500011" range="-1.5708 1.5708" />
+                  <joint name="lhumerus_y" pos="0 0 0" axis="-1 0 0" range="-1.5708 1.5708" />
+                  <joint name="lhumerus_x" pos="0 0 0" axis="0 -0.500011 -0.866019" range="-1.0472 1.5708" />
+                  <geom size="0.0362779 0.143883" pos="0.164362 0 0" quat="0.707107 0 -0.707107 0" type="capsule" mass="1.9725" />
+                  <body name="lradius" pos="0.328725 0 0" user="0.6374 -0.0149 0.4121">
+                    <joint name="lradius_x" pos="0 0 0" axis="0 -0.500011 -0.866019" range="-0.174533 2.96706" />
+                    <geom size="0.0292564 0.10386" pos="0.10386 0 0" quat="0.707107 0 -0.707107 0" type="capsule" mass="1.125" />
+                    <body name="lwrist" pos="0.20772 0 0" user="0.7261 -0.0149 0.4121">
+                      <geom size="0.0468102" pos="0.0514912 0 0" mass="0.4425" />
+                    <inertial pos="0.0514912 0.0 0.0" mass="0.75" diaginertia="1.64339611803e-07 1.64339611803e-07 1.64339611803e-07" quat="-0.5 0.5 0.5 0.5" /></body>
+                  <inertial pos="0.10386 0.0 0.0" mass="0.75" diaginertia="8.090174699999995e-07 8.090174699999995e-07 8.090174699999995e-07" quat="-0.5 0.5 0.5 0.5" /></body>
+                <inertial pos="0.164362 0.0 0.0" mass="0.75" diaginertia="1.5526738266749994e-06 1.5526738266749994e-06 1.5526738266749994e-06" quat="-0.5 0.5 0.5 0.5" /></body>
+              <inertial pos="0.106084 -0.00386184 -0.0111759" mass="0.75" diaginertia="6.367099745167502e-07 6.367099745167501e-07 6.367099745167501e-07" quat="0.061907135028778926 0.9980819137889076 0.0 0.0" /></body>
+              <body name="rclavicle" pos="0.00152133 -0.0125217 0.105908" user="-0.179 -0.0149 0.4121">
+                <joint name="rclavicle_z" pos="-0.00386184 0.0125217 -0.105908" axis="0 -1 0" range="-0.349066 0" />
+                <joint name="rclavicle_y" pos="-0.00386184 0.0125217 -0.105908" axis="0 0 1" range="-0.174533 0.349066" />
+                <geom size="0.0397887 0.0921383" pos="-0.106084 -0.00386184 -0.0111759" quat="0.743231 -0.0239246 0.668607 0" type="capsule" mass="3.9225" />
+                <body name="rhumerus" pos="-0.212167 -0.00772369 -0.0223519" user="-0.4599 -0.0149 0.4121">
+                  <joint name="rhumerus_z" pos="0 0 0" axis="0 0.866019 -0.500011" range="-1.5708 1.5708" />
+                  <joint name="rhumerus_y" pos="0 0 0" axis="1 0 0" range="-1.5708 1.5708" />
+                  <joint name="rhumerus_x" pos="0 0 0" axis="0 0.500011 0.866019" range="-1.5708 1.0472" />
+                  <geom size="0.0362779 0.143883" pos="-0.164362 0 0" quat="0.707107 0 0.707107 0" type="capsule" mass="1.9725" />
+                  <body name="rradius" pos="-0.328725 0 0" user="-0.6374 -0.0149 0.4121">
+                    <joint name="rradius_x" pos="0 0 0" axis="0 0.500011 0.866019" range="-0.174533 2.96706" />
+                    <geom size="0.0292564 0.10386" pos="-0.10386 0 0" quat="0.707107 0 0.707107 0" type="capsule" mass="1.125" />
+                    <body name="rwrist" pos="-0.20772 0 0" user="-0.7261 -0.0149 0.4121">
+                      <geom size="0.0468102" pos="-0.0514912 0 0" mass="0.4425" />
+                    <inertial pos="-0.0514912 0.0 0.0" mass="0.75" diaginertia="1.64339611803e-07 1.64339611803e-07 1.64339611803e-07" quat="-0.5 0.5 0.5 0.5" /></body>
+                  <inertial pos="-0.10386 0.0 0.0" mass="0.75" diaginertia="8.090174699999995e-07 8.090174699999995e-07 8.090174699999995e-07" quat="-0.5 0.5 0.5 0.5" /></body>
+                <inertial pos="-0.164362 0.0 0.0" mass="0.75" diaginertia="1.5526738266749994e-06 1.5526738266749994e-06 1.5526738266749994e-06" quat="-0.5 0.5 0.5 0.5" /></body>
+              <inertial pos="-0.106084 -0.00386184 -0.0111759" mass="0.75" diaginertia="6.367099745167502e-07 6.367099745167501e-07 6.367099745167501e-07" quat="0.061907135028778926 0.9980819137889076 0.0 0.0" /></body>
+            <inertial pos="-0.00386184 -0.0125217 0.241658" mass="0.75" diaginertia="6.57358447212e-07 6.57358447212e-07 6.57358447212e-07" quat="-0.5 0.5 0.5 0.5" /></body>
+          <inertial pos="0.0 0.0 0.0631938" mass="0.75" diaginertia="1.0271313507000002e-06 1.0271313507000002e-06 1.0271313507000002e-06" quat="-0.5 0.5 0.5 0.5" /></body>
+        <inertial pos="0.0 0.0 0.0117026" mass="0.75" diaginertia="5.032906755307501e-07 5.032906755307501e-07 5.032906755307501e-07" quat="-0.5 0.5 0.5 0.5" /></body>
+      </body>
+    <inertial pos="0.0 0.0 -0.0280861" mass="10.649999999999999" diaginertia="7.935669971384629 7.935669971384629 7.935669971384629" quat="-0.5 0.5 0.5 0.5" /></body>
+  </worldbody>
+  <actuator>
+    <general name="lfemur_z" joint="lfemur_z" />
+    <general name="lfemur_y" joint="lfemur_y" />
+    <general name="lfemur_x" joint="lfemur_x" />
+    <general name="ltibia_x" joint="ltibia_x" />
+    <general name="lfoot_z" joint="lfoot_z" />
+    <general name="lfoot_y" joint="lfoot_y" />
+    <general name="lfoot_x" joint="lfoot_x" />
+    <general name="rfemur_z" joint="rfemur_z" />
+    <general name="rfemur_y" joint="rfemur_y" />
+    <general name="rfemur_x" joint="rfemur_x" />
+    <general name="rtibia_x" joint="rtibia_x" />
+    <general name="rfoot_z" joint="rfoot_z" />
+    <general name="rfoot_y" joint="rfoot_y" />
+    <general name="rfoot_x" joint="rfoot_x" />
+    <general name="upperback_z" joint="upperback_z" />
+    <general name="upperback_y" joint="upperback_y" />
+    <general name="upperback_x" joint="upperback_x" />
+    <general name="lowerneck_z" joint="lowerneck_z" />
+    <general name="lowerneck_y" joint="lowerneck_y" />
+    <general name="lowerneck_x" joint="lowerneck_x" />
+    <general name="lclavicle_z" joint="lclavicle_z" />
+    <general name="lclavicle_y" joint="lclavicle_y" />
+    <general name="lhumerus_z" joint="lhumerus_z" />
+    <general name="lhumerus_y" joint="lhumerus_y" />
+    <general name="lhumerus_x" joint="lhumerus_x" />
+    <general name="lradius_x" joint="lradius_x" />
+    <general name="rclavicle_z" joint="rclavicle_z" />
+    <general name="rclavicle_y" joint="rclavicle_y" />
+    <general name="rhumerus_z" joint="rhumerus_z" />
+    <general name="rhumerus_y" joint="rhumerus_y" />
+    <general name="rhumerus_x" joint="rhumerus_x" />
+    <general name="rradius_x" joint="rradius_x" />
+  </actuator>
+</mujoco>

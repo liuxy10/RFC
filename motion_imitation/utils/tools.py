@@ -132,10 +132,10 @@ def assign_mass_inertia( m, input_mujoco_xml, output_mujoco_xml):
     "LowerLeg_mass": None,
     "Foot_mass": None,
     "Toe_mass": None,
-}
+    }
     linkMass = scaleMass(m, linkMass)
     
-    print("lowerTrunk:", linkMass["LowerTrunk_mass"])
+    # print("lowerTrunk:", linkMass["LowerTrunk_mass"])
     tree = ET.parse(input_mujoco_xml)
     root = tree.getroot()
     

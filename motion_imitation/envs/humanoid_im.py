@@ -27,7 +27,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                     raise IOError("File %s does not exist" % fullpath)
             input_xml = fullpath
             output_height_xml = fullpath.replace('.xml', '_height_scaled.xml')
-            output_xml = fullpath.replace('.xml', '_all_scacled.xml')
+            output_xml = fullpath.replace('.xml', '_all_scaled.xml')
             scale_humanoid_model(input_xml, output_height_xml, cfg.H)
             assign_mass_inertia(cfg.M,  output_height_xml, output_xml)
             print("Scaled model is saved at ", output_xml)
@@ -67,7 +67,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.load_expert()
         self.set_spaces()
         self.body_tree = build_body_tree(cfg.mujoco_model_file)
-        print(self.body_tree)
+        # print(self.body_tree)
         self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
         self.max_vf = 30.0 # N
         self.grf_normalized = get_ideal_grf(total_idx = 1000, offset_period = 15, stance_period = 18) 
@@ -76,9 +76,17 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.mass = self.model.body_subtreemass[0]
     
     def load_expert(self):
-        expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
-        # print(expert_meta)
-        # print(expert_qpos.shape)
+        if type(self.cfg.expert_traj_file) is list:
+            expert_qpos, expert_meta = [], []
+            for file in self.cfg.expert_traj_file:
+                expert_qpos_, expert_meta = pickle.load(open(file, "rb"))
+                expert_qpos.append(expert_qpos_)
+            expert_qpos = np.concatenate(expert_qpos, axis = 0)
+        else:
+            expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
+        # print("expert_meta",expert_meta)
+        # print("expert_qpos.shape", expert_qpos.shape)
+        
         try:
             self.expert = get_expert(expert_qpos, expert_meta, self)
         except ValueError:
@@ -578,12 +586,12 @@ def generate_inverse_dynamics_torques(env, qpos_trajectory, qvel_trajectory, qac
    
 if __name__ == "__main__":
     from motion_imitation.utils.config import Config
-    cfg = Config('0202', False, create_dirs=False)
-    cfg_f = Config('0202_freeze', False, create_dirs=False)
-    cfg_p = Config('0202_prothesis', False, create_dirs=False)
+    cfg = Config('69XX', False, create_dirs=False)
+    # cfg_f = Config('0202_freeze', False, create_dirs=False)
+    # cfg_p = Config('0202_prothesis', False, create_dirs=False)
     cfg.env_start_first = True
-    cfg_f.env_start_first = True
-    cfg_p.env_start_first = True
+    # cfg_f.env_start_first = True
+    # cfg_p.env_start_first = True
     env = HumanoidEnv(cfg)
     # env_f = HumanoidEnvFreezeKnee(cfg_f, cfg)
     # env_p = HumanoidEnvProthesis(cfg_p, cfg)

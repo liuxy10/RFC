@@ -43,7 +43,10 @@ class Config:
 
         # expert
         self.motion_id = cfg['motion_id'] # what if it is a list of motion data?
-        self.expert_traj_file = f'data/cmu_mocap/motion/{self.motion_id}.p'
+        if isinstance(self.motion_id, (list, tuple)):
+            self.expert_traj_file = [f'data/cmu_mocap/motion/{motion}.p' for motion in self.motion_id]
+        else:
+            self.expert_traj_file = f'data/cmu_mocap/motion/{self.motion_id}.p'
 
         # training config
         self.gamma = cfg.get('gamma', 0.95)
