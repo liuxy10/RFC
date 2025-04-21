@@ -6,38 +6,52 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 from khrylib.utils.transformation import quaternion_from_matrix, rotation_from_quaternion
 PARAMS = {
-    # COM: center of mass /segment length. MASS: segment mass / total mass. I: inertia: MP COG/seg len, AP COG/seg len, TWIST COG/seg len
+    # COM: center of mass /segment length in geom frame. MASS: segment mass / total mass. I: inertia: MP COG/seg len, AP COG/seg len, TWIST COG/seg len
     'root': {'com': [0., 0., 0.],'mass': 0.142, 'I': [-1., -1., -1.]},
     'lfemur': {'com': [0., 0., 0.5 - 0.433],'mass': 0.100, 'I': [0.323, 0.323, -1]},
     'ltibia': {'com': [0., 0., 0.5 - 0.433],'mass': 0.0465, 'I': [0.302, 0.302, -1]},
     'lfoot': {'com': [0., 0., 0.],'mass': 0.0145, 'I': [0.475, -1., 0.475]},
     'rfemur': {'com': [0., 0., 0.5 - 0.433],'mass': 0.100, 'I': [0.323, 0.323, -1]},
     'rtibia': {'com': [0., 0., 0.5 - 0.433],'mass': 0.0465, 'I': [0.302, 0.302, -1]},
-    'rfoot': {'com': [0., -0., 0.],'mass': 0.0145, 'I': [0.475, -1., 0.475]}
+    'rfoot': {'com': [0., -0., 0.],'mass': 0.0145, 'I': [0.475, -1., 0.475]},
+    'upperback': {'com': [0., 0., 0.],'mass': 0.139, 'I': [-1., -1., -1.]},
+    'thorax': {'com': [0., 0., 0.],'mass': 0.216, 'I': [-1., -1., -1.]},
+    'lowerneck': {'com': [0., 0., 0.],'mass': 0.081, 'I': [-1., -1., -1.]},
+    "lclavicle": {'com': [0., 0., 0.],'mass': 0.001, 'I': [-1., -1., -1.]},
+    "rclavicle": {'com': [0., 0., 0.],'mass': 0.001, 'I': [-1., -1., -1.]},
+    "lhumerus": {'com': [0., 0., 0.5 - 0.436],'mass': 0.028, 'I': [0.322, 0.322, -1.]},
+    "rhumerus": {'com': [0., 0., 0.5 - 0.436],'mass': 0.028, 'I': [0.322, 0.322, -1.]},
+    "lradius": {'com': [0., 0., 0.5 - 0.43],'mass': 0.016, 'I': [0.303, 0.303, -1.]},
+    "rradius": {'com': [0., 0., 0.5 - 0.43],'mass': 0.016, 'I': [0.303, 0.303, -1.]},
+    "lwrist": {'com': [0., 0., 0.],'mass': 0.006, 'I': [-1., -1., -1.]},
+    "rwrist": {'com': [0., 0., 0.],'mass': 0.006, 'I': [-1., -1., -1.]}
 }
+
+# print("total mass", np.sum([v['mass'] for v in PARAMS.values()]))
 
 def calculate_inertia(rho, m, R=None):
 
     rho = np.array(rho)
-    mask = rho>0  # assert np.array_equal(mask, whd > 0), "rho and whd should have the same mask"
+    mask = rho>0  
     I = np.zeros(3)
     if np.sum(mask) == 3: # 001, 011, 111
         I[mask] = rho[mask]**2 * m
     elif np.sum(mask) == 2:
         assert R is not None, "R should be provided when two inertia values are non-zero"
         I[mask] = rho[mask]**2 * m
-        # I[~mask] = np.sum(I[mask]) - 1/6 * m * np.sum(whd[~mask]**2)
         I[~mask] = max(1/2 * m * R**2, 1/2* I[mask][0]) # R is the radius of the cylinder
     elif np.sum(mask) == 1:
         raise NotImplementedError("TODO: implement this case")
     else:
         assert np.sum(mask) == 0, "All dimensions should be zero"
-        density = 1.
+        density = 1.0* 1e3 # kg/m^3
         r = np.cbrt((3 * m) / (4 * np.pi * density))
+        print("estimated radius", r)
         I[~mask] = (2/5) * m * r**2
-        
     return I
-def update_inertial_params(input_file, output_file, winter_params, total_mass=75., total_height=1.8):
+
+
+def update_inertial_params(input_file, output_file, winter_params, total_mass=75., total_height=1.75):
     # Load and modify XML
     tree = ET.parse(input_file)
     root = tree.getroot()
@@ -47,24 +61,25 @@ def update_inertial_params(input_file, output_file, winter_params, total_mass=75
     
     # Set global coordinate system alignment
     compiler.set('coordinate', 'local')
-    
-    for body in root.iter('body'):
+    worldbody = tree.getroot().find('worldbody')
+    # get the root body
+    # root_body = root.find('body[@name="root"]')
+    for body in worldbody.findall('.//body'):
         name = body.get('name')
         print(f"Processing body: {name}")
          # Remove existing inertial if present
         inertial = body.find('inertial')
         if inertial is not None:
             body.remove(inertial)
-        if name in winter_params:
-            params = winter_params[name]  
-    
+        if name in winter_params and body.find('geom') is not None:
+            params = winter_params[name] 
+            geom = body.find('./geom')
+            # delete mass in geom
+            if geom is not None and geom.get('mass') is not None:
+                del geom.attrib['mass']  
         else:
-        # if True:
-            params = {
-                'com': np.array([0., 0., 0.0]),
-                'mass': 0.01,
-                'I': np.array([0.01, 0.01, 0.01])
-                }
+            print(f"Warning: {name} not in winter_params, skipping.")
+            continue
         # transform inertial frame from geom to body
         geom = body.find('./geom')
         if geom is not None:
@@ -74,11 +89,9 @@ def update_inertial_params(input_file, output_file, winter_params, total_mass=75
             if geom.get('type') == 'capsule':
                 s = np.array([float(x) for x in geom.get('size',"0.1 0.1").split()])
                 if s.shape[0] == 2:
-                    print("capsule,s ", s)
                     seg_len = s[1]
                     cylinder_radius = np.array([float(x) for x in geom.get('size',"0.1 0.1").split()])[0]       
                 elif s.shape[0] ==1:
-                    print("capsule,s ", s)
                     cylinder_radius  = s[0]
                     fromto = np.array([float(x) for x in geom.get('fromto',"0. 0. 0. 0. 0. 0.").split()])
                     seg_len = np.linalg.norm(fromto[3:] - fromto[:3])
@@ -107,8 +120,61 @@ def update_inertial_params(input_file, output_file, winter_params, total_mass=75
             inertial.set('quat', ' '.join(map(str, quat)))
             
                 
-        # Save modified model
-        tree.write(output_file, encoding='utf-8', xml_declaration=True)
+    # Save modified model
+    tree.write(output_file, encoding='utf-8', xml_declaration=True)
+    print(f"Updated inertial parameters and save at:{output_file}")
+
+
+
+def transform_inertial_geom_to_body(
+    mass, com_geom, diaginertia_geom, quat_geom, pos_geom
+):
+    """
+    Transform inertial properties from geom frame to body frame.
+    Args:
+        mass: float
+        com_geom: (3,) array, center of mass in geom frame
+        diaginertia_geom: (3,) array, diagonal inertia in geom frame
+        quat_geom: (4,) array, [w, x, y, z] quaternion of geom frame in parent (body) frame
+        pos_geom: (3,) array, position of geom frame in body frame
+        quat_body: (4,) array, [w, x, y, z] quaternion of body frame in parent frame (usually identity)
+        pos_body: (3,) array, position of body frame in parent frame (usually zero)
+    Returns:
+        com_body: (3,) array, center of mass in body frame
+        diaginertia_body: (3,) array, diagonal inertia in body frame
+        quat_body_inertial: (4,) array, orientation of principal axes in body frame
+    """
+    # Rotation from geom to body
+    R_geom = Rotation.from_quat([quat_geom[1], quat_geom[2], quat_geom[3], quat_geom[0]]).as_matrix()
+    # R_geom = rotation_from_quaternion(quat_geom)
+    # Inertia tensor in geom frame
+    I_geom = np.diag(diaginertia_geom)
+    # Rotate inertia tensor to body frame
+    I_body = R_geom @ I_geom @ R_geom.T
+    # Center of mass in body frame
+    com_body = R_geom @ com_geom + pos_geom
+    # Parallel axis theorem (if com_geom is not at origin)
+    d = com_body - pos_geom  # vector from geom origin to COM in body frame
+    I_body += mass * (np.dot(d, d) * np.eye(3) - np.outer(d, d))
+    # Get principal axes and diagonalize
+    eigvals, eigvecs = np.linalg.eigh(I_body)
+    # Sort by descending eigenvalue
+    idx = np.argsort(eigvals)[::-1]
+    eigvals = eigvals[idx]
+    eigvecs = eigvecs[:, idx]
+    # Quaternion for principal axes
+    R_principal = eigvecs
+    assert np.allclose(R_principal.T @ R_principal, np.eye(3)), "Axes are not orthogonal"
+    assert np.allclose(abs(np.linalg.det(R_principal)), 1), "Axes are not normalized"
+    if np.linalg.det(R_principal) < 0:
+        R_principal[:, [1, 2]] = R_principal[:, [2, 1]]  # flip the order of 2nd and 3rd columns  assert np.linalg.det(R_principal) > 0, "Axes are not right-handed"
+        eigvals [[1,2]] = eigvals [[2,1]]
+    quat_body_inertial = Rotation.from_matrix(R_principal).as_quat()  # [x, y, z, w]
+    # quat_body_inertial = quaternion_from_matrix(R_principal)
+    # Convert to MuJoCo [w, x, y, z]
+    quat_body_inertial = [quat_body_inertial[3], quat_body_inertial[0], quat_body_inertial[1], quat_body_inertial[2]]
+    return com_body, eigvals, quat_body_inertial 
+
 
 
 
@@ -165,58 +231,8 @@ def modify_xml_local_coordinate(input_file, output_file):
             del general.attrib["actdim"]
 
     # Write the modified XML to the output file
-    tree.write(output_file, encoding="utf-8", xml_declaration=True)
-
-
-def transform_inertial_geom_to_body(
-    mass, com_geom, diaginertia_geom, quat_geom, pos_geom
-):
-    """
-    Transform inertial properties from geom frame to body frame.
-    Args:
-        mass: float
-        com_geom: (3,) array, center of mass in geom frame
-        diaginertia_geom: (3,) array, diagonal inertia in geom frame
-        quat_geom: (4,) array, [w, x, y, z] quaternion of geom frame in parent (body) frame
-        pos_geom: (3,) array, position of geom frame in body frame
-        quat_body: (4,) array, [w, x, y, z] quaternion of body frame in parent frame (usually identity)
-        pos_body: (3,) array, position of body frame in parent frame (usually zero)
-    Returns:
-        com_body: (3,) array, center of mass in body frame
-        diaginertia_body: (3,) array, diagonal inertia in body frame
-        quat_body_inertial: (4,) array, orientation of principal axes in body frame
-    """
-    # Rotation from geom to body
-    R_geom = Rotation.from_quat([quat_geom[1], quat_geom[2], quat_geom[3], quat_geom[0]]).as_matrix()
-    # R_geom = rotation_from_quaternion(quat_geom)
-    # Inertia tensor in geom frame
-    I_geom = np.diag(diaginertia_geom)
-    # Rotate inertia tensor to body frame
-    I_body = R_geom @ I_geom @ R_geom.T
-    # Center of mass in body frame
-    com_body = R_geom @ com_geom + pos_geom
-    # Parallel axis theorem (if com_geom is not at origin)
-    d = com_body - pos_geom  # vector from geom origin to COM in body frame
-    I_body += mass * (np.dot(d, d) * np.eye(3) - np.outer(d, d))
-    # Get principal axes and diagonalize
-    eigvals, eigvecs = np.linalg.eigh(I_body)
-    # Sort by descending eigenvalue
-    idx = np.argsort(eigvals)[::-1]
-    eigvals = eigvals[idx]
-    eigvecs = eigvecs[:, idx]
-    # Quaternion for principal axes
-    R_principal = eigvecs
-    assert np.allclose(R_principal.T @ R_principal, np.eye(3)), "Axes are not orthogonal"
-    assert np.allclose(abs(np.linalg.det(R_principal)), 1), "Axes are not normalized"
-    if np.linalg.det(R_principal) < 0:
-        R_principal[:, [1, 2]] = R_principal[:, [2, 1]]  # flip the order of 2nd and 3rd columns  assert np.linalg.det(R_principal) > 0, "Axes are not right-handed"
-        eigvals [[1,2]] = eigvals [[2,1]]
-    quat_body_inertial = Rotation.from_matrix(R_principal).as_quat()  # [x, y, z, w]
-    # quat_body_inertial = quaternion_from_matrix(R_principal)
-    # Convert to MuJoCo [w, x, y, z]
-    quat_body_inertial = [quat_body_inertial[3], quat_body_inertial[0], quat_body_inertial[1], quat_body_inertial[2]]
-    return com_body, eigvals, quat_body_inertial 
-    
+    tree.write(output_file, encoding="utf-8", xml_declaration=True) 
+    print(f"Modified XML file saved at: {output_file}")
 if __name__ == "__main__":
     winter_params = {
     'root':{

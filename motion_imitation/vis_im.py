@@ -20,16 +20,16 @@ import glfw
 
 from motion_imitation.reward_function import reward_func
 parser = argparse.ArgumentParser()
-parser.add_argument('--cfg', default='0202_wo_phase')
+parser.add_argument('--cfg', default='0202')
 parser.add_argument('--vis_model_file', default='mocap_v2_vis')
-parser.add_argument('--iter', type=int, default=250)
+parser.add_argument('--iter', type=int, default=140)
 parser.add_argument('--focus', action='store_true', default=True)
 parser.add_argument('--hide_expert', action='store_true', default=False)
 parser.add_argument('--preview', action='store_true', default=False)
 parser.add_argument('--record', action='store_true', default=False)
 parser.add_argument('--record_expert', action='store_true', default=False)
 parser.add_argument('--azimuth', type=float, default=45)
-parser.add_argument('--imp_aware', action='store_true', default=False)
+parser.add_argument('--imp_aware', action='store_true', default=True)
 parser.add_argument('--video_dir', default='out/videos/normal_hw') # need to be manually switched
 args = parser.parse_args()
 cfg = Config(args.cfg, False, create_dirs=False)
@@ -136,7 +136,7 @@ class MyVisulizer(Visualizer):
                 
                 next_state, reward, done,info = env.step(action, nonstop=True)
                 torques.append(env.data.ctrl.copy()/env.mass) # env.data.qfrc_actuator.copy()[6:]) #np.hstack([env.data.qfrc_applied[:6].copy(), env.data.qfrc_actuator[6:].copy()])) 
-                compared_inverse_dynamics = False
+                compared_inverse_dynamics = True
                 if compared_inverse_dynamics:
                     torques_id.append(env.inverse_dynamics().copy()/env.mass)
                 if env.cfg.osl: 
@@ -148,7 +148,7 @@ class MyVisulizer(Visualizer):
                 
                 if running_state is not None:
                     next_state = running_state(next_state, update=False)
-                if done or t > 110:
+                if done or t > 100:
                     print(f"fail: {info['fail']}")
                     break
                 state = next_state
@@ -163,10 +163,10 @@ class MyVisulizer(Visualizer):
                 jkps.append(env.jkp[env.lower_index[0]: env.lower_index[1]].copy())
                 
                 print(t, 
-                    "grf_desired",env.grf_normalized[t], "|")
-                #     "grf_current", np.array([grf_r[2],grf_l[2], grf_r[1],grf_l[1]]) /9.81 / env.mass,"|"
+                    "grf_desired",env.grf_normalized[t], "|",
+                    "grf_current", np.array([grf_r[2],grf_l[2], grf_r[1],grf_l[1]]) /9.81 / env.mass,"|"
                 #     "rew", custom_reward(env, state, action, info)[1][-1], "|",  # reward in real time
-                #     )
+                    )
                 
                 t += 1
 

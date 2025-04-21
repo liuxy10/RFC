@@ -16,7 +16,8 @@ def load_amc_file(fname, scale): # scale is the length of the bone
     for line in content:
         line_words = line.split()
         cmd = line_words[0]
-        if cmd == str(fr):
+        # if cmd == str(fr):
+        if cmd.isdigit():
             if cur_pos:
                 poses.append(np.array(cur_pos))
             cur_pos = []

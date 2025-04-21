@@ -1,5 +1,6 @@
 # data
-motion_id: ['69_01', '69_02', '69_03', '69_04', '69_05']
+# motion_id: ['69_01', '69_02', '69_03', '69_04', '69_05']
+motion_id: ['69_01_c', '69_02_c', '69_03_c', '69_04_c', '69_05_c']
 H: 1.75 # the code is designed that if H is negative, the default value will be used
 M: 75.0
 osl: False

@@ -6,7 +6,7 @@ from gym import spaces
 from khrylib.utils import *
 from khrylib.utils.transformation import quaternion_from_euler
 from motion_imitation.utils.tools import *
-import mujoco_py as mujoco
+import  mujoco
 from mujoco_py import functions as mjf
 import pickle
 import time
@@ -304,6 +304,9 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             fail = self.expert is not None and self.data.qpos[2] < self.expert['height_lb'] - 0.2
         cyclic = self.expert['meta']['cyclic']
         end =  (cyclic and self.cur_t >= cfg.env_episode_len) or (not cyclic and self.cur_t + self.start_ind >= self.expert['len'] + cfg.env_expert_trail_steps)
+        # The above code is a comment in Python. Comments are used to provide explanations or notes
+        # within the code and are not executed by the Python interpreter. In this case, the comment "#
+        # Python" is indicating that the code is written in Python.
         done = fail or end
         if nonstop:
             done = fail

@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='utf-8'?>
 <mujoco model="humanoid">
   <compiler angle="degree" inertiafromgeom="true" coordinate="global" />
   <include file="./common/materials.xml" />
