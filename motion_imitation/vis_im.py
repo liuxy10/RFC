@@ -20,16 +20,16 @@ import glfw
 
 from motion_imitation.reward_function import reward_func
 parser = argparse.ArgumentParser()
-parser.add_argument('--cfg', default='0202')
+parser.add_argument('--cfg', default='0202_wo_phase')
 parser.add_argument('--vis_model_file', default='mocap_v2_vis')
-parser.add_argument('--iter', type=int, default=140)
+parser.add_argument('--iter', type=int, default=200)
 parser.add_argument('--focus', action='store_true', default=True)
 parser.add_argument('--hide_expert', action='store_true', default=False)
 parser.add_argument('--preview', action='store_true', default=False)
 parser.add_argument('--record', action='store_true', default=False)
 parser.add_argument('--record_expert', action='store_true', default=False)
 parser.add_argument('--azimuth', type=float, default=45)
-parser.add_argument('--imp_aware', action='store_true', default=True)
+parser.add_argument('--imp_aware', action='store_true', default=False)
 parser.add_argument('--video_dir', default='out/videos/normal_hw') # need to be manually switched
 args = parser.parse_args()
 cfg = Config(args.cfg, False, create_dirs=False)
@@ -119,7 +119,8 @@ class MyVisulizer(Visualizer):
 
                 
                 if self.save_by_frame:
-                    fig, ax = env.visualize_by_frame(label = f"{args.cfg} t = {env.cur_t}", show = False)
+                    title = f"{args.cfg} t = {env.cur_t}, osl = {env.osl.osl_info['phase']}" if env.cfg.osl else f"{args.cfg} t = {env.cur_t}"
+                    fig, ax = env.visualize_by_frame(label = title, show = False)
                     vfs = env.data.qfrc_applied[:3].copy()
                     com_root = env.data.subtree_com[0,:].copy() 
                     visualize_3d_forces(fig, ax, vfs, com_root, sc = 20)
@@ -148,7 +149,7 @@ class MyVisulizer(Visualizer):
                 
                 if running_state is not None:
                     next_state = running_state(next_state, update=False)
-                if done or t > 100:
+                if done or t > 300:
                     print(f"fail: {info['fail']}")
                     break
                 state = next_state
@@ -188,7 +189,7 @@ class MyVisulizer(Visualizer):
             yield poses
 
     def visualize_traj(self, poses, vels, accs, torques, torques_osl, phases, grfs, jkps):
-        plot_pose, plot_vel, plot_acc, plot_impedance, plot_torque, plot_grfs = 1,1,1,1,1, True
+        plot_pose, plot_vel, plot_acc, plot_impedance, plot_torque, plot_grfs = 1,1,1,0,1,1
 
         output_dir = f'{args.video_dir}/plots'
         os.makedirs(output_dir, exist_ok=True)

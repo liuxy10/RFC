@@ -26,12 +26,14 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 if not path.exists(fullpath):
                     raise IOError("File %s does not exist" % fullpath)
             input_xml = fullpath
-            output_height_xml = fullpath.replace('.xml', '_height_scaled.xml')
             output_xml = fullpath.replace('.xml', '_all_scaled.xml')
-            scale_humanoid_model(input_xml, output_height_xml, cfg.H)
-            assign_mass_inertia(cfg.M,  output_height_xml, output_xml)
+            scale_humanoid_model(input_xml, output_xml, cfg.H)
+            assign_mass_inertia(cfg.M,  output_xml, output_xml)
+            modify_xml_local_coordinate(output_xml, output_xml)
+            update_inertial_params(output_xml, output_xml, total_height=cfg.H, total_mass=cfg.M) 
             print("Scaled model is saved at ", output_xml)
             print(f"scaled height: {calculate_humanoid_height(output_xml)}")
+            
             cfg.mujoco_model_file = output_xml
             
             scale_inertia = cfg.M /(30.9534) * (cfg.H / 1.4954 )**2 # scale inertia proportional to mass and the square of the height 
@@ -326,10 +328,14 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             self.set_state(init_pose, init_vel)
             self.bquat = self.get_body_quat()
             self.update_expert()
+            
         else:
             init_pose = self.data.qpos
             init_pose[2] += 1.0
             self.set_state(init_pose, self.data.qvel)
+        if self.cfg.osl:
+            self.osl.update_osl_control(self.get_osl_sens())
+        
         return self.get_obs()
 
     def viewer_setup(self, mode):
@@ -477,18 +483,18 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 poss.append(contact.pos.copy())
         return np.array(forces), np.array(poss), np.array(ids)
 
-    def get_ground_reaction_force(self):
-        forces, poss, ids = self.get_contact_force()
-        # print(ids)
-        force_sum, pos_sum, force_sum_magnitude = get_sum_force(forces, poss)
-        return force_sum, pos_sum, force_sum_magnitude
+    # def get_ground_reaction_force(self):
+    #     forces, poss, ids = self.get_contact_force()
+    #     # print(ids)
+    #     force_sum, pos_sum, force_sum_magnitude = get_sum_force(forces, poss)
+    #     return force_sum, pos_sum, force_sum_magnitude
     
     def get_grf_rl(self):
         forces, poss, ids = self.get_contact_force()
         # print( ids, ids == 'rfoot', ids == 'lfoot')
         (force_sum_r, pos_sum_r, force_sum_magnitude_r) = get_sum_force(forces[ids == 'rfoot'], poss[ids == 'rfoot']) if len(ids) > 0 else (np.zeros(3), None, 0)
         (force_sum_l, pos_sum_l, force_sum_magnitude_l) = get_sum_force(forces[ids == 'lfoot'], poss[ids == 'lfoot']) if len(ids) > 0 else (np.zeros(3), None, 0)
-        # print(force_sum_l[2], force_sum_r[2])
+        print("force_sum_magnitude_r, force_sum_magnitude_l",force_sum_magnitude_r, force_sum_magnitude_l)
         assert force_sum_r.shape == (3,) and force_sum_l.shape == (3,), "Force sum should be a 3D vector"
         return force_sum_r, pos_sum_r, force_sum_magnitude_r, force_sum_l, pos_sum_l, force_sum_magnitude_l
     
@@ -526,15 +532,14 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         ax.set_title(label)
         # visualize residual force on the root
 
-        f, cops, _ = self.get_ground_reaction_force()
-        if len(f) > 0: 
-            if plot_lr:
-                fs_r, cop_r, fm_r, fs_l, cop_l, fm_l = self.get_grf_rl()
-                visualize_3d_forces(fig, ax, fs_l, cop_l, sc = 500)
-                visualize_3d_forces(fig, ax, fs_r, cop_r, sc = 500)
+        fs_r, cop_r, fm_r, fs_l, cop_l, fm_l = self.get_grf_rl()
+        if len(fs_r)> 0 or len(fs_l) > 0: 
+            
+            visualize_3d_forces(fig, ax, fs_l, cop_l, sc = 500)
+            visualize_3d_forces(fig, ax, fs_r, cop_r, sc = 500)
                 
-            else:
-                visualize_3d_forces(fig, ax, f, cops)
+            # f, cops, _ = self.get_ground_reaction_force()
+            # visualize_3d_forces(fig, ax, f, cops)
         fig, ax = visualize_skeleton(fig, ax, joint_pos, self.body_tree, body_com_pos)
         
 
@@ -589,7 +594,7 @@ def generate_inverse_dynamics_torques(env, qpos_trajectory, qvel_trajectory, qac
    
 if __name__ == "__main__":
     from motion_imitation.utils.config import Config
-    cfg = Config('69XX', False, create_dirs=False)
+    cfg = Config('69XX_v3', False, create_dirs=False)
     # cfg_f = Config('0202_freeze', False, create_dirs=False)
     # cfg_p = Config('0202_prothesis', False, create_dirs=False)
     cfg.env_start_first = True

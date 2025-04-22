@@ -4,10 +4,7 @@
   <compiler angle="degree" inertiafromgeom="true" coordinate="local" />
   <statistic extent="3" center="0 0 1" />
   <size nuser_body="3" />
-  <option timestep="0.00222222222" />
-
-
-
+  <option timestep="0.00222222222"/>
   <default class="main">
     <joint limited="true" solimplimit="0 0.99 0.01"/>
     <geom contype="7" conaffinity="7" condim="1" margin="0.001" material="self" rgba="0.98 0.54 0.56 1" />
@@ -83,9 +80,6 @@
         </body>
       </body>
       <body name="lowerback">
-        <!-- <joint name="lowerback_z" axis="0 0 1" range="-30 30" type="hinge"/> -->
-        <!-- <joint name="lowerback_y" axis="0 1 0" range="-30 30" type="hinge"/> -->
-        <!-- <joint name="lowerback_x" axis="1 0 0" range="-20 45" type="hinge"/> -->
         <geom type="capsule" name="lowerback" size="0.065 0.055" pos="0 0.056 .03" quat="1 0 1 0"/>
         <body name="upperback" pos="0 0.1 -0.01">
           <joint name="upperback_z" axis="0 0 1" range="-30 30" type="hinge"/>

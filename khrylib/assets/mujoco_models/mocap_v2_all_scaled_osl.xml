@@ -119,6 +119,15 @@
       </body>
     </body>
   </worldbody>
+
+  <contact>
+    <exclude body1="lclavicle" body2="rclavicle" />
+    <exclude body1="lowerneck" body2="lclavicle" />
+    <exclude body1="lowerneck" body2="rclavicle" />
+    <exclude body1="upperneck" body2="lclavicle" />
+    <exclude body1="upperneck" body2="rclavicle" />
+  </contact>
+
   <actuator>
     <motor gear="1" joint="lfemur_z" name="lfemur_z" /> 
     <motor gear="1" joint="lfemur_y" name="lfemur_y" />

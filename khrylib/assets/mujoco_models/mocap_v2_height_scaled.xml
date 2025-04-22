@@ -119,6 +119,8 @@
       </body>
     </body>
   </worldbody>
+
+
   <actuator>
     <motor gear="1" joint="lfemur_z" name="lfemur_z" /> 
     <motor gear="1" joint="lfemur_y" name="lfemur_y" />

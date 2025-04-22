@@ -234,95 +234,13 @@ def modify_xml_local_coordinate(input_file, output_file):
     tree.write(output_file, encoding="utf-8", xml_declaration=True) 
     print(f"Modified XML file saved at: {output_file}")
 if __name__ == "__main__":
-    winter_params = {
-    'root':{
-        'com': [0, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'thorax': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'lfemur': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'ltibia': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'lfoot': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'rfemur': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'rtibia': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'rfoot': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'lhumerus': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'lradius': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'lwrist': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'rhumerus': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'rradius': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'rwrist': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'lowerneck':{
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    },
-    'head': {
-        'com': [0.1, 0, 0],
-        'mass': 1.0,
-        'I': [0.1, 0.1, 0.1]
-    }
-    }
     # update_inertial_params('khrylib/assets/mujoco_models/mocap_v2_local.xml',
     #                         'khrylib/assets/mujoco_models/mocap_v2_local_new.xml',  winter_params = PARAMS, total_mass = 75., total_height=1.75)
-    modify_xml_local_coordinate('/home/xliu227/Github/RFC/khrylib/assets/mujoco_models/mocap_v2_all_scaled.xml',
-                                '/home/xliu227/Github/RFC/khrylib/assets/mujoco_models/mocap_v2_all_scaled_local.xml')
+    modify_xml_local_coordinate('/home/xliu227/Github/RFC/khrylib/assets/mujoco_models/mocap_v3_all_scaled.xml',
+                                '/home/xliu227/Github/RFC/khrylib/assets/mujoco_models/mocap_v3_all_scaled_local.xml')
     
-    update_inertial_params('/home/xliu227/Github/RFC/khrylib/assets/mujoco_models/mocap_v2_all_scaled_local.xml',
-                            '/home/xliu227/Github/RFC/khrylib/assets/mujoco_models/mocap_v2_all_scaled_local.xml',  winter_params = PARAMS, total_mass = 75., total_height=1.75)
+    update_inertial_params('/home/xliu227/Github/RFC/khrylib/assets/mujoco_models/mocap_v3_all_scaled_local.xml',
+                            '/home/xliu227/Github/RFC/khrylib/assets/mujoco_models/mocap_v3_all_scaled_local.xml',  winter_params = PARAMS, total_mass = 75., total_height=1.75)
 
     # # Example usage:
     # mass = 1.0
