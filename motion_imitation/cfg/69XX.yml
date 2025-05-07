@@ -1,9 +1,16 @@
 # data
-# motion_id: ['69_01', '69_02', '69_03', '69_04', '69_05']
-motion_id: ['69_01_c', '69_02_c', '69_03_c', '69_04_c', '69_05_c']
+# motion_id: ['69_01', '69_02', '69_03', '69_04', '69_05'] # walk forward
+motion_id: ['69_06', '69_07', '69_08', '69_09', '69_10', '69_11'] # walk and turn repeat (both directions:12)
+# motion_id: [ '69_13', '69_14', '69_15'] # walk and turn in place
+# walk forward and turn 90 (stop: 20-27,smooth: 28-33)
+# motion_id: [ '69_20', '69_21', '69_22', '69_23', '69_24', '69_25', '69_26', '69_27', '69_28', '69_29', '69_30', '69_31', '69_32', '69_33', '69_34', '69_35', '69_36', '69_37', '69_38', '69_39', '69_40', '69_41', '69_42', '69_43', '69_44', '69_45', '69_46', '69_47', '69_48', '69_49', '69_50', '69_51', '69_52', '69_53', '69_54', '69_55', '69_56', '69_57', '69_58', '69_59', '69_60', '69_61', '69_62', '69_63', '69_64', '69_65', '69_66', '69_67', '69_68', '69_69', '69_70', '69_71', '69_72', '69_73', '69_74', '69_75']
+# motion_id: [  '69_20', '69_21', '69_22', '69_23', '69_24', '69_25', '69_26', '69_27', '69_28', '69_29', '69_30', '69_31', '69_32', '69_33']
+# motion_id: ['69_01_c', '69_02_c', '69_03_c', '69_04_c', '69_05_c'] # c means ones that exclude the start of the trial
+# motion_id: '69_10'
 H: 1.75 # the code is designed that if H is negative, the default value will be used
 M: 75.0
 osl: False
+start_from: 20 
 # training parameters
 gamma: 0.95
 tau: 0.95
@@ -54,7 +61,7 @@ env_episode_len: 200
 env_term_body: 'root'
 env_expert_trail_steps: 10
 obs_coord: 'heading'
-obs_phase: false
+obs_phase: true
 root_deheading: true
 
 # RFC parameters

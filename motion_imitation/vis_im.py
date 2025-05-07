@@ -20,7 +20,7 @@ import glfw
 
 from motion_imitation.reward_function import reward_func
 parser = argparse.ArgumentParser()
-parser.add_argument('--cfg', default='0202_wo_phase')
+parser.add_argument('--cfg', default='69XX')
 parser.add_argument('--vis_model_file', default='mocap_v2_vis')
 parser.add_argument('--iter', type=int, default=200)
 parser.add_argument('--focus', action='store_true', default=True)
@@ -57,6 +57,7 @@ cp_path = '%s/iter_%04d.p' % (cfg.model_dir, args.iter)
 logger.info('loading model from checkpoint: %s' % cp_path)
 model_cp = pickle.load(open(cp_path, "rb"))
 policy_net.load_state_dict(model_cp['policy_dict'])
+print(policy_net.policy_net[0].weight)  # Adjusted to access the correct attribute
 value_net.load_state_dict(model_cp['value_dict'])
 running_state = model_cp['running_state']
 
@@ -85,7 +86,7 @@ class MyVisulizer(Visualizer):
 
     def data_generator(self):
         while True:
-            poses, vels, accs = {'pred': [], 'gt': [], 'target': []}, {'gt': []}, {'gt': []}
+            poses, vels, accs = {'pred': [], 'gt': [], 'target': []}, {'pred': []}, {'pred': []}
             torques, torques_osl, torques_id, phases, grfs, jkps= [],[], [],[], {'l':[], 'r':[]}, []
             state = env.reset()
             if running_state is not None:
@@ -109,8 +110,8 @@ class MyVisulizer(Visualizer):
                     poses['gt'].append(epos[7:].copy()) 
                 poses['pred'].append(env.data.qpos[7:].copy())
                 poses['target'].append(env.get_target_pose(action))
-                vels['gt'].append(env.data.qvel[6:].copy())
-                accs['gt'].append(env.data.qacc[6:].copy())
+                vels['pred'].append(env.data.qvel[6:].copy())
+                accs['pred'].append(env.data.qacc[6:].copy())
                 # print("ctrl", env.data.ctrl[3], "| ", 
                 #       "torque", env.inverse_dynamics()[9], "| ",
                 #       "diff = ", env.inverse_dynamics()[9] - env.data.ctrl[3])
@@ -149,7 +150,7 @@ class MyVisulizer(Visualizer):
                 
                 if running_state is not None:
                     next_state = running_state(next_state, update=False)
-                if done or t > 300:
+                if done or t >150 :
                     print(f"fail: {info['fail']}")
                     break
                 state = next_state
@@ -165,13 +166,15 @@ class MyVisulizer(Visualizer):
                 
                 print(t, 
                     "grf_desired",env.grf_normalized[t], "|",
-                    "grf_current", np.array([grf_r[2],grf_l[2], grf_r[1],grf_l[1]]) /9.81 / env.mass,"|"
+                    "grf_current", np.array([grf_r[2],grf_l[2], grf_r[1],grf_l[1]]) /9.81 / env.mass,"|",
+                    "phase", env.expert['phase'][t], next_state[-2],"|",
+                    
                 #     "rew", custom_reward(env, state, action, info)[1][-1], "|",  # reward in real time
                     )
                 
                 t += 1
 
-            poses['gt'],  poses['pred'], poses['target'], vels['gt'], accs['gt'] = np.vstack(poses['gt']), np.vstack(poses['pred']), np.vstack(poses['target']), np.vstack(vels['gt']), np.vstack(accs['gt'])
+            poses['gt'],  poses['pred'], poses['target'], vels['pred'], accs['pred'] = np.vstack(poses['gt']), np.vstack(poses['pred']), np.vstack(poses['target']), np.vstack(vels['pred']), np.vstack(accs['pred'])
             torques, torques_id = np.vstack(torques), np.vstack(torques_id)
             if env.cfg.osl:
                 torques_osl = np.vstack(torques_osl)

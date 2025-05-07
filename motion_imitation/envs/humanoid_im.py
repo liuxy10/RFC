@@ -15,6 +15,9 @@ from motion_imitation.envs.oslAgent import OSLAgent
 # sys.path.append("/home/xliu227/Github/human-model-generator/code/")
 # from write_xml import *
 
+
+from motion_imitation.envs.phase_estimate import GaitPhasePredictor
+
 class HumanoidEnv(mujoco_env.MujocoEnv):
 
     def __init__(self, cfg):
@@ -66,34 +69,70 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.prev_bquat = None
         self.set_model_params()
         self.expert = None
+        self.phase_predictor = GaitPhasePredictor()
         self.load_expert()
+        self.phase_predictor.freeze_parameters()
         self.set_spaces()
         self.body_tree = build_body_tree(cfg.mujoco_model_file)
         # print(self.body_tree)
         self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
         self.max_vf = 30.0 # N
-        self.grf_normalized = get_ideal_grf(total_idx = 1000, offset_period = 15, stance_period = 18) 
+        self.grf_normalized = get_ideal_grf(total_idx = 100, offset_period = 15, stance_period = 18) 
         self.t_last_switch_phase = -1
         self.last_phase_stance = True # hand code for 0202
         self.mass = self.model.body_subtreemass[0]
-    
+
+                
     def load_expert(self):
         if type(self.cfg.expert_traj_file) is list:
             expert_qpos, expert_meta = [], []
+            phase = []
             for file in self.cfg.expert_traj_file:
                 expert_qpos_, expert_meta = pickle.load(open(file, "rb"))
-                expert_qpos.append(expert_qpos_)
+                # print(file)
+                # only take the part where 
+                # indexes of qpos[:,9] that pass the threshold 0 with a vel > 0, and take it as the start of a phase
+                indexes = filter_gait_indexes(expert_qpos_, 
+                                              move_dir=[0,1], 
+                                              start_from = self.cfg.start_from, 
+                                              start_hip_angle=0.01,
+                                              vis =False
+                                              )
+                
+                if len(indexes) > 0:
+                    phase.append(np.concatenate([np.arange(0,indexes[i][1]- indexes[i][0])/(indexes[i][1]- indexes[i][0]) for i in range(len(indexes))]))
+                    expert_qpos.append(np.concatenate([expert_qpos_[(indexes[i][0]):(indexes[i][1])] for i in range(len(indexes))]))
             expert_qpos = np.concatenate(expert_qpos, axis = 0)
+            phase = np.concatenate(phase, axis = 0)
         else:
             expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
-        # print("expert_meta",expert_meta)
-        # print("expert_qpos.shape", expert_qpos.shape)
-        
+            # indexes = filter_gait_indexes(expert_qpos_,move_dir=-1, 
+            #                                   start_from = self.cfg.start_from, 
+            #                                   start_hip_angle=0.0,
+            #                                   vis =False,
+            #                               ) # used to filter normal walk pattern from various dataset
+            # expert_qpos = np.concatenate([expert_qpos_[(indexes[i][0]):(indexes[i][1])] for i in range(len(indexes))])
+            # phase = np.concatenate([np.arange(0,indexes[i][1]- indexes[i][0])/(indexes[i][1]- indexes[i][0]) for i in range(len(indexes))])
+        # print("expert_qpos.shape, phase.shape", expert_qpos.shape, phase.shape)
         try:
             self.expert = get_expert(expert_qpos, expert_meta, self)
+            
         except ValueError:
             self.expert = None
+            
+        if self.cfg.obs_phase:
+            self.expert['phase'] = phase
+            
         
+        # n_seq = 1
+        phase_predict_path = os.path.join(self.cfg.model_dir,f'phase_predictor_lstm.pth')
+        
+        train_phase = (not os.path.exists(phase_predict_path)) and self.cfg.obs_phase # check if phase_predict_path exists
+        if train_phase:
+            self.phase_predictor.train_phase_predictor(expert_qpos, phase, n_seq=1, epochs=20, lr=0.002, save_path= phase_predict_path, vis=False)
+        elif self.cfg.obs_phase:
+            self.phase_predictor.load_state_dict(torch.load(phase_predict_path)) 
+    
     def set_model_params(self):
         if self.cfg.action_type == 'torque' and hasattr(self.cfg, 'j_stiff'):
             self.model.jnt_stiffness[1:] = self.cfg.j_stiff
@@ -145,8 +184,8 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             obs.append(qvel)
         # phase
         if self.cfg.obs_phase:
-            phase = self.get_phase()
-            obs.append(np.array([phase]))
+            phase_p, phase = self.get_phase() # decide whether to use phase_p or phase
+            obs.append(phase_p)
         obs = np.concatenate(obs)
         return obs
 
@@ -361,9 +400,18 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                 expert['cycle_pos'] = np.concatenate((self.data.qpos[:2], expert['init_pos'][[2]]))
 
 
+    # def get_phase(self):
+    #     ind = self.get_expert_index(self.cur_t)
+    #     return ind / self.expert['len']
+    
     def get_phase(self):
-        ind = self.get_expert_index(self.cur_t)
-        return ind / self.expert['len']
+        qpos = self.data.qpos.copy()
+        phase_p = self.phase_predictor.predict(np.array(qpos[None, None, 7:14]))# qpos is 1D, expand batch = 1, n_seq = 1
+        phase = np.arctan2(phase_p[1], phase_p[0]) / (2 * np.pi) + (-np.sign(np.arcsin(np.clip(phase_p[1], -1, 1)))) / 2 + 1 / 2
+        phase = self.expert["phase"][self.cur_t]
+        phase_p = np.array([np.cos(phase * 2 * np.pi), np.sin(phase * 2 * np.pi)])
+        
+        return phase_p, phase
 
     def get_expert_index(self, t):
         return (self.start_ind + t) % self.expert['len'] \
@@ -494,7 +542,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         # print( ids, ids == 'rfoot', ids == 'lfoot')
         (force_sum_r, pos_sum_r, force_sum_magnitude_r) = get_sum_force(forces[ids == 'rfoot'], poss[ids == 'rfoot']) if len(ids) > 0 else (np.zeros(3), None, 0)
         (force_sum_l, pos_sum_l, force_sum_magnitude_l) = get_sum_force(forces[ids == 'lfoot'], poss[ids == 'lfoot']) if len(ids) > 0 else (np.zeros(3), None, 0)
-        print("force_sum_magnitude_r, force_sum_magnitude_l",force_sum_magnitude_r, force_sum_magnitude_l)
+        # print("force_sum_magnitude_r, force_sum_magnitude_l",force_sum_magnitude_r, force_sum_magnitude_l)
         assert force_sum_r.shape == (3,) and force_sum_l.shape == (3,), "Force sum should be a 3D vector"
         return force_sum_r, pos_sum_r, force_sum_magnitude_r, force_sum_l, pos_sum_l, force_sum_magnitude_l
     

@@ -43,6 +43,7 @@ class Config:
 
         # expert
         self.motion_id = cfg['motion_id'] # what if it is a list of motion data?
+        self.start_from = cfg.get('start_from ', 0)
         if isinstance(self.motion_id, (list, tuple)):
             self.expert_traj_file = [f'data/cmu_mocap/motion/{motion}.p' for motion in self.motion_id]
         else:

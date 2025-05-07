@@ -5,6 +5,46 @@ from khrylib.utils.math import *
 
 
 class PolicyGaussian(Policy):
+    """
+    A Gaussian policy for reinforcement learning, which outputs a Gaussian 
+    distribution parameterized by a mean and standard deviation.
+
+    Attributes:
+        type (str): The type of the policy, set to 'gaussian'.
+        net (nn.Module): The neural network used to process input observations.
+        action_mean (nn.Linear): A linear layer to compute the mean of the action distribution.
+        action_log_std (nn.Parameter): A learnable parameter representing the log standard deviation 
+            of the action distribution.
+
+    Args:
+        net (nn.Module): The neural network used to process input observations.
+        action_dim (int): The dimensionality of the action space.
+        net_out_dim (int, optional): The output dimensionality of the `net`. If None, it defaults 
+            to `net.out_dim`.
+        log_std (float, optional): The initial value for the log standard deviation. Default is 0.
+        fix_std (bool, optional): If True, the standard deviation is fixed and not learnable. 
+            Default is False.
+
+    Methods:
+        forward(x):
+            Computes the Gaussian distribution for the given input.
+            Args:
+                x (torch.Tensor): The input tensor.
+            Returns:
+                DiagGaussian: A diagonal Gaussian distribution with computed mean and standard deviation.
+
+        get_fim(x):
+            Computes the Fisher Information Matrix (FIM) related information for the policy.
+            Args:
+                x (torch.Tensor): The input tensor.
+            Returns:
+                tuple: A tuple containing:
+                    - cov_inv (torch.Tensor): The inverse of the covariance matrix.
+                    - dist.loc (torch.Tensor): The mean of the Gaussian distribution.
+                    - dict: A dictionary with keys:
+                        - 'std_id': The parameter ID of the action_log_std.
+                        - 'std_index': The index of the action_log_std parameter in the flattened parameter list.
+    """
     def __init__(self, net, action_dim, net_out_dim=None, log_std=0, fix_std=False):
         super().__init__()
         self.type = 'gaussian'

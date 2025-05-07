@@ -426,7 +426,7 @@ def scale_humanoid_model(model_path, scaled_model_path, height, weight = None):
                     child.set('fromto', ' '.join(str(x) for x in fromto))
                 pos = child.attrib.get('pos')
                 if pos:
-                    print(pos)
+                    # print(pos)
                     pos = [float(x) for x in pos.split(' ')]
                     pos = [x * scale for x in pos]
                     child.set('pos', ' '.join(str(x) for x in pos))
@@ -567,6 +567,49 @@ def get_expert(expert_qpos, expert_meta, env):
     env.sim.set_state(old_state)
     env.sim.forward()
     return expert
+    
+    
+def filter_gait_indexes(qpos, vis = True, 
+                        move_dir = -1, 
+                        start_hip_angle = 0.0, 
+                        start_from = 0,
+                        phase_len_range = [30, 40],
+                        com_min_vel = 0.08):
+    indexes = np.where((qpos[start_from + 1:, 9] > start_hip_angle) & (np.diff(qpos[start_from:, 9],1) >= 0))[0] # 9 is the index of left hip
+    indexes = [indexes[i] for i in range(len(indexes)) if i == 0 or indexes[i] > indexes[i - 1] + 1] 
+    # print("indexes", indexes)
+    if len(indexes) > 0:
+        indexes = [[indexes[i-1], indexes[i]] for i in range(1,len(indexes)) if indexes[i] > indexes[i-1] + 10]
+    # print("indexes", indexes)
+    if type(move_dir) is int:
+        if move_dir >= 0: 
+        
+            indexes = [indexes[i] for i in range(len(indexes)) if
+                                (np.all(np.diff(qpos[indexes[i][0]:indexes[i][1], move_dir],1) >= 0) or 
+                                np.all(np.diff(qpos[indexes[i][0]:indexes[i][1], move_dir],1) <= 0)) and 
+                                np.all(np.linalg.norm(np.diff(qpos[indexes[i][0]:indexes[i][1], move_dir],1), axis = 1) > com_min_vel)] 
+            
+    elif type(move_dir) in (list, tuple):
+        com_vel = [np.diff(qpos[indexes[i][0]:indexes[i][1], move_dir],1) for i in range(len(indexes))]
+        # print("com_vel", com_vel) 
+        indexes = [indexes[i] for i in range(len(indexes)) if np.all(com_vel[i]*com_vel[i][0]>=0) and np.all(np.linalg.norm(com_vel[i], axis = 1) > com_min_vel)]
+    indexes = [indexes[i] for i in range(len(indexes)) if indexes[i][1] - indexes[i][0] > phase_len_range[0] and indexes[i][1] - indexes[i][0] < phase_len_range[1]]
+    if vis:
+        print("Start of phases at filtered indexes:", indexes)
+        fig, ax = plt.subplots(1, 1, figsize=(15, 5))        
+        plt.plot(qpos[:,move_dir], label = "com")
+        plt.plot(qpos[:,9], label = "left hip")
+        # plt.plot(np.diff(qpos[:, 9],1))
+        for idx in indexes:
+            # plot region between idx[0] and idx[1]
+            plt.axvspan(idx[0], idx[1], color='yellow', alpha=0.3, label='Phase Region' if idx == indexes[0] else "")
+        plt.legend()
+        plt.show()
+    
+    return indexes
+            
+    
+    
 
 if __name__ == "__main__":
     # update_inertial_params('khrylib/assets/mujoco_models/mocap_v2_local.xml',

@@ -16,10 +16,12 @@ from mpl_toolkits.mplot3d import Axes3D
 import glob
 import re
 
-
-
 import matplotlib.pyplot as plt
 
+
+
+    
+    
 def generate_interpolated_grf(t, stance_period=0.55):
     # Define key timing points and force values for vertical and AP forces
     time_points = [0, 0.15, 0.50, 0.85, 1]  # Percentage of stance phase
@@ -128,7 +130,7 @@ def visualize_phases(fig, axs, osl_infos):
 
 def visualize_kinematics(var, joint_names, phases = None, osl_params_dict = None, var_name = 'qpos'): 
     
-    num_var = var['gt'].shape[1]
+    num_var = var['gt'].shape[1] if 'gt' in var.keys() else var['pred'].shape[1]
     num_cols = 4
     num_rows = num_var // num_cols + (num_var % num_cols > 0)
     
