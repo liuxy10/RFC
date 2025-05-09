@@ -77,7 +77,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         # print(self.body_tree)
         self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
         self.max_vf = 30.0 # N
-        self.grf_normalized = get_ideal_grf(total_idx = 100, offset_period = 15, stance_period = 18) 
+        self.grf_normalized = get_ideal_grf(total_idx = 500, offset_period = 15, stance_period = 18) 
         self.t_last_switch_phase = -1
         self.last_phase_stance = True # hand code for 0202
         self.mass = self.model.body_subtreemass[0]
@@ -123,7 +123,17 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         if self.cfg.obs_phase:
             self.expert['phase'] = phase
             
-        
+        fig, ax = plt.subplots(1, 1, figsize=(15, 5))        
+        # plt.plot(qpos[:,move_dir], label = "com")
+        plt.plot(expert_qpos[:,9], label = "left hip")
+        plt.plot(self.expert["rlinv_local"], label = "local root linear vel")
+        # plt.show()
+        # plt.plot(np.diff(qpos[:, 9],1))
+        for idx in indexes:
+            # plot region between idx[0] and idx[1]
+            plt.axvspan(idx[0], idx[1], color='yellow', alpha=0.3, label='Phase Region' if idx == indexes[0] else "")
+        plt.legend()
+        plt.show()
         # n_seq = 1
         phase_predict_path = os.path.join(self.cfg.model_dir,f'phase_predictor_lstm.pth')
         

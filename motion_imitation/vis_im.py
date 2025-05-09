@@ -57,7 +57,6 @@ cp_path = '%s/iter_%04d.p' % (cfg.model_dir, args.iter)
 logger.info('loading model from checkpoint: %s' % cp_path)
 model_cp = pickle.load(open(cp_path, "rb"))
 policy_net.load_state_dict(model_cp['policy_dict'])
-print(policy_net.policy_net[0].weight)  # Adjusted to access the correct attribute
 value_net.load_state_dict(model_cp['value_dict'])
 running_state = model_cp['running_state']
 

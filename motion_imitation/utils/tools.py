@@ -513,12 +513,14 @@ def remove_autolimits_attribute(xml_file):
 
 def get_expert(expert_qpos, expert_meta, env):
     old_state = env.sim.get_state()
+    
     expert = {'qpos': expert_qpos, 'meta': expert_meta}
     feat_keys = {'qvel', 'rlinv', 'rlinv_local', 'rangv', 'rq_rmh',
                  'com', 'head_pos', 'ee_pos', 'ee_wpos', 'bquat', 'bangvel'}
     for key in feat_keys:
         expert[key] = []
-
+    
+    
     for i in range(expert_qpos.shape[0]):
         qpos = expert_qpos[i]
         env.data.qpos[:] = qpos
@@ -555,9 +557,11 @@ def get_expert(expert_qpos, expert_meta, env):
         bangvel = get_angvel_fd(expert['bquat'][i - 1], expert['bquat'][i], env.dt)
         expert['bangvel'].append(bangvel)
     expert['bangvel'].insert(0, expert['bangvel'][0].copy())
-
+    
+    # 
     for key in feat_keys:
         expert[key] = np.vstack(expert[key])
+        
     expert['len'] = expert['qpos'].shape[0]
     expert['height_lb'] = expert['qpos'][:, 2].min()
     expert['head_height_lb'] = expert['head_pos'][:, 2].min()
