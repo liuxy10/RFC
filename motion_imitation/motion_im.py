@@ -26,7 +26,7 @@ parser.add_argument('--max_iter_num', type=int, default=300)
 parser.add_argument('--gpu_index', type=int, default=0)
 parser.add_argument('--iter', type=int, default=0)
 parser.add_argument('--show_noise', action='store_true', default=False)
-parser.add_argument('--save_model_interval', default=1)
+parser.add_argument('--save_model_interval', default=5)
 parser.add_argument('--imp_aware', action='store_true', default=False)
 args = parser.parse_args()
 if args.render:

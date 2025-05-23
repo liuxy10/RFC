@@ -79,7 +79,36 @@ class GaitPhasePredictor(nn.Module):
             outputs = self(X_tensor)
             loss = F.mse_loss(outputs, y_tensor)
         return loss.item()
-
+    def validate_model(self, expert_qpos, expert_phase, n_seq=1, vis = False):
+        X = np.array([expert_qpos[i:i+n_seq, 7:14] for i in range(len(expert_qpos)-n_seq)])
+        y_gt = expert_phase[n_seq:]
+        y_gt = np.vstack([np.cos(y_gt * 2 * np.pi), np.sin(y_gt * 2 * np.pi)]).T
+        assert X.shape[0] == y_gt.shape[0], f"X {X.shape} and y {y_gt.shape} should have the same number of samples"
+        y_pred = self.predict(X)
+        rmse_p = np.sqrt(np.mean((y_pred - y_gt) ** 2))
+        rs_p = 1 - np.sum((y_pred - y_gt) ** 2) / np.sum((y_gt - np.mean(y_gt)) ** 2)
+        
+        if vis:
+            import matplotlib.pyplot as plt
+            fig, ax = plt.subplots(y_pred.shape[1], 1, figsize=(10, 6))
+            for i in range(y_pred.shape[1]):
+                ax[i].plot(y_pred[:, i], label='Predicted')
+                ax[i].plot(y_gt[:, i], label='True')
+                ax[i].set_title(f'Phase {i+1}')
+                ax[i].legend()
+            plt.title(f'Gait Phase Prediction in polar coordinate, rmse = {rmse_p:.4f}, r square = {rs_p:.4f}')
+            plt.show()
+            
+            fig, ax = plt.subplots(1, 1, figsize=(10, 6))
+            ax.plot(expert_phase, label='True Phase')
+            ax.plot(np.arctan2(y_pred[:, 1], y_pred[:, 0]) / (2 * np.pi) + (-np.sign(np.arcsin(np.clip(y_pred[:,1], -1, 1))))  / 2 + 1 / 2, label='Predicted Phase')
+            ax.set_title(f'Gait Phase Prediction, rmse = {rmse_p:.4f}, r square = {rs_p:.4f}')
+            ax.legend()
+            plt.show()
+            
+            
+        
+        
     def train_phase_predictor(self, expert_qpos, expert_phase,
                               n_seq=1, epochs=50, lr=0.001, 
                               save_path='phase_predictor_lstm.pth', 

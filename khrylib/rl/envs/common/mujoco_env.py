@@ -143,7 +143,7 @@ class MujocoEnv:
         self._get_viewer('human').custom_key_callback = key_func
 
     def get_body_frame_position(self, body_name):
-        return self.data.get_body_xpos(body_name)
+        return self.data.get_body_xpos(body_name) # get_body_xpos() returns the position of the body in world coordinates
 
     def state_vector(self):
         return np.concatenate([

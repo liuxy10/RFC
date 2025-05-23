@@ -143,7 +143,7 @@ def multi_quat_diff(nq1, nq0):
 def multi_quat_norm(nq):
     """return the scalar rotation of a N joints"""
 
-    nq_norm = np.arccos(np.clip(abs(nq[::4]), -1.0, 1.0))
+    nq_norm = np.arccos(np.clip(abs(nq[::4]), -1.0, 1.0)) 
     return nq_norm
 
 

@@ -511,7 +511,7 @@ def remove_autolimits_attribute(xml_file):
 
 
 
-def get_expert(expert_qpos, expert_meta, env):
+def get_expert(expert_qpos, expert_meta, env, vis = False):
     old_state = env.sim.get_state()
     
     expert = {'qpos': expert_qpos, 'meta': expert_meta}
@@ -523,11 +523,15 @@ def get_expert(expert_qpos, expert_meta, env):
     
     for i in range(expert_qpos.shape[0]):
         qpos = expert_qpos[i]
+        # offsetting qpos
+        qpos[26] += 0.2
+        
+        
         env.data.qpos[:] = qpos
         env.sim.forward()
         rq_rmh = de_heading(qpos[3:7])
         ee_pos = env.get_ee_pos(env.cfg.obs_coord) # ee_pos in obs_coord
-        ee_wpos = env.get_ee_pos(None)
+        ee_wpos = env.get_ee_pos(None) # ee_wpos in world coord
         bquat = env.get_body_quat()
         com = env.get_com()
         head_pos = env.get_body_frame_position('head').copy()
@@ -548,6 +552,20 @@ def get_expert(expert_qpos, expert_meta, env):
         expert['com'].append(com)
         expert['head_pos'].append(head_pos)
         expert['rq_rmh'].append(rq_rmh)
+        
+        if vis:
+            # try:
+            print("visualizing frame", i, "saving at", f'frame_expert/%04d.png' % i)
+            fig, ax = env.visualize_by_frame(show = False, label =  "expert", vis_grf = False)
+            fig.canvas.draw()
+            frame_dir = f'frame_expert'
+            data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))
+            save_image_hwc(data,  f'{frame_dir}/%04d.png' % i) 
+            plt.close(fig)
+            # except:
+            #     env.render()
+    
+        
     expert['qvel'].insert(0, expert['qvel'][0].copy())
     expert['rlinv'].insert(0, expert['rlinv'][0].copy())
     expert['rlinv_local'].insert(0, expert['rlinv_local'][0].copy())
@@ -578,7 +596,30 @@ def filter_gait_indexes(qpos, vis = True,
                         start_hip_angle = 0.0, 
                         start_from = 0,
                         phase_len_range = [30, 40],
-                        com_min_vel = 0.08):
+                        com_min_vel = 0.00):
+    """
+    Filters gait phases based on specific criteria from the given positional data.
+    Args:
+        qpos (numpy.ndarray): A 2D array representing positional data. The 9th column is assumed to correspond to the left hip angle.
+        vis (bool, optional): If True, visualizes the filtered gait phases. Defaults to True.
+        move_dir (int or list/tuple, optional): The index or indices of the direction(s) of movement to analyze. 
+            If an integer, it specifies a single direction. If a list/tuple, it specifies multiple directions. Defaults to -1.
+        start_hip_angle (float, optional): The starting angle of the left hip to consider for filtering. Defaults to 0.0.
+        start_from (int, optional): The starting index in the data to begin filtering. Defaults to 0.
+        phase_len_range (list, optional): A list specifying the minimum and maximum length of a valid phase. Defaults to [30, 40].
+        com_min_vel (float, optional): The minimum velocity of the center of mass (COM) to consider a phase valid. Defaults to 0.08.
+    Returns:
+        list: A list of filtered gait phase indexes, where each element is a pair [start_index, end_index] representing the start and end of a phase.
+    Visualization:
+        If `vis` is True, the function plots:
+        - The positional data for the specified movement direction (`move_dir`).
+        - The left hip angle.
+        - Highlighted regions corresponding to the filtered gait phases.
+    Notes:
+        - The function identifies phases where the left hip angle increases and filters them based on the specified criteria.
+        - If `move_dir` is an integer, the function ensures the movement in that direction is monotonic and exceeds the minimum velocity.
+        - If `move_dir` is a list/tuple, the function ensures the movement in all specified directions is consistent and exceeds the minimum velocity.
+    """
     indexes = np.where((qpos[start_from + 1:, 9] > start_hip_angle) & (np.diff(qpos[start_from:, 9],1) >= 0))[0] # 9 is the index of left hip
     indexes = [indexes[i] for i in range(len(indexes)) if i == 0 or indexes[i] > indexes[i - 1] + 1] 
     # print("indexes", indexes)

@@ -55,6 +55,8 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             
         mujoco_env.MujocoEnv.__init__(self, cfg.mujoco_model_file, frame_skip = 15) # 15 is the frame skip 
         self.cfg = cfg
+        self.body_tree = build_body_tree(cfg.mujoco_model_file)
+        self.mass = self.model.body_subtreemass[0]
         self.set_cam_first = set()
         # env specific
         self.end_reward = 0.0
@@ -67,20 +69,19 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         self.lower_index = [0, 14] # lower body index from yml config file
         self.bquat = self.get_body_quat()
         self.prev_bquat = None
-        self.set_model_params()
+        self.set_model_params() # 
         self.expert = None
-        self.phase_predictor = GaitPhasePredictor()
+        
         self.load_expert()
-        self.phase_predictor.freeze_parameters()
         self.set_spaces()
-        self.body_tree = build_body_tree(cfg.mujoco_model_file)
+        
         # print(self.body_tree)
         self.lower_limb_names = ['root','lfemur', 'ltibia', 'lfoot', 'rfemur', 'rtibia', 'rfoot']
         self.max_vf = 30.0 # N
         self.grf_normalized = get_ideal_grf(total_idx = 500, offset_period = 15, stance_period = 18) 
         self.t_last_switch_phase = -1
         self.last_phase_stance = True # hand code for 0202
-        self.mass = self.model.body_subtreemass[0]
+        
 
                 
     def load_expert(self):
@@ -96,6 +97,7 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
                                               move_dir=[0,1], 
                                               start_from = self.cfg.start_from, 
                                               start_hip_angle=0.01,
+                                              com_min_vel = 0.08,
                                               vis =False
                                               )
                 
@@ -108,40 +110,34 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
             expert_qpos, expert_meta = pickle.load(open(self.cfg.expert_traj_file, "rb"))
             # indexes = filter_gait_indexes(expert_qpos_,move_dir=-1, 
             #                                   start_from = self.cfg.start_from, 
-            #                                   start_hip_angle=0.0,
-            #                                   vis =False,
+            #                                   start_hip_angle=-0.25,
+            #                                   phase_len_range = [25, 35],
+            #                                   vis =True,
             #                               ) # used to filter normal walk pattern from various dataset
             # expert_qpos = np.concatenate([expert_qpos_[(indexes[i][0]):(indexes[i][1])] for i in range(len(indexes))])
             # phase = np.concatenate([np.arange(0,indexes[i][1]- indexes[i][0])/(indexes[i][1]- indexes[i][0]) for i in range(len(indexes))])
         # print("expert_qpos.shape, phase.shape", expert_qpos.shape, phase.shape)
         try:
-            self.expert = get_expert(expert_qpos, expert_meta, self)
+            self.expert = get_expert(expert_qpos, expert_meta, self, vis = True)
             
         except ValueError:
             self.expert = None
+            print("expert is None")
             
         if self.cfg.obs_phase:
             self.expert['phase'] = phase
+            self.phase_predictor = GaitPhasePredictor()
             
-        fig, ax = plt.subplots(1, 1, figsize=(15, 5))        
-        # plt.plot(qpos[:,move_dir], label = "com")
-        plt.plot(expert_qpos[:,9], label = "left hip")
-        plt.plot(self.expert["rlinv_local"], label = "local root linear vel")
-        # plt.show()
-        # plt.plot(np.diff(qpos[:, 9],1))
-        for idx in indexes:
-            # plot region between idx[0] and idx[1]
-            plt.axvspan(idx[0], idx[1], color='yellow', alpha=0.3, label='Phase Region' if idx == indexes[0] else "")
-        plt.legend()
-        plt.show()
-        # n_seq = 1
         phase_predict_path = os.path.join(self.cfg.model_dir,f'phase_predictor_lstm.pth')
         
         train_phase = (not os.path.exists(phase_predict_path)) and self.cfg.obs_phase # check if phase_predict_path exists
         if train_phase:
-            self.phase_predictor.train_phase_predictor(expert_qpos, phase, n_seq=1, epochs=20, lr=0.002, save_path= phase_predict_path, vis=False)
+            self.phase_predictor.train_phase_predictor(expert_qpos, phase, n_seq=3, epochs=30, lr=0.002, save_path= phase_predict_path, vis=True)
+            self.phase_predictor.freeze_parameters()
         elif self.cfg.obs_phase:
             self.phase_predictor.load_state_dict(torch.load(phase_predict_path)) 
+            self.phase_predictor.validate_model(expert_qpos, phase, vis = True)
+            self.phase_predictor.freeze_parameters()
     
     def set_model_params(self):
         if self.cfg.action_type == 'torque' and hasattr(self.cfg, 'j_stiff'):
@@ -581,20 +577,21 @@ class HumanoidEnv(mujoco_env.MujocoEnv):
         return F_cartesian
     
     
-    def visualize_by_frame(self, show = False, label =  "normal", plot_lr = True):
+    def visualize_by_frame(self, show = False, label =  "normal",  vis_grf = True):
         joint_pos = {n: self.get_body_frame_position(n) for n in self.model.body_names if n != "world"}
         body_com_pos = {n: [self.get_body_com(n), self.get_body_mass(n)] for n in self.model.body_names if n != "world"}
         fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=(10, 10))
         # forces, poss = self.get_contact_force()
         ax.view_init(elev=0, azim=180)  # Set the view to face the yz plane
-        ax.set_title(label)
+        ax.set_title(label+f", total_mass = {self.mass} kg")
         # visualize residual force on the root
 
-        fs_r, cop_r, fm_r, fs_l, cop_l, fm_l = self.get_grf_rl()
-        if len(fs_r)> 0 or len(fs_l) > 0: 
-            
-            visualize_3d_forces(fig, ax, fs_l, cop_l, sc = 500)
-            visualize_3d_forces(fig, ax, fs_r, cop_r, sc = 500)
+        if vis_grf:
+            fs_r, cop_r, fm_r, fs_l, cop_l, fm_l = self.get_grf_rl()
+            if len(fs_r)> 0 or len(fs_l) > 0: 
+                
+                visualize_3d_forces(fig, ax, fs_l, cop_l, sc = 500)
+                visualize_3d_forces(fig, ax, fs_r, cop_r, sc = 500)
                 
             # f, cops, _ = self.get_ground_reaction_force()
             # visualize_3d_forces(fig, ax, f, cops)

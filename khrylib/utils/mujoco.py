@@ -20,6 +20,7 @@ def change_stiffness(input_path,output_path, joints, stiffness):
 
 
 def build_body_tree(fullpath):
+    
     if not path.exists(fullpath):
             # try the default assets path
             fullpath = path.join(Path(__file__).parent.parent, 'assets/mujoco_models', path.basename(fullpath))

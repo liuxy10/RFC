@@ -166,7 +166,7 @@ class MyVisulizer(Visualizer):
                 print(t, 
                     "grf_desired",env.grf_normalized[t], "|",
                     "grf_current", np.array([grf_r[2],grf_l[2], grf_r[1],grf_l[1]]) /9.81 / env.mass,"|",
-                    "phase", env.expert['phase'][t], next_state[-2],"|",
+                    # "phase", env.expert['phase'][t], next_state[-2],"|",
                     
                 #     "rew", custom_reward(env, state, action, info)[1][-1], "|",  # reward in real time
                     )

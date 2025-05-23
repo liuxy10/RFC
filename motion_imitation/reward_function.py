@@ -158,7 +158,7 @@ def local_rfc_implicit_reward(env, state, action, info):
     cur_qvel = get_qvel_fd_new(prev_qpos, cur_qpos, env.dt, cfg.obs_coord)
     cur_rlinv_local = cur_qvel[:3]
     cur_rangv = cur_qvel[3:6]
-    cur_rq_rmh = de_heading(cur_qpos[3:7])
+    cur_rq_rmh = de_heading(cur_qpos[3:7]) # current root quaternion in heading frame
     cur_ee = env.get_ee_pos(cfg.obs_coord)
     cur_bquat = env.get_body_quat()
     cur_bangvel = get_angvel_fd(prev_bquat, cur_bquat, env.dt)
@@ -170,7 +170,7 @@ def local_rfc_implicit_reward(env, state, action, info):
     e_ee = env.get_expert_attr('ee_pos', ind)
     e_bquat = env.get_expert_attr('bquat', ind)
     e_bangvel = env.get_expert_attr('bangvel', ind)
-    # pose reward
+    # 0 pose reward 
     if w_p > 0.0:
         pose_diff = multi_quat_norm(multi_quat_diff(cur_bquat[4:], e_bquat[4:]))    # ignore root
         pose_diff *= cfg.b_diffw
@@ -178,33 +178,33 @@ def local_rfc_implicit_reward(env, state, action, info):
         pose_reward = math.exp(-k_p * (pose_dist ** 2))
     else:
         pose_reward = 0.0
-    # velocity reward
+    # 1 velocity reward
     if w_v > 0.0:
         vel_dist = np.linalg.norm(cur_bangvel[3:] - e_bangvel[3:], ord=v_ord)  # ignore root
         vel_reward = math.exp(-k_v * (vel_dist ** 2))
     else:
         vel_reward = 0.0    
-    # ee reward
+    # 2 ee reward
     if w_e > 0.0:
         ee_dist = np.linalg.norm(cur_ee - e_ee)
         ee_reward = math.exp(-k_e * (ee_dist ** 2)) 
     else:
         ee_reward = 0.0
-    # root position reward
+    # 3 root position reward
     if w_rp > 0.0:
         root_height_dist = cur_qpos[2] - e_qpos[2]
         root_quat_dist = multi_quat_norm(multi_quat_diff(cur_rq_rmh, e_rq_rmh))[0]
         root_pose_reward = math.exp(-k_rh * (root_height_dist ** 2) - k_rq * (root_quat_dist ** 2))
     else:
         root_pose_reward = 0.0
-    # root velocity reward
+    # 4 root velocity reward
     if w_rv > 0.0:
         root_linv_dist = np.linalg.norm(cur_rlinv_local - e_rlinv_local) 
         root_angv_dist = np.linalg.norm(cur_rangv - e_rangv)
         root_vel_reward = math.exp(-k_rl * (root_linv_dist ** 2) - k_ra * (root_angv_dist ** 2))
     else:
         root_vel_reward = 0.0
-    # grf reward
+    # 5 grf reward
     if w_grf > 0.0:
         grf_r, _,_, grf_l, _,_ = env.get_grf_rl()
         grf_r_ref, grf_l_ref = env.get_grf_via_phase()
@@ -213,12 +213,7 @@ def local_rfc_implicit_reward(env, state, action, info):
     else:
         grf_reward = 0.0
     
-    w_ph = 0 # TODO
-    if w_ph > 0.0:
-        pass
-    else:
-        pass
-    # residual force reward
+    # 6 residual force reward
     if w_vf > 0.0:
         vf = action[env.ndof: (env.ndof + env.vf_dim)]
         vf_reward = math.exp(-k_vf * (np.linalg.norm(vf) ** 2))

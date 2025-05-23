@@ -260,13 +260,15 @@ def visualize_3d_forces(fig, ax, forces, positions, sc = 500):
     return fig, ax
 
 
-def visualize_skeleton(fig, ax, joints, tree, coms = None):
+def visualize_skeleton(fig, ax, joints, tree, coms = None, verbose = True):
     """
     visualzie the skeletons specifed by the joints and tree
     """
     # Plot the joints
-    for name, com in joints.items():
-        ax.scatter(com[0], com[1], com[2], c='r', marker='o')
+    for name, jts in joints.items():
+        ax.scatter(jts[0], jts[1], jts[2], c='r', marker='o')
+       
+        
 
     # Convert dictionary values to a numpy array
     joints_array = np.array(list(joints.values()))
@@ -296,8 +298,12 @@ def visualize_skeleton(fig, ax, joints, tree, coms = None):
                 pass
     
     if coms is not None: 
-        for com in coms.values():
+        for name, com in coms.items():
             ax.scatter(com[0][0], com[0][1], com[0][2], c='b', marker='o') 
+            if verbose and com [1] > 1e-3:
+                ax.text(com[0][0] + 0.03, com[0][1] + 0.03, com[0][2]+0.03, f"{name}: {com[1]:.2f}", color='blue', fontsize=6)
+    
+    
     mid_x = (joints_array[:, 0].max() + joints_array[:, 0].min()) * 0.5
     mid_y = (joints_array[:, 1].max() + joints_array[:, 1].min()) * 0.5
     mid_z = (joints_array[:, 2].max() + joints_array[:, 2].min()) * 0.5
